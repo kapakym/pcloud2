@@ -15,7 +15,7 @@ function ExplorerLayout({ children }: PropsWithChildren<unknown>) {
 		<div className=' min-h-screen  flex flex-col h-screen max-h-screen overflow-hidden'>
 			<Header />
 			<div className='flex h-full  overflow-hidden'>
-				<div className='hidden lg:flex w-1/4 bg-gray-800 '>
+				<div className='hidden lg:flex w-1/4 bg-gray-800 border-[1px] border-solid border-slate-600 rounded-lb-xl'>
 					<NavigationMenu />
 				</div>
 				<div className='h-full overflow-hidden relative  w-full '>

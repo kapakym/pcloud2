@@ -12,7 +12,6 @@ export class FilesService {
   ) {}
 
   async getFiles(currentPath: string, accessToken: string) {
-    console.log('tets');
     const cloudFolder = this.configService.get('CLOUD_PATH');
 
     const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);

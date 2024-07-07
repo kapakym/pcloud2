@@ -25,7 +25,6 @@ function Drawer({
 			}
 		}
 	})
-	console.log(open)
 	return (
 		<>
 			{open && (

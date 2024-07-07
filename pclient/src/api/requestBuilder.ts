@@ -21,7 +21,6 @@ axiosCreate.interceptors.request.use((config: AxiosCustomConfig) => {
 	if (config.isAuth) {
 		const accessToken = getAccessToken()
 
-		// console.log(config.isAuth)
 		if (config?.headers && accessToken) {
 			config.headers.Authorization = `Bearer ${accessToken}`
 		}
@@ -35,7 +34,6 @@ axiosCreate.interceptors.response.use(
 	async error => {
 		const originalRequest = error.config
 
-		console.log(error.config.isAuth)
 		if (error?.config?.isAuth) {
 			if (
 				(error?.response?.status === 401 ||

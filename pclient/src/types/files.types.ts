@@ -12,4 +12,20 @@ export interface IFile extends IFolder {
 	size: number
 }
 
-export type TypeFiles = 'file' | 'folder'
+export type TypeFiles =
+	| 'file'
+	| 'folder'
+	| 'upFolder'
+	| 'image'
+	| 'movie'
+	| 'pdf'
+
+export type TypeFilesActions =
+	| 'copy'
+	| 'download'
+	| 'upload'
+	| 'edit'
+	| 'delete'
+	| 'view'
+	| 'move'
+	| null

@@ -1,3 +1,5 @@
+import { IFilesStore } from '@/stores/file-actions.store'
+
 export interface IFolder {
 	files: IFile[]
 	folders: IFolder[]
@@ -12,6 +14,12 @@ export interface IFile extends IFolder {
 	size: number
 }
 
+export interface IActionFilesReq {
+	sourcePath: string
+	destPath: string
+	files: IFilesStore[]
+}
+
 export type TypeFiles =
 	| 'file'
 	| 'folder'
@@ -21,6 +29,7 @@ export type TypeFiles =
 	| 'pdf'
 
 export type TypeFilesActions =
+	| 'paste'
 	| 'copy'
 	| 'download'
 	| 'upload'
@@ -28,4 +37,5 @@ export type TypeFilesActions =
 	| 'delete'
 	| 'view'
 	| 'move'
+	| 'selectAll'
 	| null

@@ -1,35 +1,34 @@
 'use client'
 
 import { filesService } from '@/services/files.service'
-import { useFileActionsStore } from '@/stores/file-actions.store'
-import { useQuery } from '@tanstack/react-query'
-import { Check } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { IFilesStore, useFileActionsStore } from '@/stores/file-actions.store'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { TouchEventHandler, useEffect, useRef, useState } from 'react'
 
 import FileActionBar from '@/components/FileActionBar/FileActionBar'
 import { FileItemRow } from '@/components/ui/FileItems/FileItemRow'
 
-import { TypeFiles } from '@/types/files.types'
+import { IActionFilesReq, TypeFiles } from '@/types/files.types'
+
+import { useDoubleTouchHook } from '@/hooks/use-double-touch.hook'
+import { useFilesActions } from '@/hooks/use-files-actions'
 
 function FilesList() {
-	const { selected, setSelected, action } = useFileActionsStore(state => state)
-	const [path, setPath] = useState('')
+	const {
+		selected,
+		setSelected,
+		action,
+		setAction,
+		setBuffer,
+		path,
+		setPath,
+		filesBuffer
+	} = useFileActionsStore(state => state)
 
 	const { data, error } = useQuery({
 		queryKey: ['getFiles', path],
 		queryFn: () => filesService.getFiles({ path })
 	})
-
-	useEffect(() => {
-		if (action) {
-			switch (action) {
-				case 'copy':
-					console.log(action)
-					break
-			}
-			console.log(action, selected)
-		}
-	}, [action])
 
 	const handleEnterFolder = (folderName: string) => {
 		setPath(path + '/' + folderName)
@@ -58,11 +57,26 @@ function FilesList() {
 		}
 	}
 
-	return (
-		<div className='w-full h-full flex flex-col select-none'>
-			<FileActionBar countSelected={selected.length} />
+	const myHook = useDoubleTouchHook()
+	useFilesActions(data)
 
-			<div className='w-full  overflow-y-auto h-full p-4'>
+	const handleTouch = (event: React.TouchEvent<HTMLDivElement>) => {
+		console.log(myHook())
+		// console.log(event)
+		// if (Date.now() - time.current < 300) {
+		// 	console.log('double')
+		// }
+		// time.current = Date.now()
+	}
+
+	return (
+		<div
+			className='w-full h-full flex flex-col select-none'
+			onTouchStart={handleTouch}
+		>
+			<FileActionBar />
+
+			<div className='w-full  overflow-y-auto h-full '>
 				{path && (
 					<FileItemRow
 						file={{ name: '..' }}

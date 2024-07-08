@@ -2,7 +2,8 @@ import { VSeparator } from '../VSepartor/VSeparator'
 import { useFileActionsStore } from '@/stores/file-actions.store'
 import {
 	Check,
-	Copy,
+	ClipboardCopy,
+	ClipboardPaste,
 	DownloadCloud,
 	Edit,
 	Eye,
@@ -10,16 +11,13 @@ import {
 	Trash,
 	UploadCloud
 } from 'lucide-react'
-import { useActionState } from 'react'
 
 import { TypeFilesActions } from '@/types/files.types'
 
-interface FileActionBarProps {
-	countSelected: number
-}
-
-export default function FileActionBar({ countSelected }: FileActionBarProps) {
-	const { setAction } = useFileActionsStore(state => state)
+export default function FileActionBar() {
+	const { setAction, filesBuffer, selected } = useFileActionsStore(
+		state => state
+	)
 
 	const handleSetAction = (action: TypeFilesActions) => {
 		setAction(action)
@@ -28,12 +26,17 @@ export default function FileActionBar({ countSelected }: FileActionBarProps) {
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>
 			<div className='flex items-center space-x-1'>
-				<Check size={28} />
-				<div>{countSelected > 0 && countSelected}</div>
+				<Check
+					size={28}
+					className='text-slate-400 hover:text-slate-200 cursor-pointer'
+					onClick={() => handleSetAction('selectAll')}
+				/>
+
+				<div>{selected.length > 0 && selected.length}</div>
 			</div>
 
 			<div className='flex space-x-2'>
-				{countSelected === 1 && (
+				{selected.length === 1 && (
 					<>
 						<Eye
 							size={28}
@@ -53,7 +56,15 @@ export default function FileActionBar({ countSelected }: FileActionBarProps) {
 					className='text-slate-400 hover:text-slate-200 cursor-pointer'
 					onClick={() => handleSetAction('upload')}
 				/>
-				{countSelected > 0 && (
+				{!!filesBuffer?.items.length && (
+					<ClipboardPaste
+						size={28}
+						className='text-slate-400 hover:text-slate-200 cursor-pointer'
+						onClick={() => handleSetAction('paste')}
+					/>
+				)}
+
+				{selected.length > 0 && (
 					<>
 						<DownloadCloud
 							size={28}
@@ -61,11 +72,12 @@ export default function FileActionBar({ countSelected }: FileActionBarProps) {
 							onClick={() => handleSetAction('download')}
 						/>
 						<VSeparator />
-						<Copy
+						<ClipboardCopy
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'
 							onClick={() => handleSetAction('copy')}
 						/>
+
 						<Move
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'

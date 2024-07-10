@@ -2,7 +2,11 @@ import { AxiosError } from 'axios'
 import { url } from 'inspector'
 import Cookies from 'js-cookie'
 
-import { IActionFilesReq, IFolder } from '@/types/files.types'
+import {
+	IActionFilesReq,
+	IFolder,
+	TypeActionFilesRes
+} from '@/types/files.types'
 
 import { requestBuilder } from '@/api/requestBuilder'
 
@@ -20,7 +24,7 @@ class FilesService {
 	}
 
 	async copyFiles(data: IActionFilesReq) {
-		const response = await requestBuilder<IActionFilesReq, IActionFilesReq>({
+		const response = await requestBuilder<IActionFilesReq, TypeActionFilesRes>({
 			url: 'files/copy',
 			method: 'post',
 			options: {
@@ -32,10 +36,26 @@ class FilesService {
 	}
 
 	async moveFiles(data: IActionFilesReq) {
-		const response = await requestBuilder<IActionFilesReq, IActionFilesReq>({
+		const response = await requestBuilder<IActionFilesReq, TypeActionFilesRes>({
 			url: 'files/move',
 			method: 'post',
 			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
+
+	async uploadFile(data: FormData, progressFnUp: (progress: number) => void) {
+		const response = await requestBuilder<FormData, string>({
+			url: 'files/upload',
+			method: 'post',
+			progressFnUp,
+			options: {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				},
 				isAuth: true,
 				data
 			}

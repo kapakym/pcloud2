@@ -1,8 +1,16 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { Auth } from 'src/auth/decorators/auth.decorator';
-import { ActionFilesDto, DeleteFilesDto } from './dto/file.dto';
+import { ActionFilesDto, DeleteFilesDto, UploadFileDto } from './dto/file.dto';
 import { FilesService } from './files.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('files')
 export class FilesController {
@@ -34,5 +42,17 @@ export class FilesController {
   async deleteFiles(@Body() dto: DeleteFilesDto, @Req() req: Request) {
     const accessToken = req.headers.authorization;
     return this.filesService.deleteFiles(dto, accessToken);
+  }
+
+  @Auth()
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @UploadedFile() file: File,
+    @Body() body: UploadFileDto,
+    @Req() req: Request,
+  ) {
+    const accessToken = req.headers.authorization;
+    return this.filesService.uploadFile(file, body, accessToken);
   }
 }

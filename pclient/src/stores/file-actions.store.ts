@@ -19,10 +19,12 @@ interface IFileActionsStore {
 	action: TypeFilesActions
 	filesBuffer: IFilesBuffer | null
 	path: string
+	filesUpload: FileList | null
 	setSelected: (payload: IFilesStore[]) => void
 	setAction: (payload: TypeFilesActions) => void
 	setBuffer: (payload: IFilesBuffer) => void
 	setPath: (payload: string) => void
+	setFilesUpload: (payload: FileList) => void
 }
 
 export const useFileActionsStore = create<IFileActionsStore>()(
@@ -31,12 +33,14 @@ export const useFileActionsStore = create<IFileActionsStore>()(
 		action: null,
 		filesBuffer: null,
 		path: '',
+		filesUpload: null,
 		setSelected: payload => set(() => ({ selected: payload })),
 		setAction: payload => set(() => ({ action: payload })),
 		setBuffer: payload =>
 			set(() => ({
 				filesBuffer: payload
 			})),
-		setPath: payload => set(state => ({ path: payload }))
+		setPath: payload => set(() => ({ path: payload })),
+		setFilesUpload: payload => set(() => ({ filesUpload: payload }))
 	}))
 )

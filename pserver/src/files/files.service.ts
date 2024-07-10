@@ -7,7 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ActionFilesDto, DeleteFilesDto } from './dto/file.dto';
+import { ActionFilesDto, DeleteFilesDto, UploadFileDto } from './dto/file.dto';
+import { IResponseFileActions } from './types/files.types';
 
 @Injectable()
 export class FilesService {
@@ -51,7 +52,7 @@ export class FilesService {
 
     const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
     if (!resultToken) throw new UnauthorizedException('Error');
-
+    const response = [];
     files.forEach((item) => {
       const fromPath = path?.join(
         cloudFolder,
@@ -66,14 +67,27 @@ export class FilesService {
         item.name,
       );
       try {
-        fs.cpSync(fromPath, toPath, { recursive: true });
+        if (!fs.existsSync(toPath)) {
+          fs.cpSync(fromPath, toPath, { recursive: true });
+          response.push({ filename: fromPath, status: 'success' });
+        } else {
+          response.push({
+            filename: fromPath,
+            status: 'error',
+            detail: 'is exist',
+          });
+        }
       } catch (e: any) {
         console.log(e);
-        throw new BadRequestException('Copy files error');
+        response.push({
+          filename: fromPath,
+          status: 'error',
+          description: e?.message,
+        });
       }
     });
 
-    return data;
+    return response;
   }
 
   async moveFiles(data: ActionFilesDto, accessToken: string) {
@@ -96,11 +110,25 @@ export class FilesService {
         destPath,
         item.name,
       );
+      const response = [];
       try {
-        fs.renameSync(fromPath, toPath);
+        if (!fs.existsSync(toPath)) {
+          fs.renameSync(fromPath, toPath);
+          response.push({ filename: fromPath, status: 'success' });
+        } else {
+          response.push({
+            filename: fromPath,
+            status: 'error',
+            detail: 'is exist',
+          });
+        }
       } catch (e: any) {
         console.log(e);
-        throw new BadRequestException('Move files error');
+        response.push({
+          filename: fromPath,
+          status: 'error',
+          description: e?.message,
+        });
       }
     });
 
@@ -121,20 +149,57 @@ export class FilesService {
         currentPath,
         item.name,
       );
+      const response: IResponseFileActions[] = [];
       try {
         if (item.type === 'file') {
           fs.rmSync(fullPath);
+          response.push({ filename: fullPath, status: 'success' });
         }
         if (item.type === 'folder') {
           fs.rmdirSync(fullPath, { recursive: true });
+          response.push({ filename: fullPath, status: 'success' });
         }
       } catch (e: any) {
-        console.log(e);
-        throw new BadRequestException('Move files error');
+        response.push({
+          filename: fullPath,
+          status: 'error',
+          description: e.message,
+        });
       }
     });
 
     return data;
+  }
+
+  async uploadFile(file: File, body: UploadFileDto, accessToken: string) {
+    console.log(file);
+    console.log(accessToken);
+    console.log(decodeURI(body.filename));
+    console.log(body.uuid);
+    return body.uuid;
+    // try {
+    //   const filename = data.
+    //   const file = req.files.file;
+    //   const filenameutf8 = decodeURI(req.body.filename);
+    //   const resPath = FileUtils.buildPath(
+    //     req.headers?.homefolder,
+    //     req.body.path,
+    //   );
+    //   if (!resPath) {
+    //     return res.status(400).json({
+    //       message: 'Ошибка загрузки файла',
+    //     });
+    //   }
+    //   if (fs.existsSync(resPath + filenameutf8)) {
+    //     return res
+    //       .status(400)
+    //       .json({ message: 'Файл с таким именем уже существует' });
+    //   }
+    //   file.mv(resPath + filenameutf8);
+    //   return res.status(200).json({ filename: file.name });
+    // } catch (error: any) {
+    //   return res.status(400).json({ message: 'Ошибка загрузки файла' });
+    // }
   }
 
   // async isValidHomeDir(fullPath: string) {

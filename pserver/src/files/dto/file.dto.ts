@@ -21,3 +21,14 @@ export class DeleteFilesDto {
   @IsArray()
   files: IFile[];
 }
+
+export class UploadFileDto {
+  @IsString()
+  filename: string;
+
+  @IsString()
+  uuid: string;
+
+  @IsString()
+  path: string;
+}

@@ -20,7 +20,7 @@ function Drawer({
 		base: ' w-full lg:w-1/2 h-screen fixed top-0 left-0 bg-slate-800 transition-all duration-500 flex flex-col p-3',
 		variants: {
 			state: {
-				open: 'lg:translate-x-0 translate-y-10 rounded-t-xl',
+				open: 'lg:translate-x-0 translate-y-10 rounded-t-xl lg:rounded-none lg:translate-y-0',
 				close: 'lg:-translate-x-full lg:translate-y-0 translate-y-full'
 			}
 		}
@@ -49,7 +49,7 @@ function Drawer({
 					</div>
 				</div>
 
-				<div>{open && children}</div>
+				<div className='h-full overflow-hidden'>{open && children}</div>
 			</div>
 		</>
 	)

@@ -15,9 +15,8 @@ import {
 import { TypeFilesActions } from '@/types/files.types'
 
 export default function FileActionBar() {
-	const { setAction, filesBuffer, selected } = useFileActionsStore(
-		state => state
-	)
+	const { setAction, filesBuffer, selected, setFilesUpload } =
+		useFileActionsStore(state => state)
 
 	const handleSetAction = (action: TypeFilesActions) => {
 		setAction(action)
@@ -25,7 +24,8 @@ export default function FileActionBar() {
 
 	const handleUploadFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
-			console.log(event.target.files)
+			setFilesUpload(event.target.files)
+			setAction('upload')
 		}
 	}
 

@@ -41,9 +41,13 @@ function Auth() {
 	}
 
 	return (
-		<div className='flex min-h-screen min-w-screen md:w-1/2 px-4 md:px-0 m-auto  justify-center items-center '>
+		<div className='flex min-h-screen min-w-screen  px-4 md:px-0 m-auto  justify-center items-center bg-[url("/pCloud.jpeg")] bg-cover '>
+			{/* <img
+				src='/pCloud.jpeg'
+				alt=''
+			/> */}
 			<form
-				className='bg-slate-800 shadow p-4 rounded-2xl flex flex-col space-y-4 min-w-full border-slate-600 text-slate-600 border-[1px] border-solid'
+				className='bg-slate-800 shadow p-4 w-1/2 rounded-2xl flex flex-col space-y-4  border-slate-600 text-slate-600 border-[1px] border-solid opacity-90'
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<h2>Login in pCloud2</h2>

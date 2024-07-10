@@ -17,10 +17,11 @@ export const useFilesActions = (
 		setAction,
 		setBuffer,
 		path,
-		filesBuffer
+		filesBuffer,
+		filesUpload
 	} = useFileActionsStore(state => state)
 
-	const { addTask, setCompletedTask } = useLogsStore(state => state)
+	const { addTask, setCompletedTask, setPercent } = useLogsStore(state => state)
 
 	const queryClient = useQueryClient()
 
@@ -49,6 +50,43 @@ export const useFilesActions = (
 			return { uuid: uuid }
 		}
 	})
+
+	const { mutate: mutateUploadFile, mutateAsync: mutateUploadFileAsync } =
+		useMutation({
+			mutationKey: ['uploadFile'],
+			mutationFn: (data: {
+				formData: FormData
+				progressFn: (percent: number) => void
+			}) => filesService.uploadFile(data.formData, data.progressFn),
+			onSuccess: data => {
+				setCompletedTask(data.data)
+			}
+		})
+
+	const handleUploadFiles = async () => {
+		if (filesUpload?.length) {
+			//@ts-ignore
+			const files = [...filesUpload]
+			files.forEach(file => {
+				const taskUuid = addTask({
+					title: 'upload file ' + file.name,
+					completed: false
+				})
+				console.log(taskUuid)
+				const progressFn = (percentComplete: number) => {
+					console.log(percentComplete)
+					// setPercent({ percent: percentComplete, uuid: taskUuid })
+				}
+
+				const formData = new FormData()
+				formData.append('file', file)
+				formData.append('filename', encodeURI(file.name))
+				formData.append('uuid', taskUuid)
+				formData.append('path', encodeURI(path))
+				mutateUploadFile({ formData, progressFn })
+			})
+		}
+	}
 
 	useEffect(() => {
 		setAction(null)
@@ -102,6 +140,9 @@ export const useFilesActions = (
 
 						setSelected([...folders, ...files])
 					}
+					break
+				case 'upload':
+					handleUploadFiles()
 					break
 			}
 		}

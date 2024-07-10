@@ -20,6 +20,14 @@ export interface IActionFilesReq {
 	files: IFilesStore[]
 }
 
+export interface IActionFiles {
+	filename: string
+	status: string
+	description?: string
+}
+
+export type TypeActionFilesRes = IActionFiles[]
+
 export type TypeFiles =
 	| 'file'
 	| 'folder'

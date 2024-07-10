@@ -2,6 +2,7 @@
 
 import { Header } from '../Header/Header'
 import { NavigationMenu } from '../NavigationMenu/NavigationMenu'
+import { StatusBar } from '../StatusBar/StatusBar'
 import { Drawer } from '../ui/Drawer/Drawer'
 import { useDrawerStore } from '@/stores/drawer.store'
 import { type PropsWithChildren } from 'react'
@@ -22,6 +23,7 @@ function ExplorerLayout({ children }: PropsWithChildren<unknown>) {
 					{children}
 				</div>
 			</div>
+			<StatusBar />
 			<Drawer
 				open={open}
 				onClose={onClose}

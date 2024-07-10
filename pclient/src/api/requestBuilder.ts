@@ -4,6 +4,7 @@ import {
 	getAccessToken,
 	removeToken
 } from '@/services/auth-token.service'
+import { useLogsStore } from '@/stores/logs.store'
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { redirect, useRouter } from 'next/navigation'
 
@@ -95,7 +96,9 @@ const requestBuilder = async <Req, Res, Params = undefined>({
 	}
 
 	try {
-		return await axiosCreate(config)
+		const response = await axiosCreate(config)
+
+		return response
 	} catch (e: any) {
 		console.log(e)
 		if (e?.response?.status === 401)

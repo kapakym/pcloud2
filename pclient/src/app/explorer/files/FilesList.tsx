@@ -11,24 +11,19 @@ import { FileItemRow } from '@/components/ui/FileItems/FileItemRow'
 import { IActionFilesReq, TypeFiles } from '@/types/files.types'
 
 import { useDoubleTouchHook } from '@/hooks/use-double-touch.hook'
-import { useFilesActions } from '@/hooks/use-files-actions'
+import { useFilesActions } from '@/hooks/use-files-actions.hook'
 
 function FilesList() {
-	const {
-		selected,
-		setSelected,
-		action,
-		setAction,
-		setBuffer,
-		path,
-		setPath,
-		filesBuffer
-	} = useFileActionsStore(state => state)
+	const { selected, setSelected, path, setPath } = useFileActionsStore(
+		state => state
+	)
 
 	const { data, error } = useQuery({
 		queryKey: ['getFiles', path],
 		queryFn: () => filesService.getFiles({ path })
 	})
+
+	useFilesActions(data)
 
 	const handleEnterFolder = (folderName: string) => {
 		setPath(path + '/' + folderName)
@@ -57,16 +52,10 @@ function FilesList() {
 		}
 	}
 
-	const myHook = useDoubleTouchHook()
-	useFilesActions(data)
+	const doubleTouchHook = useDoubleTouchHook()
 
 	const handleTouch = (event: React.TouchEvent<HTMLDivElement>) => {
-		console.log(myHook())
-		// console.log(event)
-		// if (Date.now() - time.current < 300) {
-		// 	console.log('double')
-		// }
-		// time.current = Date.now()
+		console.log(doubleTouchHook())
 	}
 
 	return (
@@ -105,9 +94,6 @@ function FilesList() {
 						selected={!!selected.find(itemFind => itemFind.name === item.name)}
 					/>
 				))}
-			</div>
-			<div className='bg-gray-800 p-2 rounded-t-xl border-[1px] border-solid border-slate-600'>
-				Path: {path}
 			</div>
 		</div>
 	)

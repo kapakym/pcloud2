@@ -23,6 +23,12 @@ export default function FileActionBar() {
 		setAction(action)
 	}
 
+	const handleUploadFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (event.target.files) {
+			console.log(event.target.files)
+		}
+	}
+
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>
 			<div className='flex items-center space-x-1'>
@@ -51,11 +57,21 @@ export default function FileActionBar() {
 					</>
 				)}
 				<VSeparator />
-				<UploadCloud
-					size={28}
-					className='text-slate-400 hover:text-slate-200 cursor-pointer'
-					onClick={() => handleSetAction('upload')}
+				<label htmlFor={'upload-photo'}>
+					<UploadCloud
+						size={28}
+						className='text-slate-400 hover:text-slate-200 cursor-pointer'
+						onClick={() => handleSetAction('upload')}
+					/>
+				</label>
+				<input
+					multiple
+					type='file'
+					onChange={e => handleUploadFiles(e)}
+					id='upload-photo'
+					className='hidden'
 				/>
+
 				{!!filesBuffer?.items.length && (
 					<ClipboardPaste
 						size={28}

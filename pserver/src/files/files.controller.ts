@@ -7,10 +7,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { Express } from 'express';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ActionFilesDto, DeleteFilesDto, UploadFileDto } from './dto/file.dto';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import 'multer';
 
 @Controller('files')
 export class FilesController {
@@ -48,7 +50,7 @@ export class FilesController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @UploadedFile() file: File,
+    @UploadedFile() file: Express.Multer.File,
     @Body() body: UploadFileDto,
     @Req() req: Request,
   ) {

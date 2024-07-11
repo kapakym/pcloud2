@@ -39,22 +39,22 @@ export const useLogsStore = create<ILogsStore>()(
 		setCompletedTask: async (payload: string) => {
 			set(state => {
 				const task = state.tasks.find(item => item.id === payload)
+
 				if (task) {
 					task.percent = 100
 					task.completedTime = new Date()
 					task.status = 'completed'
+					state.completedTask.push(task)
+					state.tasks = state.tasks.filter(item => item.id !== payload)
 				}
 			})
 		},
 		setPercent: async payload => {
 			set(state => {
-				const task = state.tasks.find(item => (item.id = payload.uuid))
-				if (task) {
-					task.percent = payload.percent
-					if (payload.percent >= 100) {
-						state.setCompletedTask(payload.uuid)
-					}
-				}
+				state.tasks = state.tasks.map(item => {
+					if (item.id === payload.uuid) item.percent = payload.percent
+					return item
+				})
 			})
 		}
 	}))

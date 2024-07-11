@@ -9,6 +9,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ActionFilesDto, DeleteFilesDto, UploadFileDto } from './dto/file.dto';
 import { IResponseFileActions } from './types/files.types';
+import 'multer';
+import { Express } from 'express';
 
 @Injectable()
 export class FilesService {
@@ -171,12 +173,32 @@ export class FilesService {
     return data;
   }
 
-  async uploadFile(file: File, body: UploadFileDto, accessToken: string) {
+  async uploadFile(
+    file: Express.Multer.File,
+    body: UploadFileDto,
+    accessToken: string,
+  ) {
+    const cloudFolder = this.configService.get('CLOUD_PATH');
+
+    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
+    if (!resultToken) throw new UnauthorizedException('Error');
     console.log(file);
     console.log(accessToken);
     console.log(decodeURI(body.filename));
     console.log(body.uuid);
-    return body.uuid;
+    const toPath = path?.join(
+      cloudFolder,
+      resultToken.id,
+      body.path,
+      decodeURI(body.filename),
+    );
+
+    if (fs.existsSync(toPath)) {
+      return { uuid: body.uuid, status: 'error', detail: 'is exist' };
+    }
+
+    await fs.promises.writeFile(toPath, file.buffer);
+    return { uuid: body.uuid, status: 'success' };
     // try {
     //   const filename = data.
     //   const file = req.files.file;

@@ -3,7 +3,7 @@ import { useLogsStore } from '@/stores/logs.store'
 import React from 'react'
 
 function TasksList() {
-	const { tasks, addTask } = useLogsStore(state => state)
+	const { tasks, completedTask } = useLogsStore(state => state)
 	// console.log(tasks.map(item => item.id))
 	console.log('render')
 	return (
@@ -14,12 +14,12 @@ function TasksList() {
 					key={item.id}
 				/>
 			))}
-			{/* {completedTask.map(item => (
+			{completedTask.map(item => (
 				<StatusBarItem
 					task={item}
 					key={item.id}
 				/>
-			))} */}
+			))}
 		</div>
 	)
 }

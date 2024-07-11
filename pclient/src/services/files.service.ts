@@ -48,7 +48,10 @@ class FilesService {
 	}
 
 	async uploadFile(data: FormData, progressFnUp: (progress: number) => void) {
-		const response = await requestBuilder<FormData, string>({
+		const response = await requestBuilder<
+			FormData,
+			{ uuid: string; status: string; description?: string }
+		>({
 			url: 'files/upload',
 			method: 'post',
 			progressFnUp,

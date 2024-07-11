@@ -59,7 +59,8 @@ export const useFilesActions = (
 				progressFn: (percent: number) => void
 			}) => filesService.uploadFile(data.formData, data.progressFn),
 			onSuccess: data => {
-				setCompletedTask(data.data)
+				queryClient.invalidateQueries({ queryKey: ['getFiles', path] })
+				setCompletedTask(data.data.uuid)
 			}
 		})
 
@@ -72,10 +73,9 @@ export const useFilesActions = (
 					title: 'upload file ' + file.name,
 					completed: false
 				})
-				console.log(taskUuid)
+
 				const progressFn = (percentComplete: number) => {
-					console.log(percentComplete)
-					// setPercent({ percent: percentComplete, uuid: taskUuid })
+					setPercent({ percent: percentComplete, uuid: taskUuid })
 				}
 
 				const formData = new FormData()

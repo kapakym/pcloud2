@@ -19,7 +19,7 @@ interface ILogsStore {
 	tasks: ITaskStore[]
 	completedTask: ITaskStore[]
 	addTask: (payload: ITaskStore) => string
-	setCompletedTask: (payload: string) => void
+	setCompletedTask: (payload: { uuid: string; description?: string }) => void
 	setPercent: (payload: { percent: number; uuid: string }) => void
 }
 
@@ -36,16 +36,20 @@ export const useLogsStore = create<ILogsStore>()(
 			})
 			return payload.id
 		},
-		setCompletedTask: async (payload: string) => {
+		setCompletedTask: async (payload: {
+			uuid: string
+			description?: string
+		}) => {
 			set(state => {
-				const task = state.tasks.find(item => item.id === payload)
+				const task = state.tasks.find(item => item.id === payload.uuid)
 
 				if (task) {
 					task.percent = 100
 					task.completedTime = new Date()
 					task.status = 'completed'
+					task.description = payload.description
 					state.completedTask.push(task)
-					state.tasks = state.tasks.filter(item => item.id !== payload)
+					state.tasks = state.tasks.filter(item => item.id !== payload.uuid)
 				}
 			})
 		},

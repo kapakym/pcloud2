@@ -1,16 +1,11 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as fs from 'fs';
+import 'multer';
 import * as path from 'path';
 import { ActionFilesDto, DeleteFilesDto, UploadFileDto } from './dto/file.dto';
 import { IResponseFileActions } from './types/files.types';
-import 'multer';
-import { Express } from 'express';
 
 @Injectable()
 export class FilesService {

@@ -30,7 +30,10 @@ export const useFilesActions = (
 		mutationFn: (data: IActionFilesReq) => filesService.copyFiles(data),
 		onSuccess: (data, variables, context) => {
 			queryClient.invalidateQueries({ queryKey: ['getFiles', path] })
-			setCompletedTask(context.uuid)
+			setCompletedTask({
+				uuid: context.uuid,
+				description: JSON.stringify(data.data, null, 2)
+			})
 		},
 		onMutate: () => {
 			const uuid = addTask({ title: 'copy files', completed: false })
@@ -43,7 +46,10 @@ export const useFilesActions = (
 		mutationFn: (data: IActionFilesReq) => filesService.moveFiles(data),
 		onSuccess: (data, variables, context) => {
 			queryClient.invalidateQueries({ queryKey: ['getFiles', path] })
-			setCompletedTask(context.uuid)
+			setCompletedTask({
+				uuid: context.uuid,
+				description: JSON.stringify(data.data, null, 2)
+			})
 		},
 		onMutate: () => {
 			const uuid = addTask({ title: 'move files', completed: false })
@@ -60,7 +66,10 @@ export const useFilesActions = (
 			}) => filesService.uploadFile(data.formData, data.progressFn),
 			onSuccess: data => {
 				queryClient.invalidateQueries({ queryKey: ['getFiles', path] })
-				setCompletedTask(data.data.uuid)
+				setCompletedTask({
+					uuid: data.data.uuid,
+					description: JSON.stringify(data.data, null, 2)
+				})
 			}
 		})
 

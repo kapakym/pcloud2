@@ -1,5 +1,7 @@
 import { ITaskStore } from '@/stores/logs.store'
 import cn from 'clsx'
+import { ChevronRight } from 'lucide-react'
+import { useState } from 'react'
 
 import { TypeStatusLogs } from '@/types/logs.types'
 
@@ -8,6 +10,7 @@ interface StatusBarItemProps {
 }
 
 function StatusBarItem({ task }: StatusBarItemProps) {
+	const [isCollapsed, setIsCollapsed] = useState(true)
 	const generateTextColor = (status: TypeStatusLogs | undefined) => {
 		switch (status) {
 			case 'completed':
@@ -45,7 +48,28 @@ function StatusBarItem({ task }: StatusBarItemProps) {
 						{task.status}
 					</span>
 				</div>
-				{task.description && <div>description: {task.description}</div>}
+				<div
+					className='flex h-4 items-center my-2 cursor-pointer justify-between border-[1px] rounded-md border-solid p-3 border-slate-400'
+					onClick={() => setIsCollapsed(!isCollapsed)}
+				>
+					<div>description:</div>{' '}
+					<ChevronRight
+						className={cn(
+							'transition-transform duration-200 ease-in-out',
+							isCollapsed ? 'rotate-0' : 'rotate-90'
+						)}
+					/>
+				</div>
+				{task.description && (
+					<div
+						className={cn(
+							'text-wrap bg-slate-900 overflow-auto transition-[max-height] ease-in-out duration-500',
+							isCollapsed ? 'max-h-0' : 'max-h-screen'
+						)}
+					>
+						<pre>{task.description}</pre>
+					</div>
+				)}
 			</div>
 		</div>
 	)

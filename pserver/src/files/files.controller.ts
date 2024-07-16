@@ -9,7 +9,12 @@ import {
 import { Request } from 'express';
 import { Express } from 'express';
 import { Auth } from 'src/auth/decorators/auth.decorator';
-import { ActionFilesDto, DeleteFilesDto, UploadFileDto } from './dto/file.dto';
+import {
+  ActionFilesDto,
+  DeleteFilesDto,
+  RenameFileDto,
+  UploadFileDto,
+} from './dto/file.dto';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import 'multer';
@@ -37,6 +42,13 @@ export class FilesController {
   async moveFiles(@Body() dto: ActionFilesDto, @Req() req: Request) {
     const accessToken = req.headers.authorization;
     return this.filesService.moveFiles(dto, accessToken);
+  }
+
+  @Auth()
+  @Post('rename')
+  async renameFiles(@Body() dto: RenameFileDto, @Req() req: Request) {
+    const accessToken = req.headers.authorization;
+    return this.filesService.renameFile(dto, accessToken);
   }
 
   @Auth()

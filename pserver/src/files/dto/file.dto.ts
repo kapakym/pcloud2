@@ -1,4 +1,4 @@
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsObject, IsString } from 'class-validator';
 import { IFile } from '../types/files.types';
 
 export class CreateFileDto {}
@@ -12,6 +12,17 @@ export class ActionFilesDto {
 
   @IsArray()
   files: IFile[];
+}
+
+export class RenameFileDto {
+  @IsString()
+  sourcePath: string;
+
+  @IsString()
+  newName: string;
+
+  @IsObject()
+  file: IFile;
 }
 
 export class DeleteFilesDto {

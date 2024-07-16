@@ -4,7 +4,9 @@ import Cookies from 'js-cookie'
 
 import {
 	IActionFilesReq,
+	IDeleteFilesReq,
 	IFolder,
+	IRenameFilesReq,
 	TypeActionFilesRes
 } from '@/types/files.types'
 
@@ -38,6 +40,30 @@ class FilesService {
 	async moveFiles(data: IActionFilesReq) {
 		const response = await requestBuilder<IActionFilesReq, TypeActionFilesRes>({
 			url: 'files/move',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
+
+	async renameFile(data: IRenameFilesReq) {
+		const response = await requestBuilder<IRenameFilesReq, TypeActionFilesRes>({
+			url: 'files/rename',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
+
+	async deleteFiles(data: IDeleteFilesReq) {
+		const response = await requestBuilder<IDeleteFilesReq, TypeActionFilesRes>({
+			url: 'files/delete',
 			method: 'post',
 			options: {
 				isAuth: true,

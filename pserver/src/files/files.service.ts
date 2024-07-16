@@ -4,8 +4,14 @@ import { JwtService } from '@nestjs/jwt';
 import * as fs from 'fs';
 import 'multer';
 import * as path from 'path';
-import { ActionFilesDto, DeleteFilesDto, UploadFileDto } from './dto/file.dto';
+import {
+  ActionFilesDto,
+  DeleteFilesDto,
+  RenameFileDto,
+  UploadFileDto,
+} from './dto/file.dto';
 import { IResponseFileActions } from './types/files.types';
+// import { response } from 'express';
 
 @Injectable()
 export class FilesService {
@@ -75,7 +81,6 @@ export class FilesService {
           });
         }
       } catch (e: any) {
-        console.log(e);
         response.push({
           filename: fromPath,
           status: 'error',
@@ -93,7 +98,7 @@ export class FilesService {
 
     const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
     if (!resultToken) throw new UnauthorizedException('Error');
-
+    const response = [];
     files.forEach((item) => {
       const fromPath = path?.join(
         cloudFolder,
@@ -107,7 +112,7 @@ export class FilesService {
         destPath,
         item.name,
       );
-      const response = [];
+
       try {
         if (!fs.existsSync(toPath)) {
           fs.renameSync(fromPath, toPath);
@@ -120,7 +125,6 @@ export class FilesService {
           });
         }
       } catch (e: any) {
-        console.log(e);
         response.push({
           filename: fromPath,
           status: 'error',
@@ -129,7 +133,44 @@ export class FilesService {
       }
     });
 
-    return data;
+    return response;
+  }
+
+  async renameFile(data: RenameFileDto, accessToken: string) {
+    const { newName, sourcePath, file } = data;
+    const cloudFolder = this.configService.get('CLOUD_PATH');
+
+    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
+    if (!resultToken) throw new UnauthorizedException('Error');
+    const response = [];
+    const fromPath = path?.join(
+      cloudFolder,
+      resultToken.id,
+      sourcePath,
+      file.name,
+    );
+    const toPath = path?.join(cloudFolder, resultToken.id, sourcePath, newName);
+
+    try {
+      if (!fs.existsSync(toPath)) {
+        fs.renameSync(fromPath, toPath);
+        response.push({ filename: fromPath, status: 'success' });
+      } else {
+        response.push({
+          filename: fromPath,
+          status: 'error',
+          detail: 'is exist',
+        });
+      }
+    } catch (e: any) {
+      response.push({
+        filename: fromPath,
+        status: 'error',
+        description: e?.message,
+      });
+    }
+
+    return response;
   }
 
   async deleteFiles(data: DeleteFilesDto, accessToken: string) {
@@ -138,7 +179,7 @@ export class FilesService {
 
     const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
     if (!resultToken) throw new UnauthorizedException('Error');
-
+    const response: IResponseFileActions[] = [];
     files.forEach((item) => {
       const fullPath = path?.join(
         cloudFolder,
@@ -146,7 +187,7 @@ export class FilesService {
         currentPath,
         item.name,
       );
-      const response: IResponseFileActions[] = [];
+
       try {
         if (item.type === 'file') {
           fs.rmSync(fullPath);
@@ -164,8 +205,7 @@ export class FilesService {
         });
       }
     });
-
-    return data;
+    return response;
   }
 
   async uploadFile(
@@ -177,10 +217,6 @@ export class FilesService {
 
     const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
     if (!resultToken) throw new UnauthorizedException('Error');
-    console.log(file);
-    console.log(accessToken);
-    console.log(decodeURI(body.filename));
-    console.log(body.uuid);
     const toPath = path?.join(
       cloudFolder,
       resultToken.id,
@@ -194,29 +230,6 @@ export class FilesService {
 
     await fs.promises.writeFile(toPath, file.buffer);
     return { uuid: body.uuid, status: 'success' };
-    // try {
-    //   const filename = data.
-    //   const file = req.files.file;
-    //   const filenameutf8 = decodeURI(req.body.filename);
-    //   const resPath = FileUtils.buildPath(
-    //     req.headers?.homefolder,
-    //     req.body.path,
-    //   );
-    //   if (!resPath) {
-    //     return res.status(400).json({
-    //       message: 'Ошибка загрузки файла',
-    //     });
-    //   }
-    //   if (fs.existsSync(resPath + filenameutf8)) {
-    //     return res
-    //       .status(400)
-    //       .json({ message: 'Файл с таким именем уже существует' });
-    //   }
-    //   file.mv(resPath + filenameutf8);
-    //   return res.status(200).json({ filename: file.name });
-    // } catch (error: any) {
-    //   return res.status(400).json({ message: 'Ошибка загрузки файла' });
-    // }
   }
 
   // async isValidHomeDir(fullPath: string) {

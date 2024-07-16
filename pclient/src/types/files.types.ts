@@ -2,22 +2,30 @@ import { IFilesStore } from '@/stores/file-actions.store'
 
 export interface IFolder {
 	files: IFile[]
-	folders: IFolder[]
+	folders: IFile[]
 }
 
-export interface IFolder {
+export interface IFile {
 	name: string
+	type: string
+	size?: number
 }
 
-export interface IFile extends IFolder {
-	type: string
-	size: number
+export interface IDeleteFilesReq {
+	path: string
+	files: IFile[]
 }
 
 export interface IActionFilesReq {
 	sourcePath: string
 	destPath: string
 	files: IFilesStore[]
+}
+
+export interface IRenameFilesReq {
+	sourcePath: string
+	newName: string
+	file: IFilesStore
 }
 
 export interface IActionFiles {

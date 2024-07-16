@@ -13,6 +13,7 @@ interface FileItemRowProps {
 	onDoubleClick?: () => void
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 	selected?: boolean
+	handleTouch?: (event: React.TouchEvent<HTMLDivElement>) => void
 }
 
 function FileItemRow({
@@ -20,7 +21,8 @@ function FileItemRow({
 	typeFile,
 	onDoubleClick,
 	selected,
-	onClick
+	onClick,
+	handleTouch
 }: FileItemRowProps) {
 	const getIconByType = (typeIcon: TypeFiles) => {
 		switch (typeIcon) {
@@ -56,6 +58,7 @@ function FileItemRow({
 	return (
 		<div
 			{...bind}
+			onTouchStart={handleTouch}
 			onDoubleClick={onDoubleClick}
 			onClick={onClick}
 			className={cn(

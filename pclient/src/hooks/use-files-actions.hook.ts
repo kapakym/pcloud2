@@ -5,7 +5,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosResponse } from 'axios'
 import { useEffect } from 'react'
 
-import { IActionFilesReq, IFolder } from '@/types/files.types'
+import {
+	IActionFilesReq,
+	IDeleteFilesReq,
+	IFolder,
+	IRenameFilesReq
+} from '@/types/files.types'
 
 export const useFilesActions = (
 	data: AxiosResponse<IFolder, IFolder> | undefined
@@ -18,7 +23,8 @@ export const useFilesActions = (
 		setBuffer,
 		path,
 		filesBuffer,
-		filesUpload
+		filesUpload,
+		newName
 	} = useFileActionsStore(state => state)
 
 	const { addTask, setCompletedTask, setPercent } = useLogsStore(state => state)
@@ -57,6 +63,22 @@ export const useFilesActions = (
 		}
 	})
 
+	const { mutate: mutateRenameFile } = useMutation({
+		mutationKey: ['renameFile'],
+		mutationFn: (data: IRenameFilesReq) => filesService.renameFile(data),
+		onSuccess: (data, variables, context) => {
+			queryClient.invalidateQueries({ queryKey: ['getFiles', path] })
+			setCompletedTask({
+				uuid: context.uuid,
+				description: JSON.stringify(data.data, null, 2)
+			})
+		},
+		onMutate: () => {
+			const uuid = addTask({ title: 'rename file', completed: false })
+			return { uuid: uuid }
+		}
+	})
+
 	const { mutate: mutateUploadFile, mutateAsync: mutateUploadFileAsync } =
 		useMutation({
 			mutationKey: ['uploadFile'],
@@ -72,6 +94,23 @@ export const useFilesActions = (
 				})
 			}
 		})
+
+	const { mutate: deleteMutate } = useMutation({
+		mutationKey: ['deleteFiles'],
+		mutationFn: (data: IDeleteFilesReq) => filesService.deleteFiles(data),
+		onSuccess: (data, variables, context) => {
+			queryClient.invalidateQueries({ queryKey: ['getFiles', path] })
+			console.log(data)
+			setCompletedTask({
+				uuid: context.uuid,
+				description: JSON.stringify(data.data, null, 2)
+			})
+		},
+		onMutate: () => {
+			const uuid = addTask({ title: 'copy files', completed: false })
+			return { uuid: uuid }
+		}
+	})
 
 	const handleUploadFiles = async () => {
 		if (filesUpload?.length) {
@@ -117,6 +156,13 @@ export const useFilesActions = (
 						})
 					}
 					break
+				case 'edit':
+					mutateRenameFile({
+						sourcePath: path,
+						newName: newName || '',
+						file: selected[0]
+					})
+					break
 				case 'copy':
 					setBuffer({
 						action: 'copy',
@@ -127,6 +173,17 @@ export const useFilesActions = (
 				case 'move':
 					setBuffer({
 						action: 'move',
+						sourcePath: path,
+						items: selected
+					})
+					break
+				case 'delete':
+					deleteMutate({
+						files: selected.map(item => ({ name: item.name, type: item.type })),
+						path
+					})
+					setBuffer({
+						action: 'delete',
 						sourcePath: path,
 						items: selected
 					})

@@ -1,22 +1,20 @@
 'use client'
 
 import { filesService } from '@/services/files.service'
-import { IFilesStore, useFileActionsStore } from '@/stores/file-actions.store'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { TouchEventHandler, useEffect, useRef, useState } from 'react'
+import { useFileActionsStore } from '@/stores/file-actions.store'
+import { useQuery } from '@tanstack/react-query'
 
 import FileActionBar from '@/components/FileActionBar/FileActionBar'
 import { FileItemRow } from '@/components/ui/FileItems/FileItemRow'
 
-import { IActionFilesReq, TypeFiles } from '@/types/files.types'
+import { TypeFiles } from '@/types/files.types'
 
 import { useDoubleTouchHook } from '@/hooks/use-double-touch.hook'
 import { useFilesActions } from '@/hooks/use-files-actions.hook'
 
 function FilesList() {
-	const { selected, setSelected, path, setPath } = useFileActionsStore(
-		state => state
-	)
+	const { selected, setSelected, path, setPath, selectMode } =
+		useFileActionsStore(state => state)
 
 	const { data, error } = useQuery({
 		queryKey: ['getFiles', path],
@@ -41,7 +39,7 @@ function FilesList() {
 		name: string,
 		type: TypeFiles
 	) => {
-		if (event.shiftKey) {
+		if (event.shiftKey || selectMode) {
 			selected.find(item => item.name === name)
 				? setSelected(selected.filter(item => item.name !== name))
 				: setSelected([...selected, { name, type }])
@@ -54,15 +52,17 @@ function FilesList() {
 
 	const doubleTouchHook = useDoubleTouchHook()
 
-	const handleTouch = (event: React.TouchEvent<HTMLDivElement>) => {
-		console.log(doubleTouchHook())
+	const handleTouch = (
+		event: React.TouchEvent<HTMLDivElement>,
+		folderName: string
+	) => {
+		if (doubleTouchHook()) {
+			handleEnterFolder(folderName)
+		}
 	}
 
 	return (
-		<div
-			className='w-full h-full flex flex-col select-none'
-			onTouchStart={handleTouch}
-		>
+		<div className='w-full h-full flex flex-col select-none'>
 			<FileActionBar />
 
 			<div className='w-full  overflow-y-auto h-full '>
@@ -72,6 +72,7 @@ function FilesList() {
 						key={'..'}
 						typeFile={'upFolder'}
 						onDoubleClick={() => handleExitFolder()}
+						handleTouch={() => handleExitFolder()}
 					/>
 				)}
 
@@ -80,6 +81,7 @@ function FilesList() {
 						file={item}
 						key={item.name}
 						typeFile={'folder'}
+						handleTouch={event => handleTouch(event, item.name)}
 						onDoubleClick={() => handleEnterFolder(item.name)}
 						onClick={event => handleSelected(event, item.name, 'folder')}
 						selected={!!selected.find(itemFind => itemFind.name === item.name)}

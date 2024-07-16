@@ -20,11 +20,15 @@ interface IFileActionsStore {
 	filesBuffer: IFilesBuffer | null
 	path: string
 	filesUpload: FileList | null
+	selectMode: boolean
+	newName: string | null
 	setSelected: (payload: IFilesStore[]) => void
 	setAction: (payload: TypeFilesActions) => void
 	setBuffer: (payload: IFilesBuffer) => void
 	setPath: (payload: string) => void
 	setFilesUpload: (payload: FileList) => void
+	setSelectMode: (payload: boolean) => void
+	setNewName: (payload: string) => void
 }
 
 export const useFileActionsStore = create<IFileActionsStore>()(
@@ -34,6 +38,8 @@ export const useFileActionsStore = create<IFileActionsStore>()(
 		filesBuffer: null,
 		path: '',
 		filesUpload: null,
+		selectMode: false,
+		newName: null,
 		setSelected: payload => set(() => ({ selected: payload })),
 		setAction: payload => set(() => ({ action: payload })),
 		setBuffer: payload =>
@@ -41,6 +47,14 @@ export const useFileActionsStore = create<IFileActionsStore>()(
 				filesBuffer: payload
 			})),
 		setPath: payload => set(() => ({ path: payload })),
-		setFilesUpload: payload => set(() => ({ filesUpload: payload }))
+		setFilesUpload: payload => set(() => ({ filesUpload: payload })),
+		setSelectMode: payload =>
+			set(() => ({
+				selectMode: payload
+			})),
+		setNewName: payload =>
+			set(() => ({
+				newName: payload
+			}))
 	}))
 )

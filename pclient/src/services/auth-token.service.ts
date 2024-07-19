@@ -1,5 +1,3 @@
-import { AxiosError } from 'axios'
-import { url } from 'inspector'
 import Cookies from 'js-cookie'
 
 import { IAuthFrom, IAuthRes } from '@/types/auth.types'

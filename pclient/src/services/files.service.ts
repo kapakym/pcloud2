@@ -5,6 +5,7 @@ import Cookies from 'js-cookie'
 import {
 	IActionFilesReq,
 	IDeleteFilesReq,
+	IDownloadFilesReq,
 	IFolder,
 	IRenameFilesReq,
 	TypeActionFilesRes
@@ -73,6 +74,23 @@ class FilesService {
 		return response
 	}
 
+	async downloadFile(
+		data: IDownloadFilesReq,
+		progressFnDw: (progress: number) => void
+	) {
+		const response = await requestBuilder<IDownloadFilesReq, Blob>({
+			url: 'files/download',
+			method: 'post',
+			progressFnDw,
+			options: {
+				isAuth: true,
+				data,
+				responseType: 'blob'
+			}
+		})
+		return response
+	}
+
 	async uploadFile(data: FormData, progressFnUp: (progress: number) => void) {
 		const response = await requestBuilder<
 			FormData,
@@ -81,6 +99,7 @@ class FilesService {
 			url: 'files/upload',
 			method: 'post',
 			progressFnUp,
+
 			options: {
 				headers: {
 					'Content-Type': 'multipart/form-data'

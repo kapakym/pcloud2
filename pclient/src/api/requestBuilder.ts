@@ -71,6 +71,7 @@ const requestBuilder = async <Req, Res, Params = undefined>({
 		baseURL: 'http://localhost:5555/api/',
 		isAuth: options?.isAuth,
 		method,
+		responseType: options?.responseType,
 		url,
 		withCredentials: true,
 		data: options?.data,

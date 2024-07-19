@@ -33,6 +33,14 @@ export class DeleteFilesDto {
   files: IFile[];
 }
 
+export class DownloadFilesDto {
+  @IsString()
+  path: string;
+
+  @IsString()
+  filename: string;
+}
+
 export class UploadFileDto {
   @IsString()
   filename: string;

@@ -3,6 +3,7 @@ import {
   Controller,
   Post,
   Req,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -12,12 +13,14 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 import {
   ActionFilesDto,
   DeleteFilesDto,
+  DownloadFilesDto,
   RenameFileDto,
   UploadFileDto,
 } from './dto/file.dto';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import 'multer';
+import { Response } from 'express';
 
 @Controller('files')
 export class FilesController {
@@ -56,6 +59,17 @@ export class FilesController {
   async deleteFiles(@Body() dto: DeleteFilesDto, @Req() req: Request) {
     const accessToken = req.headers.authorization;
     return this.filesService.deleteFiles(dto, accessToken);
+  }
+
+  @Auth()
+  @Post('download')
+  async downloadFile(
+    @Body() dto: DownloadFilesDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const accessToken = req.headers.authorization;
+    return this.filesService.downloadFile(dto, accessToken, res);
   }
 
   @Auth()

@@ -16,6 +16,11 @@ export interface IDeleteFilesReq {
 	files: IFile[]
 }
 
+export interface IDownloadFilesReq {
+	path: string
+	filename: string
+}
+
 export interface IActionFilesReq {
 	sourcePath: string
 	destPath: string

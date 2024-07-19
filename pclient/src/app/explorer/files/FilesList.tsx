@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import FileActionBar from '@/components/FileActionBar/FileActionBar'
 import { FileItemRow } from '@/components/ui/FileItems/FileItemRow'
+import { ModalPreview } from '@/components/ui/ModalPreview/ModalPreview'
 
 import { TypeFiles } from '@/types/files.types'
 
@@ -97,6 +98,7 @@ function FilesList() {
 					/>
 				))}
 			</div>
+			<ModalPreview />
 		</div>
 	)
 }

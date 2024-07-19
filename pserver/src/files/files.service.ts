@@ -1,17 +1,22 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 import * as fs from 'fs';
 import 'multer';
 import * as path from 'path';
 import {
   ActionFilesDto,
   DeleteFilesDto,
+  DownloadFilesDto,
   RenameFileDto,
   UploadFileDto,
 } from './dto/file.dto';
 import { IResponseFileActions } from './types/files.types';
-// import { response } from 'express';
 
 @Injectable()
 export class FilesService {
@@ -230,6 +235,29 @@ export class FilesService {
 
     await fs.promises.writeFile(toPath, file.buffer);
     return { uuid: body.uuid, status: 'success' };
+  }
+
+  async downloadFile(
+    data: DownloadFilesDto,
+    accessToken: string,
+    res: Response,
+  ) {
+    const { path: currentPath, filename } = data;
+    const cloudFolder = this.configService.get('CLOUD_PATH');
+
+    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
+    if (!resultToken) throw new UnauthorizedException('Error');
+
+    const downloadPath = path?.join(
+      cloudFolder,
+      resultToken.id,
+      currentPath,
+      filename,
+    );
+    if (fs.existsSync(downloadPath)) {
+      return res.download(downloadPath, filename);
+    }
+    throw new BadRequestException('file not found');
   }
 
   // async isValidHomeDir(fullPath: string) {

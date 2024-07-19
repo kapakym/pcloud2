@@ -1,4 +1,8 @@
-import { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
+import {
+	AxiosRequestConfig,
+	InternalAxiosRequestConfig,
+	ResponseType
+} from 'axios'
 
 export type AxiosRequestHeaders = {
 	[x: string]: string | number | boolean
@@ -14,6 +18,7 @@ export interface PropsRequestBuilder<Req, Params> {
 		id?: string
 		isAuth?: boolean
 		params?: Params
+		responseType?: ResponseType | undefined
 	}
 	progressFnUp?: (process: number) => void
 	progressFnDw?: (process: number) => void

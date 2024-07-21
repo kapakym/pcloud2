@@ -2,14 +2,15 @@ import {
   Body,
   Controller,
   Post,
-  Req,
   Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
+import 'multer';
 import { Auth } from 'src/auth/decorators/auth.decorator';
+import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import {
   ActionFilesDto,
   DeleteFilesDto,
@@ -18,9 +19,6 @@ import {
   UploadFileDto,
 } from './dto/file.dto';
 import { FilesService } from './files.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import 'multer';
-import { Response } from 'express';
 
 @Controller('files')
 export class FilesController {
@@ -28,48 +26,45 @@ export class FilesController {
 
   @Auth()
   @Post()
-  async getFiles(@Body() dto: { path: string }, @Req() req: Request) {
-    const accessToken = req.headers.authorization;
-    return this.filesService.getFiles(dto.path, accessToken);
+  async getFiles(@Body() dto: { path: string }, @CurrentUser('id') id: string) {
+    return this.filesService.getFiles(dto.path, id);
   }
 
   @Auth()
   @Post('copy')
-  async copyFiles(@Body() dto: ActionFilesDto, @Req() req: Request) {
-    const accessToken = req.headers.authorization;
-    return this.filesService.copyFiles(dto, accessToken);
+  async copyFiles(@Body() dto: ActionFilesDto, @CurrentUser('id') id: string) {
+    return this.filesService.copyFiles(dto, id);
   }
 
   @Auth()
   @Post('move')
-  async moveFiles(@Body() dto: ActionFilesDto, @Req() req: Request) {
-    const accessToken = req.headers.authorization;
-    return this.filesService.moveFiles(dto, accessToken);
+  async moveFiles(@Body() dto: ActionFilesDto, @CurrentUser('id') id: string) {
+    return this.filesService.moveFiles(dto, id);
   }
 
   @Auth()
   @Post('rename')
-  async renameFiles(@Body() dto: RenameFileDto, @Req() req: Request) {
-    const accessToken = req.headers.authorization;
-    return this.filesService.renameFile(dto, accessToken);
+  async renameFiles(@Body() dto: RenameFileDto, @CurrentUser('id') id: string) {
+    return this.filesService.renameFile(dto, id);
   }
 
   @Auth()
   @Post('delete')
-  async deleteFiles(@Body() dto: DeleteFilesDto, @Req() req: Request) {
-    const accessToken = req.headers.authorization;
-    return this.filesService.deleteFiles(dto, accessToken);
+  async deleteFiles(
+    @Body() dto: DeleteFilesDto,
+    @CurrentUser('id') id: string,
+  ) {
+    return this.filesService.deleteFiles(dto, id);
   }
 
   @Auth()
   @Post('download')
   async downloadFile(
     @Body() dto: DownloadFilesDto,
-    @Req() req: Request,
+    @CurrentUser('id') id: string,
     @Res() res: Response,
   ) {
-    const accessToken = req.headers.authorization;
-    return this.filesService.downloadFile(dto, accessToken, res);
+    return this.filesService.downloadFile(dto, id, res);
   }
 
   @Auth()
@@ -78,9 +73,8 @@ export class FilesController {
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: UploadFileDto,
-    @Req() req: Request,
+    @CurrentUser('id') id: string,
   ) {
-    const accessToken = req.headers.authorization;
-    return this.filesService.uploadFile(file, body, accessToken);
+    return this.filesService.uploadFile(file, body, id);
   }
 }

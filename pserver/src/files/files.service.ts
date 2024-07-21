@@ -25,17 +25,16 @@ export class FilesService {
     private jwt: JwtService,
   ) {}
 
-  async getFiles(currentPath: string, accessToken: string) {
+  async getFiles(currentPath: string, id: string) {
     const cloudFolder = this.configService.get('CLOUD_PATH');
 
-    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
-    if (!resultToken) throw new UnauthorizedException('Error');
+    if (!id) throw new UnauthorizedException('Error');
 
-    const basePath = path?.join(cloudFolder, resultToken.id);
+    const basePath = path?.join(cloudFolder, id);
 
     let fullPath = basePath;
     if (currentPath) {
-      fullPath = path?.join(cloudFolder, resultToken.id, currentPath);
+      fullPath = path?.join(cloudFolder, id, currentPath);
     }
 
     // await this.isValidHomeDir(fullPath);
@@ -54,26 +53,15 @@ export class FilesService {
     return { files, folders };
   }
 
-  async copyFiles(data: ActionFilesDto, accessToken: string) {
+  async copyFiles(data: ActionFilesDto, id: string) {
     const { destPath, sourcePath, files } = data;
     const cloudFolder = this.configService.get('CLOUD_PATH');
 
-    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
-    if (!resultToken) throw new UnauthorizedException('Error');
+    if (!id) throw new UnauthorizedException('Error');
     const response = [];
     files.forEach((item) => {
-      const fromPath = path?.join(
-        cloudFolder,
-        resultToken.id,
-        sourcePath,
-        item.name,
-      );
-      const toPath = path?.join(
-        cloudFolder,
-        resultToken.id,
-        destPath,
-        item.name,
-      );
+      const fromPath = path?.join(cloudFolder, id, sourcePath, item.name);
+      const toPath = path?.join(cloudFolder, id, destPath, item.name);
       try {
         if (!fs.existsSync(toPath)) {
           fs.cpSync(fromPath, toPath, { recursive: true });
@@ -97,26 +85,15 @@ export class FilesService {
     return response;
   }
 
-  async moveFiles(data: ActionFilesDto, accessToken: string) {
+  async moveFiles(data: ActionFilesDto, id: string) {
     const { destPath, sourcePath, files } = data;
     const cloudFolder = this.configService.get('CLOUD_PATH');
 
-    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
-    if (!resultToken) throw new UnauthorizedException('Error');
+    if (!id) throw new UnauthorizedException('Error');
     const response = [];
     files.forEach((item) => {
-      const fromPath = path?.join(
-        cloudFolder,
-        resultToken.id,
-        sourcePath,
-        item.name,
-      );
-      const toPath = path?.join(
-        cloudFolder,
-        resultToken.id,
-        destPath,
-        item.name,
-      );
+      const fromPath = path?.join(cloudFolder, id, sourcePath, item.name);
+      const toPath = path?.join(cloudFolder, id, destPath, item.name);
 
       try {
         if (!fs.existsSync(toPath)) {
@@ -141,20 +118,14 @@ export class FilesService {
     return response;
   }
 
-  async renameFile(data: RenameFileDto, accessToken: string) {
+  async renameFile(data: RenameFileDto, id: string) {
     const { newName, sourcePath, file } = data;
     const cloudFolder = this.configService.get('CLOUD_PATH');
 
-    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
-    if (!resultToken) throw new UnauthorizedException('Error');
+    if (!id) throw new UnauthorizedException('Error');
     const response = [];
-    const fromPath = path?.join(
-      cloudFolder,
-      resultToken.id,
-      sourcePath,
-      file.name,
-    );
-    const toPath = path?.join(cloudFolder, resultToken.id, sourcePath, newName);
+    const fromPath = path?.join(cloudFolder, id, sourcePath, file.name);
+    const toPath = path?.join(cloudFolder, id, sourcePath, newName);
 
     try {
       if (!fs.existsSync(toPath)) {
@@ -178,20 +149,14 @@ export class FilesService {
     return response;
   }
 
-  async deleteFiles(data: DeleteFilesDto, accessToken: string) {
+  async deleteFiles(data: DeleteFilesDto, id: string) {
     const { path: currentPath, files } = data;
     const cloudFolder = this.configService.get('CLOUD_PATH');
 
-    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
-    if (!resultToken) throw new UnauthorizedException('Error');
+    if (!id) throw new UnauthorizedException('Error');
     const response: IResponseFileActions[] = [];
     files.forEach((item) => {
-      const fullPath = path?.join(
-        cloudFolder,
-        resultToken.id,
-        currentPath,
-        item.name,
-      );
+      const fullPath = path?.join(cloudFolder, id, currentPath, item.name);
 
       try {
         if (item.type === 'file') {
@@ -213,18 +178,13 @@ export class FilesService {
     return response;
   }
 
-  async uploadFile(
-    file: Express.Multer.File,
-    body: UploadFileDto,
-    accessToken: string,
-  ) {
+  async uploadFile(file: Express.Multer.File, body: UploadFileDto, id: string) {
     const cloudFolder = this.configService.get('CLOUD_PATH');
 
-    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
-    if (!resultToken) throw new UnauthorizedException('Error');
+    if (!id) throw new UnauthorizedException('Error');
     const toPath = path?.join(
       cloudFolder,
-      resultToken.id,
+      id,
       body.path,
       decodeURI(body.filename),
     );
@@ -237,23 +197,13 @@ export class FilesService {
     return { uuid: body.uuid, status: 'success' };
   }
 
-  async downloadFile(
-    data: DownloadFilesDto,
-    accessToken: string,
-    res: Response,
-  ) {
+  async downloadFile(data: DownloadFilesDto, id: string, res: Response) {
     const { path: currentPath, filename } = data;
     const cloudFolder = this.configService.get('CLOUD_PATH');
 
-    const resultToken = await this.jwt.verifyAsync(accessToken.split(' ')[1]);
-    if (!resultToken) throw new UnauthorizedException('Error');
+    if (!id) throw new UnauthorizedException('Error');
 
-    const downloadPath = path?.join(
-      cloudFolder,
-      resultToken.id,
-      currentPath,
-      filename,
-    );
+    const downloadPath = path?.join(cloudFolder, id, currentPath, filename);
     if (fs.existsSync(downloadPath)) {
       return res.download(downloadPath, filename);
     }

@@ -65,7 +65,6 @@ function FilesList() {
 	return (
 		<div className='w-full h-full flex flex-col select-none'>
 			<FileActionBar />
-
 			<div className='w-full  overflow-y-auto h-full '>
 				{path && (
 					<FileItemRow

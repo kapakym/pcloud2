@@ -27,8 +27,11 @@ model User {
 }
 
 model Photos {
-  id   String @id @default(cuid())
-  path String @unique
+  id         String    @id @default(cuid())
+  path       String    @unique
+  dateCreate DateTime? @map("date_create")
+  longitude  String?
+  latitude   String?
 
   user   User?   @relation(fields: [userId], references: [id])
   userId String? @map("user_id")

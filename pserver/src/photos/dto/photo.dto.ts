@@ -15,3 +15,13 @@ export class GetPhotoListDto {
   @IsNumber()
   offset: number;
 }
+
+export class GetPhotoByIdtDto {
+  @IsString()
+  id: string;
+}
+
+export class DetectFaceDto {
+  @IsString()
+  id: string;
+}

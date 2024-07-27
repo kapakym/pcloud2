@@ -31,6 +31,31 @@ class PhotosService {
 		return response
 	}
 
+	async detectFaces(data: { id: string }) {
+		const response = await requestBuilder<{ id: string }, IGetPhotosRes>({
+			url: 'photos/detect',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
+
+	async getPhotosById(data: { id: string }) {
+		const response = await requestBuilder<{ id: string }, Blob>({
+			url: 'photos/getById',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data,
+				responseType: 'blob'
+			}
+		})
+		return response
+	}
+
 	async scanPhotos(data: IScanPhotosReq) {
 		const response = await requestBuilder<IScanPhotosReq, string>({
 			url: 'photos/scan',

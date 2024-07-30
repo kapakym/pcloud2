@@ -20,6 +20,7 @@ import {
   GetPhotoListDto,
   ScanPhotoDto,
 } from './dto/photo.dto';
+import axios from 'axios';
 
 @Injectable()
 export class PhotosService {
@@ -30,7 +31,6 @@ export class PhotosService {
     private jwt: JwtService,
     private prisma: PrismaService,
     private tasksGateway: TasksGateway,
-    private pyclient: WebsocketPyclientService,
   ) {}
 
   async findLimit(dto: GetPhotoListDto, id: string) {
@@ -120,15 +120,58 @@ export class PhotosService {
   }
 
   async detectFaces(dto: DetectFaceDto, id: string) {
-    const cloudFolder = this.configService.get('CLOUD_PATH');
-
+    const tempFolder = this.configService.get('TEMP_PATH');
     if (!id) throw new UnauthorizedException('Error');
 
-    const photo = await this.prisma.photos.findUnique({
-      where: { id: dto.id, userId: id },
+    // const photo = await this.prisma.photos.findUnique({
+    //   where: { id: dto.id, userId: id },
+    // });
+
+    const photos = await this.prisma.photos.findMany({
+      include: {
+        faces: true,
+      },
     });
-    if (photo) {
-      this.pyclient.socket.emit('message', { path: photo.path });
+    if (photos.length) {
+      const url = `http://localhost:6000/find_faces`;
+
+      for (const photo of photos) {
+        if (!photo.faces.length) {
+          const result: any = await axios.post(url, {
+            path: photo.path,
+            dest_path: tempFolder,
+          });
+          console.log(result.data);
+          for (const element of result.data.faces) {
+            await this.prisma.faces.create({
+              data: {
+                path: element.filename,
+                photosId: photo.id,
+                left: element.position.left,
+                right: element.position.right,
+                top: element.position.top,
+                bottom: element.position.bottom,
+              },
+            });
+          }
+        }
+      }
+
+      // await this.pyclient.socket.emit('message', {
+      //   cmd: 'scan_faces',
+      //   files: photos,
+      //   dest_path: tempFolder,
+      // });
+      // for (const photo of photos) {
+      //   if (photo) {
+      //     await this.pyclient.socket.emit('message', {
+      //       cmd: 'scan_faces',
+      //       path: photo.path,
+      //       uuid: photo.id,
+      //       dest_path: tempFolder,
+      //     });
+      //   }
+      // }
     }
   }
 

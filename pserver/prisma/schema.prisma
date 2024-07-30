@@ -35,8 +35,35 @@ model Photos {
 
   user   User?   @relation(fields: [userId], references: [id])
   userId String? @map("user_id")
+  faces  Faces[]
 
   @@map("photos")
+}
+
+model Faces {
+  id     String @id @default(cuid())
+  path   String @unique
+  left   Int?
+  right  Int?
+  top    Int?
+  bottom Int?
+
+  photo      Photos?   @relation(fields: [photosId], references: [id])
+  photosId   String?   @map("photo_id")
+  Clusters   Clusters? @relation(fields: [clustersId], references: [id])
+  clustersId String?
+
+  @@map("faces")
+}
+
+model Clusters {
+  id String @id @default(cuid())
+
+  faces Faces[]
+
+  name String
+
+  @@map("clusters")
 }
 
 enum Roles {

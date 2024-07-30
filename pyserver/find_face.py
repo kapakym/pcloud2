@@ -1,20 +1,11 @@
-import json
 import face_recognition
 import cv2
 from datetime import datetime
-import socket_server
 import uuid
-import asyncio
-import time
-from deepface import DeepFace
 
-async def findFaces(image_path, dest_path, image_uuid, sid):
+async def findFaces(image_path, dest_path):
     print(image_path)
-    if image_path:
-        await socket_server.sio.emit('message',json.dumps({'message:':f'{image_path}', 'status':'process', 'time':f'{datetime.now()}'}))
-    else:
-        await socket_server.sio.emit('message', json.dumps({'message:':'file not found', 'status':'error', 'time':f'{datetime.now()}'}))
-        return
+
 
     image = cv2.imread(image_path)
 
@@ -40,7 +31,6 @@ async def findFaces(image_path, dest_path, image_uuid, sid):
         face_filename = f"{uuid.uuid4()}.jpg"
         face_files.append({'filename':face_filename, 'position':{'top':top, 'right':right, 'bottom':bottom, 'left':left}})
         cv2.imwrite(face_path+face_filename, face_image)
-        #print(f"Сохранено лицо {i+1} в файл {face_filename}")
 
-    await socket_server.sio.emit('message', json.dumps({'message:':'task completed', 'status':'completed', 'type':'find_faces', 'time':f'{datetime.now()}', 'faces': face_files, 'uuid':image_uuid}))
+    return {'message:':'task completed', 'status':'completed', 'type':'find_faces', 'time':f'{datetime.now()}', 'faces': face_files}
 

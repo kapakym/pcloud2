@@ -2,6 +2,7 @@ import aiohttp
 import socketio
 import json
 import find_faces
+import cluster_creator
 
 # Создание экземпляра Socket.IO сервера
 sio = socketio.AsyncServer(cors_allowed_origins='*')
@@ -23,9 +24,13 @@ def server_init():
     @sio.event
     async def message(sid, data):
         print(f'Received message from {sid}: {data}')
-        await sio.send(sid, 'test')
-        if data['path']:
-            await find_faces.findFaces(image_path=data['path'])
+        # if data['files'] and data['cmd']=='scan_faces':
+        if data['path'] and data['cmd']=='scan_faces':
+            await find_faces.findFaces(image_path=data['path'], dest_path=data['dest_path'], image_uuid=data['uuid'], sid=sid)
+            # for photo in data['files']:
+            #     await find_faces.findFaces(image_path=photo['path'], dest_path=data['dest_path'], image_uuid=photo['id'], sid=sid)
+        # if data['cmd'] == 'create_clusters':   
+        #     await cluster_creator.create_clusters(images_path=data['path']) 
 
 
     # Обработчик события отключения клиента

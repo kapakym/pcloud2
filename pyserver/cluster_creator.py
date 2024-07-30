@@ -7,7 +7,8 @@ from datetime import datetime
 
 async def create_clusters(images_path):
     # Путь к папке с изображениями
-    
+    images_path = f"{images_path}/temp_faces/"
+    print(images_path)
     # Инициализация пустых списков для кодировок лиц и имен файлов
     face_encodings = []
     file_names = []
@@ -15,7 +16,10 @@ async def create_clusters(images_path):
     # Перебор всех изображений в папке
     for file_name in os.listdir(images_path):
         image_path = os.path.join(images_path, file_name)
-        image = face_recognition.load_image_file(image_path)
+        try:
+            image = face_recognition.load_image_file(image_path)
+        except:
+            print("error")
         encodings = face_recognition.face_encodings(image)
     
         if encodings:

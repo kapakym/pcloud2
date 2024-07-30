@@ -7,14 +7,13 @@ app = Quart(__name__)
 async def find_faces():
     requestClient = await request.json
     path = requestClient['path']
+    print(path)
     dest_path = requestClient['dest_path']
-    # print(requestClient, path, dest_path)
-    result = await find_face.findFaces(dest_path=dest_path, image_path=path)
-    print(result)
+    result = await find_face.findFaces(dest_path=dest_path, images_path=path)
     return jsonify(result), 200
 
 @app.route('/update_clusters', methods=['POST'])
-async def find_faces():
+async def update_clusters():
     requestClient = await request.json
     path = requestClient['path']
     result = await cluster_creator.create_clusters(images_path=path)

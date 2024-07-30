@@ -21,4 +21,9 @@ export interface IGetPhotosRes extends IGetPhotosReq {
 	total: number
 }
 
-export type TypePhotosActions = 'scanAll' | null
+export type TypePhotosActions =
+	| 'scanAll'
+	| 'scanFaces'
+	| 'updateClusters'
+	| 'preview'
+	| null

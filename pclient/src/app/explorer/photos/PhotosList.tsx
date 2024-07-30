@@ -10,6 +10,7 @@ import { useInView } from 'react-intersection-observer'
 import PhotoActionBar from '@/components/Photos/PhotoActionBar/PhotoActionBar'
 import { PhotoItem } from '@/components/Photos/PhotoItem/PhotoItem'
 import Button from '@/components/ui/Button/Button'
+import { ModalPreview } from '@/components/ui/ModalPreview/ModalPreview'
 
 import { IScanPhotosReq } from '@/types/photos.types'
 
@@ -73,6 +74,7 @@ export default function PhotosList() {
 				></div>
 				<div className='h-[10px]'></div>
 			</div>
+			<ModalPreview />
 		</div>
 	)
 }

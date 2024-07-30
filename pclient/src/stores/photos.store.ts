@@ -22,6 +22,7 @@ interface IFileActionsStore {
 	total: number
 	photoList: IPhoto[]
 	selectMode: boolean
+	previewPhoto: string | null
 
 	setLimit: (payload: number) => void
 	setOffset: (payload: number) => void
@@ -29,6 +30,7 @@ interface IFileActionsStore {
 	setPhotoList: (payload: IPhoto[]) => void
 	setAction: (payload: TypePhotosActions) => void
 	setSelectMode: (payload: boolean) => void
+	setPreviewPhoto: (payload: string) => void
 }
 
 export const usePhotosStore = create<IFileActionsStore>()(
@@ -39,12 +41,14 @@ export const usePhotosStore = create<IFileActionsStore>()(
 		total: 0,
 		photoList: [],
 		selectMode: false,
+		previewPhoto: null,
 
 		setLimit: payload => set(() => ({ limit: payload })),
 		setTotal: payload => set(() => ({ total: payload })),
 		setOffset: payload => set(() => ({ offset: payload })),
 		setPhotoList: payload => set(() => ({ photoList: payload })),
 		setAction: payload => set(() => ({ action: payload })),
-		setSelectMode: payload => set(() => ({ selectMode: payload }))
+		setSelectMode: payload => set(() => ({ selectMode: payload })),
+		setPreviewPhoto: payload => set(() => ({ previewPhoto: payload }))
 	}))
 )

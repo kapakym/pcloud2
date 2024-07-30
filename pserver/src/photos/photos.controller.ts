@@ -3,10 +3,10 @@ import { Response } from 'express';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import {
-  DetectFaceDto,
   GetPhotoByIdtDto,
   GetPhotoListDto,
   ScanPhotoDto,
+  TaskIdDto,
 } from './dto/photo.dto';
 import { PhotosService } from './photos.service';
 
@@ -37,8 +37,14 @@ export class PhotosController {
   }
 
   @Auth()
-  @Post('detect')
-  detectFaces(@Body() dto: DetectFaceDto, @CurrentUser('id') id: string) {
-    return this.photosService.detectFaces(dto, id);
+  @Post('scan_faces')
+  detectFaces(@Body() dto: TaskIdDto, @CurrentUser('id') id: string) {
+    return this.photosService.scanFaces(dto, id);
+  }
+
+  @Auth()
+  @Post('update_clusters')
+  updateClusters(@Body() dto: TaskIdDto, @CurrentUser('id') id: string) {
+    return this.photosService.updateClusters(dto, id);
   }
 }

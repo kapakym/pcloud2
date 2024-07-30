@@ -8,10 +8,11 @@ import { PhotosController } from './photos.controller';
 import { PhotosService } from './photos.service';
 import { TasksModule } from 'src/tasks/tasks.module';
 import { TasksGateway } from 'src/tasks/tasks.gateway';
-import { WebsocketPyclientService } from 'src/websocket-pyclient/websocket-pyclient.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     TasksModule,
     ConfigModule,
     JwtModule.registerAsync({
@@ -21,12 +22,6 @@ import { WebsocketPyclientService } from 'src/websocket-pyclient/websocket-pycli
     }),
   ],
   controllers: [PhotosController],
-  providers: [
-    PhotosService,
-    PrismaService,
-    TasksService,
-    TasksGateway,
-    WebsocketPyclientService,
-  ],
+  providers: [PhotosService, PrismaService, TasksService, TasksGateway],
 })
 export class PhotosModule {}

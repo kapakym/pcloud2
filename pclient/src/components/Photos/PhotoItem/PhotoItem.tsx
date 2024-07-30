@@ -1,6 +1,7 @@
 'use client'
 
 import { photosService } from '@/services/photos.service'
+import { usePreviewStore } from '@/stores/preivew.store'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { memo, useEffect, useState } from 'react'
 
@@ -8,14 +9,11 @@ import { IPhoto } from '@/types/photos.types'
 
 // eslint-disable-next-line react/display-name
 export const PhotoItem = memo(({ photo }: { photo: IPhoto }) => {
+	const { setPreviewFile, setOpen, setTitle } = usePreviewStore(state => state)
+
 	const { data, isLoading } = useQuery({
 		queryKey: ['getPhotoById', photo.id],
 		queryFn: () => photosService.getPhotosById({ id: photo?.id })
-	})
-
-	const { mutate: mutateDetectFace } = useMutation({
-		mutationKey: ['mutateDetectFace'],
-		mutationFn: (data: { id: string }) => photosService.detectFaces(data)
 	})
 
 	const [photoUrl, setPhotoUrl] = useState('')
@@ -27,14 +25,17 @@ export const PhotoItem = memo(({ photo }: { photo: IPhoto }) => {
 		}
 	}, [data])
 
-	const handleDetect = (id: string) => {
-		mutateDetectFace({ id })
+	const handlePreview = (url: string) => {
+		setPreviewFile({ src: url, type: 'image/jpeg' })
+		setTitle(`Preview file ${photo.path}`)
+		setOpen(true)
 	}
+
 	return (
 		<div className=' border-[1px] border-solid border-slate-400 rounded-xl flex justify-center items-center overflow-hidden object-cover  relative aspect-square'>
 			{photoUrl && (
 				<img
-					onClick={() => handleDetect(photo.id)}
+					onClick={() => handlePreview(photoUrl)}
 					className='w-full h-full object-cover hover:scale-110 scale-100 duration-300 transition-all cursor-pointer'
 					src={photoUrl}
 					alt=''

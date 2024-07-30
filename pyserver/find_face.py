@@ -4,8 +4,6 @@ from datetime import datetime
 import uuid
 
 async def findFaces(image_path, dest_path):
-    print(image_path)
-
 
     image = cv2.imread(image_path)
 
@@ -14,9 +12,6 @@ async def findFaces(image_path, dest_path):
 
     
     face_locations = face_recognition.face_locations(rgb_image)
-    # face_locations2 = DeepFace.detectFace(image, detector_backend='opencv', enforce_detection=False)
-    # face_locations = await asyncio.to_thread(face_recognition.face_locations, rgb_image)
-    print(face_locations)
 
     # Проход по всем найденным лицам
     face_files = []

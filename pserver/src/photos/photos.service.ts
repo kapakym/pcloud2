@@ -6,6 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { WebSocketServer } from '@nestjs/websockets';
+import axios, { AxiosResponse } from 'axios';
 import * as ExifReader from 'exifreader';
 import { Response } from 'express';
 import * as fs from 'fs';
@@ -13,25 +14,28 @@ import * as path from 'path';
 import { PrismaService } from 'src/prisma.service';
 import { TasksGateway } from 'src/tasks/tasks.gateway';
 import { filterImages, getFilesNonRecursively } from 'src/utils/files.utils';
-import { WebsocketPyclientService } from 'src/websocket-pyclient/websocket-pyclient.service';
 import {
-  DetectFaceDto,
+  TaskIdDto,
   GetPhotoByIdtDto,
   GetPhotoListDto,
   ScanPhotoDto,
 } from './dto/photo.dto';
-import axios from 'axios';
 
 @Injectable()
 export class PhotosService {
   @WebSocketServer() server;
+  tempFolder;
+  serverPythonUrl;
 
   constructor(
     private configService: ConfigService,
     private jwt: JwtService,
     private prisma: PrismaService,
     private tasksGateway: TasksGateway,
-  ) {}
+  ) {
+    this.tempFolder = this.configService.get('TEMP_PATH');
+    this.serverPythonUrl = this.configService.get('SERVER_PYTHON');
+  }
 
   async findLimit(dto: GetPhotoListDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
@@ -119,13 +123,8 @@ export class PhotosService {
     return dto.uuidTask;
   }
 
-  async detectFaces(dto: DetectFaceDto, id: string) {
-    const tempFolder = this.configService.get('TEMP_PATH');
+  async scanFaces(dto: TaskIdDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
-
-    // const photo = await this.prisma.photos.findUnique({
-    //   where: { id: dto.id, userId: id },
-    // });
 
     const photos = await this.prisma.photos.findMany({
       include: {
@@ -133,13 +132,14 @@ export class PhotosService {
       },
     });
     if (photos.length) {
-      const url = `http://localhost:6000/find_faces`;
+      console.log(this.serverPythonUrl);
+      const url = `${this.serverPythonUrl}/find_faces`;
 
       for (const photo of photos) {
         if (!photo.faces.length) {
           const result: any = await axios.post(url, {
             path: photo.path,
-            dest_path: tempFolder,
+            dest_path: this.tempFolder,
           });
           console.log(result.data);
           for (const element of result.data.faces) {
@@ -156,23 +156,21 @@ export class PhotosService {
           }
         }
       }
-
-      // await this.pyclient.socket.emit('message', {
-      //   cmd: 'scan_faces',
-      //   files: photos,
-      //   dest_path: tempFolder,
-      // });
-      // for (const photo of photos) {
-      //   if (photo) {
-      //     await this.pyclient.socket.emit('message', {
-      //       cmd: 'scan_faces',
-      //       path: photo.path,
-      //       uuid: photo.id,
-      //       dest_path: tempFolder,
-      //     });
-      //   }
-      // }
     }
+  }
+
+  async updateClusters(dto: TaskIdDto, id: string) {
+    if (!id) throw new UnauthorizedException('Error');
+
+    const url = `${this.serverPythonUrl}/update_clusters`;
+    console.log(url);
+    type ClusterType = Record<string, string>;
+    const result: AxiosResponse = await axios.post<{
+      clusters: ClusterType;
+    }>(url, {
+      path: this.tempFolder,
+    });
+    console.log(result.data);
   }
 
   async findById(dto: GetPhotoByIdtDto, id: string, res: Response) {

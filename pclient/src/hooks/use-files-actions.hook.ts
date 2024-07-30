@@ -1,4 +1,5 @@
 import { filesService } from '@/services/files.service'
+import { photosService } from '@/services/photos.service'
 import { IFilesStore, useFileActionsStore } from '@/stores/file-actions.store'
 import { useLogsStore } from '@/stores/logs.store'
 import { usePreviewStore } from '@/stores/preivew.store'

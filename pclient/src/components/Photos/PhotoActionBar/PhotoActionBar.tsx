@@ -16,8 +16,10 @@ import {
 	Eye,
 	FileScan,
 	Move,
+	ScanFace,
 	Trash,
-	UploadCloud
+	UploadCloud,
+	UserSearch
 } from 'lucide-react'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -91,62 +93,24 @@ export default function PhotoActionBar() {
 			</div>
 
 			<div className='flex space-x-2'>
-				<>
-					<Eye
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSetAction(null)}
-					/>
-					<Edit
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleRename()}
-					/>
-				</>
 				<VSeparator />
-				<label htmlFor={'upload-photo'}>
-					<UploadCloud
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSetAction(null)}
-					/>
-				</label>
-				<input
-					multiple
-					type='file'
-					onChange={e => handleUploadFiles(e)}
-					id='upload-photo'
-					className='hidden'
-				/>
-
-				<ClipboardPaste
-					size={28}
-					className='text-slate-400 hover:text-slate-200 cursor-pointer'
-					onClick={() => handleSetAction(null)}
-				/>
-
 				<>
-					<DownloadCloud
+					<UserSearch
 						size={28}
 						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSetAction(null)}
+						onClick={() => handleSetAction('updateClusters')}
 					/>
-					<VSeparator />
-					<ClipboardCopy
+
+					<ScanFace
 						size={28}
 						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSetAction(null)}
+						onClick={() => handleSetAction('scanFaces')}
 					/>
 
 					<FileScan
 						size={28}
 						className='text-slate-400 hover:text-slate-200 cursor-pointer'
 						onClick={() => handleSetAction('scanAll')}
-					/>
-					<Trash
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => setOpen(true)}
 					/>
 				</>
 			</div>

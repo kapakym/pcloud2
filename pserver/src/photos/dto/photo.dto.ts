@@ -21,7 +21,7 @@ export class GetPhotoByIdtDto {
   id: string;
 }
 
-export class DetectFaceDto {
+export class TaskIdDto {
   @IsString()
   id: string;
 }

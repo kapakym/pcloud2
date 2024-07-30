@@ -27,13 +27,7 @@ function ExplorerLayout({ children }: PropsWithChildren<unknown>) {
 	return (
 		<div className=' min-h-screen  flex flex-col h-screen max-h-screen overflow-hidden'>
 			<Header />
-			<Button
-				onClick={() => {
-					socket.emit('updateTask', 'hello')
-				}}
-			>
-				TEST
-			</Button>
+
 			<div className='flex h-full  overflow-hidden'>
 				<div className='hidden lg:flex w-1/4 bg-gray-800 border-[1px] border-solid border-slate-600 rounded-lb-xl'>
 					<NavigationMenu />

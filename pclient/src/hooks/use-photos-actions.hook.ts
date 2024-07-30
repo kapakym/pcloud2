@@ -19,7 +19,8 @@ import {
 import { IScanPhotosReq } from '@/types/photos.types'
 
 export const usePhotosActions = () => {
-	const { action, setAction } = usePhotosStore(state => state)
+	const { action, setAction, previewPhoto } = usePhotosStore(state => state)
+	const { setPreviewFile, setOpen, setTitle } = usePreviewStore(state => state)
 
 	const { addTask, setCompletedTask, setPercent } = useLogsStore(state => state)
 
@@ -33,12 +34,44 @@ export const usePhotosActions = () => {
 		}
 	})
 
+	const { mutate: mutateScanFace } = useMutation({
+		mutationKey: ['mutateScanFace'],
+		mutationFn: (data: { id: string }) => photosService.scanFaces(data),
+		onMutate: () => {
+			const uuid = addTask({ completed: false, title: 'scan faces' })
+			return { uuid }
+		}
+	})
+
+	const { mutate: mutateUpdateClusters } = useMutation({
+		mutationKey: ['mutateUpdateClusters'],
+		mutationFn: (data: { id: string }) => photosService.updateClusters(data),
+		onMutate: () => {
+			const uuid = addTask({ completed: false, title: 'update clusters' })
+			return { uuid }
+		}
+	})
+
+	const handlePreviewFile = () => {
+		if (previewPhoto) {
+			// setPreviewFile({ src: url, type: data.data.type })
+			// setTitle(`Preview file ${context.filename}`)
+			setOpen(true)
+		}
+	}
+
 	useEffect(() => {
 		setAction(null)
 		if (action) {
 			switch (action) {
 				case 'scanAll':
 					mutateScanPhotos({ uuidTask: '1' })
+					break
+				case 'scanFaces':
+					mutateScanFace({ id: 'sdsddsfsdf' })
+					break
+				case 'updateClusters':
+					mutateUpdateClusters({ id: 'sdsddsfsdf' })
 					break
 			}
 		}

@@ -19,6 +19,7 @@ import {
   GetPhotoByIdtDto,
   GetPhotoListDto,
   ScanPhotoDto,
+  GetPeoplesListDto,
 } from './dto/photo.dto';
 
 @Injectable()
@@ -37,16 +38,79 @@ export class PhotosService {
     this.serverPythonUrl = this.configService.get('SERVER_PYTHON');
   }
 
+  async getPeoples(dto: GetPeoplesListDto) {
+    const peoples = await this.prisma.clusters.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+      include: {
+        faces: true,
+      },
+    });
+
+    const response = [];
+    for (const people of peoples) {
+      if (people.id !== '-1') {
+        const photos = await this.prisma.photos.findMany({
+          where: {
+            faces: {
+              some: {
+                clusterId: people.id,
+              },
+            },
+          },
+        });
+        const item = {
+          id: people.id,
+          name: people.name,
+          face: people.faces[0].path,
+          faceId: people.faces[0].id,
+          photos: photos,
+        };
+        response.push(item);
+      } else {
+        for (const face of people.faces) {
+          const photo = await this.prisma.photos.findUnique({
+            where: { id: face.photosId },
+          });
+          const item = {
+            id: people.id,
+            name: people.name,
+            face: face.path,
+            faceId: face.id,
+            photos: [photo],
+          };
+          response.push(item);
+        }
+      }
+    }
+    return response;
+  }
+
   async findLimit(dto: GetPhotoListDto, id: string) {
+    const { sortBy, sortWay } = dto;
     if (!id) throw new UnauthorizedException('Error');
+
+    const orderBy = sortBy
+      ? {
+          [sortBy]: sortWay,
+        }
+      : undefined;
 
     const imageFiles = await this.prisma.photos.findMany({
       skip: dto.offset,
       take: dto.limit,
+      orderBy: {
+        ...orderBy,
+      },
       where: {
         userId: id,
       },
+      include: {
+        faces: true,
+      },
     });
+
     const total = await this.prisma.photos.count({
       where: {
         userId: id,
@@ -86,7 +150,6 @@ export class PhotosService {
 
     for (const item of imageFiles) {
       const tags = await ExifReader.load(item);
-      // console.log(tags);
 
       const existImage = await this.prisma.photos.findUnique({
         where: {
@@ -132,7 +195,6 @@ export class PhotosService {
       },
     });
     if (photos.length) {
-      console.log(this.serverPythonUrl);
       const url = `${this.serverPythonUrl}/find_faces`;
 
       for (const photo of photos) {
@@ -141,7 +203,6 @@ export class PhotosService {
             path: photo.path,
             dest_path: this.tempFolder,
           });
-          console.log(result.data);
           for (const element of result.data.faces) {
             await this.prisma.faces.create({
               data: {
@@ -163,14 +224,44 @@ export class PhotosService {
     if (!id) throw new UnauthorizedException('Error');
 
     const url = `${this.serverPythonUrl}/update_clusters`;
-    console.log(url);
-    type ClusterType = Record<string, string>;
+    type ClusterType = Record<string, string[]>;
     const result: AxiosResponse = await axios.post<{
       clusters: ClusterType;
     }>(url, {
       path: this.tempFolder,
     });
-    console.log(result.data);
+    for (const key in result.data.clusters) {
+      let isExistCluster: any = await this.prisma.clusters.findUnique({
+        where: {
+          id: key,
+        },
+      });
+      !isExistCluster
+        ? (isExistCluster = await this.prisma.clusters.create({
+            data: {
+              id: key,
+              name: 'noname',
+            },
+          }))
+        : isExistCluster;
+
+      if (isExistCluster) {
+        for (const item of result.data.clusters[key]) {
+          try {
+            await this.prisma.faces.update({
+              where: {
+                path: item,
+              },
+              data: {
+                clusterId: isExistCluster.id,
+              },
+            });
+          } catch (e) {
+            console.log('ERROR', 'file ', item, ' not found in db');
+          }
+        }
+      }
+    }
   }
 
   async findById(dto: GetPhotoByIdtDto, id: string, res: Response) {
@@ -187,6 +278,23 @@ export class PhotosService {
 
     if (fs.existsSync(file.path)) {
       return res.download(file.path, path.basename(file.path));
+    }
+    throw new BadRequestException('file not found');
+  }
+
+  async findFaceById(dto: GetPhotoByIdtDto, res: Response) {
+    const file = await this.prisma.faces.findUnique({
+      where: {
+        id: dto.id,
+      },
+    });
+
+    if (!file) throw new BadRequestException('file not found');
+
+    const pathFace = path.join(this.tempFolder, 'temp_faces', file.path);
+    console.log(pathFace);
+    if (fs.existsSync(pathFace)) {
+      return res.download(pathFace, path.basename(file.path));
     }
     throw new BadRequestException('file not found');
   }

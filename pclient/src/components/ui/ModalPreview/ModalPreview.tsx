@@ -66,7 +66,9 @@ function ModalPreview() {
 				<div className={drawerClass({ state: 'open' })}>
 					<>
 						<div className='flex justify-between items-center'>
-							<h2 className='text-nowrap'>{title}</h2>
+							<h2 className='text-nowrap text-ellipsis overflow-hidden'>
+								{title}
+							</h2>
 
 							<div
 								className='w-full flex justify-end items-center'

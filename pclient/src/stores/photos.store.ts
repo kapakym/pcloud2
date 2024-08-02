@@ -2,20 +2,15 @@ import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
 import { TypeFiles, TypeFilesActions } from '@/types/files.types'
-import { IPhoto, TypePhotosActions } from '@/types/photos.types'
+import {
+	IPeopleResponse,
+	IPhoto,
+	TypePhotosActions,
+	TypeSortPhotos,
+	TypeSortWay
+} from '@/types/photos.types'
 
-export interface IFilesStore {
-	name: string
-	type: TypeFiles
-}
-
-export interface IFilesBuffer {
-	action?: TypeFilesActions
-	sourcePath: string
-	items: IFilesStore[]
-}
-
-interface IFileActionsStore {
+interface IPhotoActionsStore {
 	action: TypePhotosActions
 	limit: number
 	offset: number
@@ -23,6 +18,11 @@ interface IFileActionsStore {
 	photoList: IPhoto[]
 	selectMode: boolean
 	previewPhoto: string | null
+	sortBy: TypeSortPhotos
+	sortWay: TypeSortWay
+	openPeoplesBar: boolean
+	peopleSelected: IPeopleResponse[] | []
+	showPeople: boolean
 
 	setLimit: (payload: number) => void
 	setOffset: (payload: number) => void
@@ -31,9 +31,14 @@ interface IFileActionsStore {
 	setAction: (payload: TypePhotosActions) => void
 	setSelectMode: (payload: boolean) => void
 	setPreviewPhoto: (payload: string) => void
+	setSortBy: (payload: TypeSortPhotos) => void
+	setSortWay: (payload: TypeSortWay) => void
+	setOpenPeoplesBar: (payload: boolean) => void
+	setPeoplesSelected: (payload: IPeopleResponse[]) => void
+	setShowPeople: (payload: boolean) => void
 }
 
-export const usePhotosStore = create<IFileActionsStore>()(
+export const usePhotosStore = create<IPhotoActionsStore>()(
 	immer(set => ({
 		action: null,
 		limit: 6,
@@ -42,6 +47,11 @@ export const usePhotosStore = create<IFileActionsStore>()(
 		photoList: [],
 		selectMode: false,
 		previewPhoto: null,
+		sortBy: undefined,
+		sortWay: 'asc',
+		peopleSelected: [],
+		openPeoplesBar: true,
+		showPeople: false,
 
 		setLimit: payload => set(() => ({ limit: payload })),
 		setTotal: payload => set(() => ({ total: payload })),
@@ -49,6 +59,11 @@ export const usePhotosStore = create<IFileActionsStore>()(
 		setPhotoList: payload => set(() => ({ photoList: payload })),
 		setAction: payload => set(() => ({ action: payload })),
 		setSelectMode: payload => set(() => ({ selectMode: payload })),
-		setPreviewPhoto: payload => set(() => ({ previewPhoto: payload }))
+		setPreviewPhoto: payload => set(() => ({ previewPhoto: payload })),
+		setSortBy: payload => set(() => ({ sortBy: payload })),
+		setSortWay: payload => set(() => ({ sortWay: payload })),
+		setOpenPeoplesBar: payload => set(() => ({ openPeoplesBar: payload })),
+		setPeoplesSelected: payload => set(() => ({ peopleSelected: payload })),
+		setShowPeople: payload => set(() => ({ showPeople: payload }))
 	}))
 )

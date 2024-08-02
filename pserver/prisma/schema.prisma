@@ -48,16 +48,16 @@ model Faces {
   top    Int?
   bottom Int?
 
-  photo      Photos?   @relation(fields: [photosId], references: [id])
-  photosId   String?   @map("photo_id")
-  Clusters   Clusters? @relation(fields: [clustersId], references: [id])
-  clustersId String?
+  photo     Photos?   @relation(fields: [photosId], references: [id])
+  photosId  String?   @map("photo_id")
+  clusters  Clusters? @relation(fields: [clusterId], references: [id])
+  clusterId String?   @map("cluster_id")
 
   @@map("faces")
 }
 
 model Clusters {
-  id String @id @default(cuid())
+  id String @id
 
   faces Faces[]
 

@@ -14,6 +14,26 @@ export class GetPhotoListDto {
 
   @IsNumber()
   offset: number;
+
+  @IsString()
+  sortBy?: string;
+
+  @IsString()
+  sortWay?: string;
+}
+
+export class GetPeoplesListDto {
+  // @IsNumber()
+  // limit: number;
+
+  // @IsNumber()
+  // offset: number;
+
+  @IsString()
+  sortBy?: string;
+
+  @IsString()
+  sortWay?: string;
 }
 
 export class GetPhotoByIdtDto {

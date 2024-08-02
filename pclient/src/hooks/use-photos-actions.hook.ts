@@ -1,21 +1,10 @@
-import { filesService } from '@/services/files.service'
 import { photosService } from '@/services/photos.service'
-import { IFilesStore, useFileActionsStore } from '@/stores/file-actions.store'
 import { useLogsStore } from '@/stores/logs.store'
 import { usePhotosStore } from '@/stores/photos.store'
 import { usePreviewStore } from '@/stores/preivew.store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { AxiosResponse } from 'axios'
 import { useEffect } from 'react'
-import { Stream } from 'stream'
 
-import {
-	IActionFilesReq,
-	IDeleteFilesReq,
-	IDownloadFilesReq,
-	IFolder,
-	IRenameFilesReq
-} from '@/types/files.types'
 import { IScanPhotosReq } from '@/types/photos.types'
 
 export const usePhotosActions = () => {

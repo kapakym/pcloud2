@@ -12,7 +12,9 @@ async def create_clusters(images_path):
     # Инициализация пустых списков для кодировок лиц и имен файлов
     face_encodings = []
     file_names = []
-    
+    print(os.listdir(images_path))
+    with open('test.txt', 'w') as f:
+        json.dump(os.listdir(images_path), f, indent=4)
     # Перебор всех изображений в папке
     for file_name in os.listdir(images_path):
         image_path = os.path.join(images_path, file_name)

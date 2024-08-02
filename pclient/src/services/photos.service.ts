@@ -1,19 +1,26 @@
 import {
-	IActionFilesReq,
-	IDeleteFilesReq,
-	IDownloadFilesReq,
-	IRenameFilesReq,
-	TypeActionFilesRes
-} from '@/types/files.types'
-import {
+	IGetPeoplesReq,
 	IGetPhotosReq,
 	IGetPhotosRes,
+	IPeopleResponse,
 	IScanPhotosReq
 } from '@/types/photos.types'
 
 import { requestBuilder } from '@/api/requestBuilder'
 
 class PhotosService {
+	async getPeoples(data?: IGetPeoplesReq) {
+		const response = await requestBuilder<IGetPeoplesReq, IPeopleResponse[]>({
+			url: 'photos/peoples',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
+
 	async getPhotos(data: IGetPhotosReq) {
 		const response = await requestBuilder<IGetPhotosReq, IGetPhotosRes>({
 			url: 'photos/get',
@@ -52,7 +59,20 @@ class PhotosService {
 
 	async getPhotosById(data: { id: string }) {
 		const response = await requestBuilder<{ id: string }, Blob>({
-			url: 'photos/getById',
+			url: 'photos/get_by_id',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data,
+				responseType: 'blob'
+			}
+		})
+		return response
+	}
+
+	async getFaceById(data: { id: string }) {
+		const response = await requestBuilder<{ id: string }, Blob>({
+			url: 'photos/get_face_by_id',
 			method: 'post',
 			options: {
 				isAuth: true,

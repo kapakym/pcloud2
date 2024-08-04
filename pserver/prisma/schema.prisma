@@ -24,6 +24,7 @@ model User {
   photos   Photos[]
   Clusters Clusters[]
   Faces    Faces[]
+  Shares   Shares[]
 
   @@map("users")
 }
@@ -73,7 +74,25 @@ model Clusters {
   @@map("clusters")
 }
 
+model Shares {
+  id       String    @id @default(cuid())
+  path     String
+  type     TypeShare
+  password String?
+  timeLive DateTime? @map("time_live")
+  userId   String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("shares")
+}
+
 enum Roles {
   user
   admin
+}
+
+enum TypeShare {
+  folder
+  file
 }

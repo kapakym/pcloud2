@@ -8,9 +8,8 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { TasksService } from './tasks.service';
 import { Server, Socket } from 'socket.io';
+import { TasksService } from './tasks.service';
 
 @WebSocketGateway({
   cors: {
@@ -27,7 +26,7 @@ export class TasksGateway
   public clients: Map<string, Socket> = new Map();
 
   afterInit(server: Server) {
-    console.log('WebSocket server initialized');
+    console.log('WebSocket server initialized', server);
   }
   handleConnection(client: Socket) {
     this.server.emit('tasks', 'run');
@@ -40,11 +39,6 @@ export class TasksGateway
   handleDisconnect(client: Socket) {
     this.clients.delete(client.id);
     console.log(`Client disconnected: ${client.id}`);
-  }
-
-  @SubscribeMessage('createTask')
-  create(@MessageBody() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
   }
 
   @SubscribeMessage('findAllTasks')

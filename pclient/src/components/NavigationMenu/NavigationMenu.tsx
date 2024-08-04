@@ -1,15 +1,18 @@
 'use client'
 
+import { useDrawerStore } from '@/stores/drawer.store'
 import { useRouter } from 'next/navigation'
 
 import { ROUTERS } from '@/constants/routers.constants'
 
 function NavigationMenu() {
 	const { push } = useRouter()
+	const { onClose } = useDrawerStore(state => state)
 	const handleClickMenuItem = (path: string) => {
 		console.log(path)
 
 		push(path)
+		onClose()
 	}
 	return (
 		<div className='flex flex-col justify-start px-2 py-4 w-full'>

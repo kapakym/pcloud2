@@ -33,31 +33,41 @@ export class PhotosController {
 
   @Auth()
   @Post('get_face_by_id')
-  findFaceById(@Body() dto: GetPhotoByIdtDto, @Res() res: Response) {
-    return this.photosService.findFaceById(dto, res);
+  findFaceById(
+    @Body() dto: GetPhotoByIdtDto,
+    @CurrentUser('id') id: string,
+    @Res() res: Response,
+  ) {
+    return this.photosService.findFaceById(dto, id, res);
   }
 
   @Auth()
   @Post('scan')
   scanAll(@Body() dto: ScanPhotoDto, @CurrentUser('id') id: string) {
-    return this.photosService.scanAll(dto, id);
+    // Фоновая задача
+    this.photosService.scanAll(dto, id);
+    return { message: 'taskStarted' };
   }
 
   @Auth()
   @Post('scan_faces')
   detectFaces(@Body() dto: TaskIdDto, @CurrentUser('id') id: string) {
-    return this.photosService.scanFaces(dto, id);
+    // Фоновая задача
+    this.photosService.scanFaces(dto, id);
+    return { message: 'taskStarted' };
   }
 
   @Auth()
   @Post('update_clusters')
   updateClusters(@Body() dto: TaskIdDto, @CurrentUser('id') id: string) {
-    return this.photosService.updateClusters(dto, id);
+    // Фоновая задача
+    this.photosService.updateClusters(dto, id);
+    return { message: 'taskStarted' };
   }
 
   @Auth()
   @Post('peoples')
-  getFaces(@Body() dto: GetPeoplesListDto) {
-    return this.photosService.getPeoples(dto);
+  getFaces(@Body() dto: GetPeoplesListDto, @CurrentUser('id') id: string) {
+    return this.photosService.getPeoples(dto, id);
   }
 }

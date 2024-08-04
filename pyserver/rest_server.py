@@ -9,7 +9,8 @@ async def find_faces():
     path = requestClient['path']
     print(path)
     dest_path = requestClient['dest_path']
-    result = await find_face.findFaces(dest_path=dest_path, images_path=path)
+    print(dest_path)
+    result = await find_face.findFaces(dest_path=dest_path, image_path=path)
     return jsonify(result), 200
 
 @app.route('/update_clusters', methods=['POST'])

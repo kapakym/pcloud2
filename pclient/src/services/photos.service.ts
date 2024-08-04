@@ -33,8 +33,8 @@ class PhotosService {
 		return response
 	}
 
-	async scanFaces(data: { id: string }) {
-		const response = await requestBuilder<{ id: string }, IGetPhotosRes>({
+	async scanFaces(data: { uuidTask: string }) {
+		const response = await requestBuilder<{ uuidTask: string }, IGetPhotosRes>({
 			url: 'photos/scan_faces',
 			method: 'post',
 			options: {
@@ -45,8 +45,8 @@ class PhotosService {
 		return response
 	}
 
-	async updateClusters(data: { id: string }) {
-		const response = await requestBuilder<{ id: string }, IGetPhotosRes>({
+	async updateClusters(data: { uuidTask: string }) {
+		const response = await requestBuilder<{ uuidTask: string }, IGetPhotosRes>({
 			url: 'photos/update_clusters',
 			method: 'post',
 			options: {

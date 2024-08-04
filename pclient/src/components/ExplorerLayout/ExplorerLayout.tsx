@@ -3,26 +3,18 @@
 import { Header } from '../Header/Header'
 import { NavigationMenu } from '../NavigationMenu/NavigationMenu'
 import { StatusBar } from '../StatusBar/StatusBar'
-import Button from '../ui/Button/Button'
 import { Drawer } from '../ui/Drawer/Drawer'
 import { useDrawerStore } from '@/stores/drawer.store'
-import { type PropsWithChildren, useEffect, useState } from 'react'
-import io from 'socket.io-client'
+import { type PropsWithChildren } from 'react'
 
-const socket = io('http://localhost:5555/tasks')
+import { UseWsTasks } from '@/hooks/use-wstasks.hook'
 
 function ExplorerLayout({ children }: PropsWithChildren<unknown>) {
 	const { open, childrenDrawer, onClose, title } = useDrawerStore(
 		state => state
 	)
 
-	const [messages, setMessages] = useState([])
-
-	useEffect(() => {
-		socket.on('updateTask', data => {
-			console.log(data)
-		})
-	}, [])
+	UseWsTasks()
 
 	return (
 		<div className=' min-h-screen  flex flex-col h-screen max-h-screen overflow-hidden'>

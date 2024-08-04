@@ -7,7 +7,7 @@ from datetime import datetime
 
 async def create_clusters(images_path):
     # Путь к папке с изображениями
-    images_path = f"{images_path}/temp_faces/"
+    images_path = f"{images_path}/"
     print(images_path)
     # Инициализация пустых списков для кодировок лиц и имен файлов
     face_encodings = []

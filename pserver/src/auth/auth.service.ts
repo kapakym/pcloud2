@@ -10,16 +10,25 @@ import { verify } from 'argon2';
 import { UserService } from 'src/user/user.service';
 import { AuthDto } from './dto/auth.dto';
 import { Response } from 'express';
+import * as fs from 'fs';
+import * as path from 'path';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   EXPIRE_DAY_REFRESH_TOKEN = 1;
   REFRESH_TOKEN_NAME = 'refreshToken';
+  tempPrefix = null;
+  cloudFolder = null;
 
   constructor(
     private jwt: JwtService,
     private userService: UserService,
-  ) {}
+    private configService: ConfigService,
+  ) {
+    this.tempPrefix = this.configService.get('TEMP_PREFIX');
+    this.cloudFolder = this.configService.get('CLOUD_PATH');
+  }
 
   async login(dto: AuthDto) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,6 +47,36 @@ export class AuthService {
     if (oldUser) throw new BadRequestException('User already exists');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = await this.userService.create(dto);
+
+    if (user) {
+      console.log(this.cloudFolder, user.id);
+      // Функция для создания директории где хранятся облачные данные
+      fs.mkdir(
+        path.join(this.cloudFolder, user.id),
+        { recursive: true },
+        (err) => {
+          if (err) {
+            return console.error(
+              `Ошибка при создании директории: ${err.message}`,
+            );
+          }
+          console.log('Директория успешно создана!');
+        },
+      );
+      // Функция для создания директории где хранятся облачные данные
+      fs.mkdir(
+        path.join(this.cloudFolder, user.id + '-' + this.tempPrefix, 'faces'),
+        { recursive: true },
+        (err) => {
+          if (err) {
+            return console.error(
+              `Ошибка при создании директории: ${err.message}`,
+            );
+          }
+          console.log('Директория успешно создана!');
+        },
+      );
+    }
 
     const tokens = this.issueTokens({ role: user.roles, id: user.id });
 

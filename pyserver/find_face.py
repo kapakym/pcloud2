@@ -22,7 +22,7 @@ async def findFaces(image_path, dest_path):
         face_image = image[top:bottom, left:right]
     
         # Сохранение лица в файл
-        face_path=f"{dest_path}/temp_faces/"
+        face_path=f"{dest_path}/"
         face_filename = f"{uuid.uuid4()}.jpg"
         face_files.append({'filename':face_filename, 'position':{'top':top, 'right':right, 'bottom':bottom, 'left':left}})
         cv2.imwrite(face_path+face_filename, face_image)

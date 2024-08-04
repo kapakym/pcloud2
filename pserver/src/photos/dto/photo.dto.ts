@@ -43,5 +43,5 @@ export class GetPhotoByIdtDto {
 
 export class TaskIdDto {
   @IsString()
-  id: string;
+  uuidTask: string;
 }

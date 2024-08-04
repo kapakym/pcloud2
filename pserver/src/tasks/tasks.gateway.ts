@@ -1,13 +1,16 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'dgram';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
@@ -15,10 +18,29 @@ import { TasksService } from './tasks.service';
   },
   namespace: 'tasks',
 })
-export class TasksGateway {
+export class TasksGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   constructor(private readonly tasksService: TasksService) {}
 
-  @WebSocketServer() public server: Socket;
+  @WebSocketServer() server: Server;
+  public clients: Map<string, Socket> = new Map();
+
+  afterInit(server: Server) {
+    console.log('WebSocket server initialized');
+  }
+  handleConnection(client: Socket) {
+    this.server.emit('tasks', 'run');
+    client.send({ id: client.id });
+    this.clients.set(client.id, client);
+    console.log(`Client connected: ${client.id}`);
+    console.log(`client total ${this.clients.size}`);
+  }
+
+  handleDisconnect(client: Socket) {
+    this.clients.delete(client.id);
+    console.log(`Client disconnected: ${client.id}`);
+  }
 
   @SubscribeMessage('createTask')
   create(@MessageBody() createTaskDto: CreateTaskDto) {

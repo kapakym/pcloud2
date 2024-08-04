@@ -27,13 +27,17 @@ function StatusBarItem({ task }: StatusBarItemProps) {
 		<div className='border-b-[1px] border-solid border-slate-600 p-2 text-wrap overflow-hidden even:bg-slate-800 bg-slate-700'>
 			<h3>{task.title}</h3>
 			{task.status === 'in progress' && (
-				// <span className='loader'></span>
-				<div className='h-[10px] w-full border-[1px] border-solid border-slate-400 my-2 rounded-xl overflow-hidden animate-pulse'>
-					<div
-						className='h-full bg-green-600 rounded-xl'
-						style={{ width: `${task.percent}%` }}
-					></div>
-				</div>
+				<>
+					{task.typeProgress === 'infinity' && <span className='loader'></span>}
+					{task.typeProgress === 'percent' && (
+						<div className='h-[10px] w-full border-[1px] border-solid border-slate-400 my-2 rounded-xl overflow-hidden animate-pulse'>
+							<div
+								className='h-full bg-green-600 rounded-xl'
+								style={{ width: `${task.percent}%` }}
+							></div>
+						</div>
+					)}
+				</>
 			)}
 
 			<div className='text-sm'>

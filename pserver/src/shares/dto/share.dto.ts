@@ -11,6 +11,9 @@ export class CreateShareDto {
   @IsString()
   password?: string;
 
+  @IsString()
+  filename: string;
+
   @IsDate()
   timeLive: Date;
 }

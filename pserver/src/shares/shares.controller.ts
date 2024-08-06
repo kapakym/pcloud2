@@ -4,7 +4,7 @@ import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import { CreateShareDto } from './dto/share.dto';
 import { SharesService } from './shares.service';
 
-@Controller('shares')
+@Controller('share')
 export class SharesController {
   constructor(private readonly sharesService: SharesService) {}
 
@@ -17,9 +17,10 @@ export class SharesController {
     return this.sharesService.create(createShareDto, id);
   }
 
+  @Auth()
   @Get()
-  findAll() {
-    return this.sharesService.findAll();
+  findAll(@CurrentUser('id') id: string) {
+    return this.sharesService.findAll(id);
   }
 
   @Get(':id')

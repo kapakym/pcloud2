@@ -81,6 +81,7 @@ model Shares {
   password String?
   timeLive DateTime? @map("time_live")
   userId   String
+  filename String
 
   user User @relation(fields: [userId], references: [id])
 

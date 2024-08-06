@@ -3,6 +3,7 @@ import { EButtonType } from '../ui/Button/button.enums'
 import { InputField } from '../ui/Fields/InputField'
 import { Modal } from '../ui/Modal/Modal'
 import { VSeparator } from '../ui/VSeparator/VSeparator'
+import { ModalAddEditShare } from './ModalAddEditShare/ModalAddEditShare'
 import { useFileActionsStore } from '@/stores/file-actions.store'
 import cn from 'clsx'
 import {
@@ -14,6 +15,7 @@ import {
 	Edit,
 	Eye,
 	Move,
+	Share2,
 	Trash,
 	UploadCloud
 } from 'lucide-react'
@@ -35,6 +37,7 @@ export default function FileActionBar() {
 
 	const [open, setOpen] = useState(false)
 	const [openRename, setOpenRename] = useState(false)
+	const [openShare, setOpenShare] = useState(false)
 
 	const handleClose = () => setOpen(false)
 	const handleCloseRename = () => setOpenRename(false)
@@ -102,6 +105,11 @@ export default function FileActionBar() {
 			<div className='flex space-x-2'>
 				{selected.length === 1 && (
 					<>
+						<Share2
+							size={28}
+							className='text-slate-400 hover:text-slate-200 cursor-pointer'
+							onClick={() => setOpenShare(true)}
+						/>
 						<Eye
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'
@@ -131,11 +139,18 @@ export default function FileActionBar() {
 				/>
 
 				{!!filesBuffer?.items.length && (
-					<ClipboardPaste
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSetAction('paste')}
-					/>
+					<>
+						<ClipboardPaste
+							size={28}
+							className='text-slate-400 hover:text-slate-200 cursor-pointer'
+							onClick={() => handleSetAction('paste')}
+						/>
+						<Move
+							size={28}
+							className='text-slate-400 hover:text-slate-200 cursor-pointer'
+							onClick={() => handleSetAction('move')}
+						/>
+					</>
 				)}
 
 				{selected.length > 0 && (
@@ -152,11 +167,6 @@ export default function FileActionBar() {
 							onClick={() => handleSetAction('copy')}
 						/>
 
-						<Move
-							size={28}
-							className='text-slate-400 hover:text-slate-200 cursor-pointer'
-							onClick={() => handleSetAction('move')}
-						/>
 						<Trash
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'
@@ -213,6 +223,10 @@ export default function FileActionBar() {
 					</div>
 				</form>
 			</Modal>
+			<ModalAddEditShare
+				open={openShare}
+				setOpen={setOpenShare}
+			/>
 		</div>
 	)
 }

@@ -18,24 +18,35 @@ export class SharesService {
 
   async create(dto: CreateShareDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
-
     const newShare = await this.prisma.shares.create({
       data: {
         userId: id,
         path: dto.path,
         type: dto.type,
-        password: await hash(dto.password),
+        password: dto.password ? await hash(dto.password) : undefined,
         timeLive: dto.timeLive,
+        filename: dto.filename,
+      },
+    });
+    return { url: newShare.id };
+  }
+
+  async findAll(id: string) {
+    const shareLinks = await this.prisma.shares.findMany({
+      where: {
+        userId: id,
+      },
+      select: {
+        password: false,
+        filename: true,
+        id: true,
+        path: true,
+        timeLive: true,
+        type: true,
       },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...response } = newShare;
-    return response;
-  }
-
-  findAll() {
-    return `This action returns all shares`;
+    return shareLinks;
   }
 
   findOne(id: number) {

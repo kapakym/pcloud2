@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'
 
 import {
 	IActionFilesReq,
+	ICreateShareLinkReq,
 	IDeleteFilesReq,
 	IDownloadFilesReq,
 	IFolder,

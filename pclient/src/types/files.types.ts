@@ -39,6 +39,14 @@ export interface IActionFiles {
 	description?: string
 }
 
+export interface ICreateShareLinkReq {
+	password?: string
+	timeLive?: string
+	path: string
+	filename: string
+	type: string
+}
+
 export type TypeActionFilesRes = IActionFiles[]
 
 export type TypeFiles =

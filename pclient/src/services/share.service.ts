@@ -11,6 +11,7 @@ import {
 	IRenameFilesReq,
 	TypeActionFilesRes
 } from '@/types/files.types'
+import { IShareLink } from '@/types/share.types'
 
 import { requestBuilder } from '@/api/requestBuilder'
 
@@ -28,7 +29,7 @@ class ShareService {
 	}
 
 	async getShare() {
-		const response = await requestBuilder<unknown, any>({
+		const response = await requestBuilder<unknown, IShareLink[]>({
 			url: 'share',
 			method: 'get',
 			options: {

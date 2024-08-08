@@ -1,5 +1,3 @@
-import { ShareList } from '@/app/explorer/share/ShareList'
-import { filesService } from '@/services/files.service'
 import { shareService } from '@/services/share.service'
 import { useFileActionsStore } from '@/stores/file-actions.store'
 import { useMutation } from '@tanstack/react-query'

@@ -8,15 +8,12 @@ import cn from 'clsx'
 import ShareActionBar from '@/components/ShareActionBar/ShareActionBar'
 import { ShareLinkItem } from '@/components/ui/ShareLinkItem/ShareLinkItem'
 
-import { IShareLink } from '@/types/share.types'
-
 function ShareList() {
 	const { selected } = useShareStore(state => state)
 	const { data } = useQuery({
 		queryKey: ['queryGetHareLinks'],
 		queryFn: () => shareService.getShare()
 	})
-	console.log(data?.data)
 	return (
 		<div className='w-full h-full flex flex-col select-none'>
 			<ShareActionBar />

@@ -38,6 +38,33 @@ class ShareService {
 		})
 		return response
 	}
+
+	async deleteShare(data: { id: string }) {
+		const response = await requestBuilder<{ id: string }, string>({
+			url: 'share',
+			method: 'delete',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
+
+	async updateShare(data: { password: string; timeLive: string }) {
+		const response = await requestBuilder<
+			{ password: string; timeLive: string },
+			string
+		>({
+			url: 'share',
+			method: 'put',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
 }
 
 export const shareService = new ShareService()

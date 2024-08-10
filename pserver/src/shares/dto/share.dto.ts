@@ -17,3 +17,19 @@ export class CreateShareDto {
   @IsDate()
   timeLive: Date;
 }
+
+export class DeleteShareDto {
+  @IsString()
+  id: string;
+}
+
+export class UpdateShareDto {
+  @IsString()
+  id: string;
+
+  @IsString()
+  password?: string;
+
+  @IsDate()
+  timeLive: Date;
+}

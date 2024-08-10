@@ -3,8 +3,11 @@ import { EButtonType } from '../ui/Button/button.enums'
 import { InputField } from '../ui/Fields/InputField'
 import { Modal } from '../ui/Modal/Modal'
 import { VSeparator } from '../ui/VSeparator/VSeparator'
+import { ModalDeleteShareLink } from './ModalDeleteShareLink/ModalDeleteShareLink'
+import { shareService } from '@/services/share.service'
 import { useFileActionsStore } from '@/stores/file-actions.store'
 import { useShareStore } from '@/stores/share.store'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import cn from 'clsx'
 import {
 	Check,
@@ -26,6 +29,7 @@ import { TypeFilesActions } from '@/types/files.types'
 import { TypeShareActions } from '@/types/share.types'
 
 export default function ShareActionBar() {
+	const queryClient = useQueryClient()
 	const {
 		register,
 		handleSubmit,
@@ -45,12 +49,25 @@ export default function ShareActionBar() {
 
 	const { setAction, selected } = useShareStore(state => state)
 
+	const { mutate: mutateDeleteShareLink } = useMutation({
+		mutationKey: ['deleteShareLink'],
+		mutationFn: (data: { id: string }) => shareService.deleteShare(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['queryGetHareLinks'] })
+		}
+	})
+
 	const handleSetAction = (action: TypeShareActions) => {
 		setAction(action)
 	}
 
 	const handleEdit = () => {}
-	const handleDelete = () => {}
+	const handleDelete = () => {
+		if (selected) {
+			mutateDeleteShareLink({ id: selected?.id })
+		}
+		setOpen(false)
+	}
 
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>
@@ -70,11 +87,17 @@ export default function ShareActionBar() {
 						<Trash
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'
-							onClick={() => handleDelete()}
+							onClick={() => setOpen(true)}
 						/>
 					</>
 				)}
 			</div>
+			<ModalDeleteShareLink
+				filename={selected?.filename}
+				onClick={handleDelete}
+				onClose={() => setOpen(false)}
+				open={open}
+			/>
 		</div>
 	)
 }

@@ -1,7 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
-import { CreateShareDto } from './dto/share.dto';
+import {
+  CreateShareDto,
+  DeleteShareDto,
+  UpdateShareDto,
+} from './dto/share.dto';
 import { SharesService } from './shares.service';
 
 @Controller('share')
@@ -23,18 +27,13 @@ export class SharesController {
     return this.sharesService.findAll(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sharesService.findOne(+id);
+  @Delete()
+  delete(@Body() dto: DeleteShareDto) {
+    return this.sharesService.delete(dto);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateShareDto: UpdateShareDto) {
-  // return this.sharesService.update(+id, updateShareDto);
-  // }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sharesService.remove(+id);
+  @Put()
+  update(@Body() dto: UpdateShareDto) {
+    return this.sharesService.update(dto);
   }
 }

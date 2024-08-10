@@ -1,7 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { ConfigService } from '@nestjs/config';
-import { CreateShareDto } from './dto/share.dto';
+import {
+  CreateShareDto,
+  DeleteShareDto,
+  UpdateShareDto,
+} from './dto/share.dto';
 import { JwtService } from '@nestjs/jwt';
 import { hash } from 'argon2';
 
@@ -49,15 +53,23 @@ export class SharesService {
     return shareLinks;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} share`;
+  async delete(dto: DeleteShareDto) {
+    const deleteShare = await this.prisma.shares.delete({
+      where: {
+        id: dto.id,
+      },
+    });
+    return deleteShare.id;
   }
 
-  // update(id: number, updateShareDto: UpdateShareDto) {
-  // return `This action updates a #${id} share`;
-  // }
-
-  remove(id: number) {
-    return `This action removes a #${id} share`;
+  async update(dto: UpdateShareDto) {
+    const updateShare = await this.prisma.shares.update({
+      where: { id: dto.id },
+      data: {
+        password: dto.password ? await hash(dto.password) : undefined,
+        timeLive: dto.timeLive,
+      },
+    });
+    return updateShare.id;
   }
 }

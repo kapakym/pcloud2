@@ -45,7 +45,6 @@ export default function PhotoActionBar() {
 		showPeople
 	} = usePhotosStore(state => state)
 
-	const queryClient = useQueryClient()
 	const [open, setOpen] = useState(false)
 	const [openRename, setOpenRename] = useState(false)
 

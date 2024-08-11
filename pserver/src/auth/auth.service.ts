@@ -4,7 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { $Enums } from '@prisma/client';
 import { verify } from 'argon2';
 import { UserService } from 'src/user/user.service';
@@ -143,5 +143,12 @@ export class AuthService {
       role: result.role,
     });
     return { user, ...tokens };
+  }
+
+  async generateTokenWithCustomSecret(
+    payload: any,
+    options?: JwtSignOptions,
+  ): Promise<string> {
+    return this.jwt.sign(payload, options);
   }
 }

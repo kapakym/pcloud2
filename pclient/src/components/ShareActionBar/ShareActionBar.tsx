@@ -4,6 +4,7 @@ import { InputField } from '../ui/Fields/InputField'
 import { Modal } from '../ui/Modal/Modal'
 import { VSeparator } from '../ui/VSeparator/VSeparator'
 import { ModalDeleteShareLink } from './ModalDeleteShareLink/ModalDeleteShareLink'
+import { ModalEditShare } from './ModalEditShareLink/ModalEditShare'
 import { shareService } from '@/services/share.service'
 import { useFileActionsStore } from '@/stores/file-actions.store'
 import { useShareStore } from '@/stores/share.store'
@@ -41,11 +42,10 @@ export default function ShareActionBar() {
 	})
 
 	const [open, setOpen] = useState(false)
-	const [openRename, setOpenRename] = useState(false)
-	const [openShare, setOpenShare] = useState(false)
+	const [openEdit, setOpenEdit] = useState(false)
 
 	const handleClose = () => setOpen(false)
-	const handleCloseRename = () => setOpenRename(false)
+	const handleCloseEdit = () => setOpenEdit(false)
 
 	const { setAction, selected } = useShareStore(state => state)
 
@@ -61,7 +61,9 @@ export default function ShareActionBar() {
 		setAction(action)
 	}
 
-	const handleEdit = () => {}
+	const handleEdit = () => {
+		setOpenEdit(true)
+	}
 	const handleDelete = () => {
 		if (selected) {
 			mutateDeleteShareLink({ id: selected?.id })
@@ -77,7 +79,7 @@ export default function ShareActionBar() {
 						<ClipboardCopy
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'
-							onClick={() => setOpenShare(true)}
+							// onClick={() => setOpenShare(true)}
 						/>
 						<Edit
 							size={28}
@@ -97,6 +99,11 @@ export default function ShareActionBar() {
 				onClick={handleDelete}
 				onClose={() => setOpen(false)}
 				open={open}
+			/>
+			<ModalEditShare
+				open={openEdit}
+				link={selected}
+				setOpen={setOpenEdit}
 			/>
 		</div>
 	)

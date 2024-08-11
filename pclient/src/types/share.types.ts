@@ -1,3 +1,5 @@
+import { IFolder } from './files.types'
+
 export interface IShareLink {
 	filename: string
 	id: string
@@ -7,3 +9,8 @@ export interface IShareLink {
 }
 
 export type TypeShareActions = 'edit' | 'delete' | null
+
+export interface IShareFolder extends IFolder {
+	status?: string
+	token?: string
+}

@@ -3,7 +3,7 @@ import { useFileActionsStore } from '@/stores/file-actions.store'
 import { useMutation } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { Clipboard } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import Button from '@/components/ui/Button/Button'
@@ -11,11 +11,13 @@ import { EButtonType } from '@/components/ui/Button/button.enums'
 import { InputField } from '@/components/ui/Fields/InputField'
 import { Modal } from '@/components/ui/Modal/Modal'
 
-import { ICreateShareLinkReq } from '@/types/files.types'
+import { IUpdateShareLinkReq } from '@/types/files.types'
+import { IShareLink } from '@/types/share.types'
 
 interface ModalAddEditShareProps {
 	setOpen: (value: boolean) => void
 	open: boolean
+	link: IShareLink | null
 }
 
 interface FormTypes {
@@ -24,59 +26,51 @@ interface FormTypes {
 	timeLive?: string
 }
 
-export const ModalAddEditShare = (props: ModalAddEditShareProps) => {
-	const { open, setOpen } = props
+export const ModalEditShare = (props: ModalAddEditShareProps) => {
+	const { open, setOpen, link } = props
 
 	const {
 		register,
 		handleSubmit,
-		formState: { errors }
+		formState: { errors },
+		setValue
 	} = useForm<FormTypes>({
 		mode: 'onChange'
 	})
 
-	const [shareUrl, setShareUrl] = useState<string | null>(null)
-
 	const { selected, path } = useFileActionsStore(state => state)
 
-	const { mutate: mutateCreateShareLink, data } = useMutation({
-		mutationKey: ['mutateCreateShareLink'],
-		mutationFn: (data: ICreateShareLinkReq) =>
-			shareService.createFileShareLink(data)
+	const { mutate: mutateUpdateShareLink, data } = useMutation({
+		mutationKey: ['mutateUpdateShareLink'],
+		mutationFn: (data: IUpdateShareLinkReq) => shareService.updateShare(data)
 	})
 
+	useEffect(() => {
+		if (link) {
+			setValue('timeLive', link.timeLive)
+		}
+	}, [link])
+
 	const handleClose = () => {
-		setShareUrl(null)
 		setOpen(false)
 	}
 
-	useEffect(() => {
-		if (data) {
-			setShareUrl(data.data.url)
-		}
-	}, [data])
-
 	const onSubmit: SubmitHandler<FormTypes> = async formData => {
-		const data: ICreateShareLinkReq = {
-			password: formData.password
-				? formData.password === formData.retryPassword
-					? formData.password
+		if (link) {
+			const data: IUpdateShareLinkReq = {
+				id: link.id,
+				password: formData.password
+					? formData.password === formData.retryPassword
+						? formData.password
+						: undefined
+					: undefined,
+				timeLive: formData.timeLive
+					? dayjs(formData.timeLive).toISOString()
 					: undefined
-				: undefined,
-			path,
-			filename: selected[0].name,
-			timeLive: formData.timeLive
-				? dayjs(formData.timeLive).toString()
-				: undefined,
-			type: selected[0].type
+			}
+
+			mutateUpdateShareLink(data)
 		}
-
-		mutateCreateShareLink(data)
-
-		// mutate(formData)
-		// setNewName(formData.name)
-		// handleSetAction('edit')
-		// setOpen(false)
 	}
 
 	const handleCopyToClipboard = (value: string) => {
@@ -88,16 +82,16 @@ export const ModalAddEditShare = (props: ModalAddEditShareProps) => {
 			onClose={handleClose}
 			title={'Share'}
 		>
-			{shareUrl && (
+			{data?.data && link && (
 				<div className='flex flex-col space-y-4'>
 					<div className='flex space-x-2'>
-						<div>{`${window.location.host}/share/${shareUrl}`}</div>
+						<div>{`${window.location.host}/share/${link.id}`}</div>
 						<Clipboard
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'
 							onClick={() =>
 								handleCopyToClipboard(
-									`${window.location.host}/share/${shareUrl}`
+									`${window.location.host}/share/${link.id}`
 								)
 							}
 						></Clipboard>
@@ -106,7 +100,7 @@ export const ModalAddEditShare = (props: ModalAddEditShareProps) => {
 					<Button onClick={handleClose}>Close</Button>
 				</div>
 			)}
-			{!shareUrl && (
+			{link && (
 				<form
 					className=' flex flex-col w-full px-2 text-left'
 					onSubmit={handleSubmit(onSubmit)}

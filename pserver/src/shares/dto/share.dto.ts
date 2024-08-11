@@ -33,3 +33,18 @@ export class UpdateShareDto {
   @IsDate()
   timeLive: Date;
 }
+
+export class GetFilesShareLinkDto {
+  @IsString()
+  id: string;
+
+  @IsString()
+  password?: string;
+}
+
+export type TypesStatusShareLink =
+  | 'invalid_password'
+  | 'not_found'
+  | 'access_denied'
+  | 'ok'
+  | 'time_leave';

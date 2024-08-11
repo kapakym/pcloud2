@@ -3,7 +3,7 @@ import { EButtonType } from '../ui/Button/button.enums'
 import { InputField } from '../ui/Fields/InputField'
 import { Modal } from '../ui/Modal/Modal'
 import { VSeparator } from '../ui/VSeparator/VSeparator'
-import { ModalAddEditShare } from './ModalAddEditShare/ModalAddEditShare'
+import { ModalAddShare } from './ModalAddEditShare/ModalAddShare'
 import { useFileActionsStore } from '@/stores/file-actions.store'
 import cn from 'clsx'
 import {
@@ -223,7 +223,7 @@ export default function FileActionBar() {
 					</div>
 				</form>
 			</Modal>
-			<ModalAddEditShare
+			<ModalAddShare
 				open={openShare}
 				setOpen={setOpenShare}
 			/>

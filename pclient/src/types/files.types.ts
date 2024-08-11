@@ -47,6 +47,12 @@ export interface ICreateShareLinkReq {
 	type: string
 }
 
+export interface IUpdateShareLinkReq {
+	id: string
+	password?: string
+	timeLive?: string
+}
+
 export type TypeActionFilesRes = IActionFiles[]
 
 export type TypeFiles =

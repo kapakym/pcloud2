@@ -19,7 +19,7 @@ function ShareList() {
 			<ShareActionBar />
 			<div
 				className={cn(
-					'flex  justify-between items-center  cursor-pointer p-2 w-full space-x-1 border-b-[1px] border-b-solid border-b-slate-700 bg-slate-600'
+					'grid grid-cols-3  justify-between items-center  cursor-pointer p-2 w-full space-x-1 border-b-[1px] border-b-solid border-b-slate-700 bg-slate-600'
 				)}
 			>
 				<div>File name</div>

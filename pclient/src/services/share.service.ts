@@ -9,9 +9,10 @@ import {
 	IDownloadFilesReq,
 	IFolder,
 	IRenameFilesReq,
+	IUpdateShareLinkReq,
 	TypeActionFilesRes
 } from '@/types/files.types'
-import { IShareLink } from '@/types/share.types'
+import { IShareFolder, IShareLink } from '@/types/share.types'
 
 import { requestBuilder } from '@/api/requestBuilder'
 
@@ -51,15 +52,26 @@ class ShareService {
 		return response
 	}
 
-	async updateShare(data: { password: string; timeLive: string }) {
-		const response = await requestBuilder<
-			{ password: string; timeLive: string },
-			string
-		>({
+	async updateShare(data: IUpdateShareLinkReq) {
+		const response = await requestBuilder<IUpdateShareLinkReq, string>({
 			url: 'share',
 			method: 'put',
 			options: {
 				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
+
+	async getFiles(data: { path: string; password?: string; id: string }) {
+		const response = await requestBuilder<
+			{ path: string; password?: string; id: string },
+			IShareFolder
+		>({
+			url: 'share/files',
+			method: 'post',
+			options: {
 				data
 			}
 		})

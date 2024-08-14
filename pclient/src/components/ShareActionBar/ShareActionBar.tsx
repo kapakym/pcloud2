@@ -29,6 +29,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { TypeFilesActions } from '@/types/files.types'
 import { TypeShareActions } from '@/types/share.types'
 
+import { handleCopyToClipboard } from '@/utils/clipboard.utils'
+
 export default function ShareActionBar() {
 	const queryClient = useQueryClient()
 	const {
@@ -71,6 +73,8 @@ export default function ShareActionBar() {
 		setOpen(false)
 	}
 
+	const copyToClipBoard = () => {}
+
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>
 			<div className='flex space-x-2'>
@@ -79,7 +83,11 @@ export default function ShareActionBar() {
 						<ClipboardCopy
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'
-							// onClick={() => setOpenShare(true)}
+							onClick={() =>
+								handleCopyToClipboard(
+									`${window.location.host}/share/${selected.id}`
+								)
+							}
 						/>
 						<Edit
 							size={28}

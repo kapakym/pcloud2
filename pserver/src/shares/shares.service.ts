@@ -92,6 +92,8 @@ export class SharesService {
 
     if (!shareLink) return { status: 'not_found' as TypesStatusShareLink };
 
+    console.log(shareLink);
+
     const result = await this.checkAuthShareLink(shareLink, dto, shareToken);
     if (shareLink.password && result.status !== 'ok') return result;
 
@@ -102,32 +104,33 @@ export class SharesService {
         files: [{ name: shareLink.filename, type: 'file' }],
       };
     }
-    return { status: 'ok' as TypesStatusShareLink };
-    // const cloudFolder = this.configService.get('CLOUD_PATH');
+    const cloudFolder = this.configService.get('CLOUD_PATH');
+    const userId = shareLink.userId;
 
-    // if (!id) throw new UnauthorizedException('Error');
+    const basePath = path?.join(
+      cloudFolder,
+      userId,
+      shareLink.path,
+      shareLink.filename,
+      dto.path,
+    );
 
-    // const basePath = path?.join(cloudFolder, id);
-
-    // let fullPath = basePath;
-    // if (currentPath) {
-    //   fullPath = path?.join(cloudFolder, id, currentPath);
-    // }
+    console.log(basePath);
 
     // await this.isValidHomeDir(fullPath);
 
-    // const items = fs.readdirSync(fullPath, { withFileTypes: true });
-    // const folders = items
-    //   .filter((item: any) => item.isDirectory())
-    //   .map((item: any) => ({ name: item.name }));
-    // const files = items
-    //   .filter((item: any) => item.isFile())
-    //   .map((item: any) => ({
-    //     name: item.name,
-    //     type: path?.extname(item.name),
-    //     size: fs.statSync(path.join(fullPath, item.name)).size,
-    //   }));
-    // return { files, folders };
+    const items = fs.readdirSync(basePath, { withFileTypes: true });
+    const folders = items
+      .filter((item: any) => item.isDirectory())
+      .map((item: any) => ({ name: item.name }));
+    const files = items
+      .filter((item: any) => item.isFile())
+      .map((item: any) => ({
+        name: item.name,
+        type: path?.extname(item.name),
+        size: fs.statSync(path.join(basePath, item.name)).size,
+      }));
+    return { files, folders, status: 'ok' };
   }
 
   async checkAuthShareLink(

@@ -14,6 +14,8 @@ import { Modal } from '@/components/ui/Modal/Modal'
 import { IUpdateShareLinkReq } from '@/types/files.types'
 import { IShareLink } from '@/types/share.types'
 
+import { handleCopyToClipboard } from '@/utils/clipboard.utils'
+
 interface ModalAddEditShareProps {
 	setOpen: (value: boolean) => void
 	open: boolean
@@ -73,9 +75,6 @@ export const ModalEditShare = (props: ModalAddEditShareProps) => {
 		}
 	}
 
-	const handleCopyToClipboard = (value: string) => {
-		navigator.clipboard.writeText(value)
-	}
 	return (
 		<Modal
 			open={open}

@@ -1,7 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
+import { Response } from 'express';
 import * as fs from 'fs';
 import 'multer';
 import * as path from 'path';
@@ -9,6 +14,7 @@ import { PrismaService } from 'src/prisma.service';
 import {
   CreateShareDto,
   DeleteShareDto,
+  DownloadShareFilesDto,
   GetFilesShareLinkDto,
   TypesStatusShareLink,
   UpdateShareDto,
@@ -92,7 +98,7 @@ export class SharesService {
 
     if (!shareLink) return { status: 'not_found' as TypesStatusShareLink };
 
-    console.log(shareLink);
+    console.log(dto);
 
     const result = await this.checkAuthShareLink(shareLink, dto, shareToken);
     if (shareLink.password && result.status !== 'ok') return result;
@@ -142,7 +148,10 @@ export class SharesService {
     if (shareLink.password && !shareToken && !dto.password) {
       return { status: 'access_denied' as TypesStatusShareLink };
     }
-    if (Date.now() > new Date(shareLink.timeLive).getMilliseconds()) {
+    if (
+      shareLink.timeLive &&
+      Date.now() > new Date(shareLink.timeLive).getMilliseconds()
+    ) {
       return { status: 'time_leave' as TypesStatusShareLink };
     }
     if (dto.password && shareLink.password) {
@@ -158,7 +167,7 @@ export class SharesService {
           expiresIn: '1d',
         },
       );
-      return { status: 'ok', token };
+      return { status: 'token', token };
     }
     if (token) {
       try {
@@ -171,5 +180,36 @@ export class SharesService {
         return { status: 'access_denied' as TypesStatusShareLink };
       }
     }
+  }
+
+  async downloadFile(
+    dto: DownloadShareFilesDto,
+    shareToken: string,
+    res: Response,
+  ) {
+    const shareLink = await this.prisma.shares.findUnique({
+      where: { id: dto.id },
+    });
+
+    if (!shareLink) return { status: 'not_found' as TypesStatusShareLink };
+
+    const result = await this.checkAuthShareLink(shareLink, dto, shareToken);
+    if (shareLink.password && result.status !== 'ok') return result;
+
+    const cloudFolder = this.configService.get('CLOUD_PATH');
+    const userId = shareLink.userId;
+
+    const basePath = path?.join(
+      cloudFolder,
+      userId,
+      shareLink.path,
+      shareLink.filename,
+      dto.path,
+      dto.filename,
+    );
+    if (fs.existsSync(basePath)) {
+      return res.download(basePath, path.basename(basePath));
+    }
+    throw new BadRequestException('file not found');
   }
 }

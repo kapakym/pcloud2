@@ -7,15 +7,17 @@ import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { ModalEnterPasswordShare } from '@/components/FileActionBar/ModalEnterPasswordShare/ModalEnterPasswordShare'
+import { ShareLinkBar } from '@/components/ShareLinkBar/ShareLinkBar'
 import { FileItemRow } from '@/components/ui/FileItems/FileItemRow'
 
 import { TypeFiles } from '@/types/files.types'
 
 import { useDoubleTouchHook } from '@/hooks/use-double-touch.hook'
+import { useShareLinkActions } from '@/hooks/use-share-link-actions.hook'
 
 export const ShareLink = () => {
 	const { id } = useParams<{ id: string }>()
-	const { path, setPath, setSelectedShareLink, selectedShareLink } =
+	const { path, setPath, setSelectedShareLink, selectedShareLink, selectMode } =
 		useShareStore(state => state)
 	const {
 		data,
@@ -36,11 +38,21 @@ export const ShareLink = () => {
 		}
 	}, [id, path])
 
+	useShareLinkActions(id)
+
 	useEffect(() => {
 		if (data?.data.status) {
 			switch (data?.data?.status) {
 				case 'access_denied':
 					setOpen(true)
+					break
+				case 'token':
+					localStorage.setItem(
+						'shareToken',
+						data?.data?.token ? data?.data?.token : ''
+					)
+					mutateGetShareFiles({ id, path })
+					setOpen(false)
 					break
 			}
 		}
@@ -58,7 +70,7 @@ export const ShareLink = () => {
 
 	const handleEnterFolder = (folderName: string) => {
 		setPath(path + '/' + folderName)
-		setSelectedShareLink(null)
+		setSelectedShareLink([])
 	}
 
 	const handleExitFolder = () => {
@@ -83,47 +95,59 @@ export const ShareLink = () => {
 		name: string,
 		type: TypeFiles
 	) => {
-		setSelectedShareLink({ name, type })
+		if (event.shiftKey || selectMode) {
+			selectedShareLink.find(item => item.name === name)
+				? setSelectedShareLink(
+						selectedShareLink.filter(item => item.name !== name)
+					)
+				: setSelectedShareLink([...selectedShareLink, { name, type }])
+		} else {
+			selectedShareLink.find(item => item.name === name)
+				? setSelectedShareLink([])
+				: setSelectedShareLink([{ name, type }])
+		}
 	}
 
 	return (
-		<div className='overflow-y-auto h-full'>
-			<div>User ID: {id}</div>
-			{path && (
-				<FileItemRow
-					file={{ name: '..' }}
-					key={'..'}
-					typeFile={'upFolder'}
-					onDoubleClick={() => handleExitFolder()}
-					handleTouch={() => handleExitFolder()}
-				/>
-			)}
+		<div className='w-full h-full flex flex-col'>
+			<ShareLinkBar />
+			<div className='overflow-y-auto h-full'>
+				{path && (
+					<FileItemRow
+						file={{ name: '..' }}
+						key={'..'}
+						typeFile={'upFolder'}
+						onDoubleClick={() => handleExitFolder()}
+						handleTouch={() => handleExitFolder()}
+					/>
+				)}
 
-			{data?.data?.folders?.map(item => (
-				<FileItemRow
-					file={item}
-					key={item.name}
-					typeFile={'folder'}
-					handleTouch={event => handleTouch(event, item.name)}
-					onDoubleClick={() => handleEnterFolder(item.name)}
-					onClick={event => handleSelected(event, item.name, 'folder')}
-					selected={selectedShareLink?.name === item.name}
+				{data?.data?.folders?.map(item => (
+					<FileItemRow
+						file={item}
+						key={item.name}
+						typeFile={'folder'}
+						handleTouch={event => handleTouch(event, item.name)}
+						onDoubleClick={() => handleEnterFolder(item.name)}
+					/>
+				))}
+				{data?.data?.files?.map(item => (
+					<FileItemRow
+						file={item}
+						key={item.name}
+						typeFile={'file'}
+						selected={
+							!!selectedShareLink.find(itemFind => itemFind.name === item.name)
+						}
+						onClick={event => handleSelected(event, item.name, 'file')}
+					/>
+				))}
+				<ModalEnterPasswordShare
+					open={open}
+					setOpen={setOpen}
+					setPassword={setPassword}
 				/>
-			))}
-			{data?.data?.files?.map(item => (
-				<FileItemRow
-					file={item}
-					key={item.name}
-					typeFile={'file'}
-					selected={selectedShareLink?.name === item.name}
-					onClick={event => handleSelected(event, item.name, 'file')}
-				/>
-			))}
-			<ModalEnterPasswordShare
-				open={open}
-				setOpen={setOpen}
-				setPassword={setPassword}
-			/>
+			</div>
 		</div>
 	)
 }

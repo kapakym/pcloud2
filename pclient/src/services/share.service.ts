@@ -72,7 +72,25 @@ class ShareService {
 			url: 'share/files',
 			method: 'post',
 			options: {
+				headers: {
+					'X-Authorization-Share': localStorage.getItem('shareToken') || ''
+				},
 				data
+			}
+		})
+		return response
+	}
+
+	async downloadFile(data: IDownloadFilesReq) {
+		const response = await requestBuilder<IDownloadFilesReq, Blob>({
+			url: 'share/download',
+			method: 'post',
+			options: {
+				headers: {
+					'X-Authorization-Share': localStorage.getItem('shareToken') || ''
+				},
+				data,
+				responseType: 'blob'
 			}
 		})
 		return response

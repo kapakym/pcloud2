@@ -8,9 +8,15 @@ export interface IShareLink {
 	type: string
 }
 
-export type TypeShareActions = 'edit' | 'delete' | null
+export type TypeShareActions = 'edit' | 'delete' | 'download' | null
 
 export interface IShareFolder extends IFolder {
 	status?: string
 	token?: string
+}
+
+export interface IDownloadShareFilesReq {
+	id: string
+	path: string
+	filename: string
 }

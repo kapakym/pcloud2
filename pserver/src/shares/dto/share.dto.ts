@@ -1,5 +1,5 @@
 import { TypeShare } from '@prisma/client';
-import { IsDate, isString, IsString } from 'class-validator';
+import { IsDate, IsString } from 'class-validator';
 
 export class CreateShareDto {
   @IsString()
@@ -51,3 +51,14 @@ export type TypesStatusShareLink =
   | 'access_denied'
   | 'ok'
   | 'time_leave';
+
+export class DownloadShareFilesDto {
+  @IsString()
+  path: string;
+
+  @IsString()
+  filename: string;
+
+  @IsString()
+  id: string;
+}

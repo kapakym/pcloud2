@@ -1,14 +1,16 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Res } from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import {
   CreateShareDto,
   DeleteShareDto,
+  DownloadShareFilesDto,
   GetFilesShareLinkDto,
   UpdateShareDto,
 } from './dto/share.dto';
 import { SharesService } from './shares.service';
 import { ShareLinkToken } from 'src/auth/decorators/shareLinkToken.decorator';
+import { Response } from 'express';
 
 @Controller('share')
 export class SharesController {
@@ -47,5 +49,14 @@ export class SharesController {
   @Put()
   update(@Body() dto: UpdateShareDto) {
     return this.sharesService.update(dto);
+  }
+
+  @Post('download')
+  async downloadFile(
+    @Body() dto: DownloadShareFilesDto,
+    @ShareLinkToken() shareToken: string,
+    @Res() res: Response,
+  ) {
+    return this.sharesService.downloadFile(dto, shareToken, res);
   }
 }

@@ -51,6 +51,12 @@ function UsersList() {
 	return (
 		<div className='w-full h-full flex flex-col select-none'>
 			<UserActionBar />
+			<div className=' grid-cols-4 p-2 bg-slate-600 hidden md:grid'>
+				<div>Name</div>
+				<div>E-mail</div>
+				<div>Status</div>
+				<div>Role</div>
+			</div>
 			<div className='h-full w-full overflow-y-auto'>
 				{!!data?.data?.users?.length &&
 					data?.data?.users.map(item => (

@@ -49,12 +49,22 @@ export const UserItem = (props: UserItemProps) => {
 		<div
 			onClick={onClick}
 			className={cn(
-				'md:grid flex flex-col md:grid-cols-4 hover:bg-slate-700 cursor-pointer p-2 w-full space-x-1 border-b-[1px] border-b-solid border-b-slate-700',
+				' md:space-y-0 grid grid-cols-2 gap-2 md:grid-cols-4 hover:bg-slate-700 cursor-pointer p-2 w-full  border-b-[1px] border-b-solid border-b-slate-700',
 				selected ? 'bg-slate-600' : 'even:bg-slate-800'
 			)}
 		>
+			<div className='block md:hidden'>
+				<h4>Name</h4>
+			</div>
 			<div>{data.name || 'noname'}</div>
+			<div className='block md:hidden'>
+				<h4>e-mail</h4>
+			</div>
 			<div>{data.email}</div>
+			<div className='block md:hidden'>
+				<h4>Status</h4>
+			</div>
+
 			<div>
 				{isAccess && (
 					<Checkbox
@@ -63,6 +73,9 @@ export const UserItem = (props: UserItemProps) => {
 						checked={data.active}
 					/>
 				)}
+			</div>
+			<div className='block md:hidden'>
+				<h4>Role</h4>
 			</div>
 			<div>
 				{isAccess && (

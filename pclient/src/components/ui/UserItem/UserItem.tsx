@@ -18,7 +18,7 @@ interface UserItemProps {
 
 export const UserItem = (props: UserItemProps) => {
 	const { data, selected = false, onClick } = props
-	const { page } = useUsersStore(state => state)
+	const { limit, offset } = useUsersStore(state => state)
 	const [role, setRole] = useState<SingleValue<IOptionSelect>>(
 		roleOptions.find(item => item.value === EnumRoles[data.roles]) || {
 			value: '',
@@ -31,7 +31,7 @@ export const UserItem = (props: UserItemProps) => {
 		mutationKey: ['setActivateMutation'],
 		mutationFn: (data: IUserActive) => usersService.setActiveUser(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['getUsers', page] })
+			queryClient.invalidateQueries({ queryKey: ['getUsers', offset, limit] })
 		}
 	})
 

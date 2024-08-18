@@ -21,14 +21,14 @@ export default function UserActionBar() {
 
 	const handleClose = () => setOpen(false)
 
-	const { setAction, selected, setSelectMode, selectMode, page } =
+	const { setAction, selected, setSelectMode, selectMode, offset, limit } =
 		useUsersStore(state => state)
 
 	const { mutate: mutateDeleteUser } = useMutation({
 		mutationKey: ['deleteUser'],
 		mutationFn: (data: { id: string }) => usersService.deleteUser(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['getUsers', page] })
+			queryClient.invalidateQueries({ queryKey: ['getUsers', offset, limit] })
 		}
 	})
 

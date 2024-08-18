@@ -2,8 +2,10 @@
 
 import { usersService } from '@/services/users.service'
 import { useUsersStore } from '@/stores/users.store'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 
+import Pagination from '@/components/Pagination/Pagination'
 import UserActionBar from '@/components/UserActionBar/UserActionBar'
 import { UserItem } from '@/components/ui/UserItem/UserItem'
 
@@ -14,21 +16,10 @@ import { useDoubleTouchHook } from '@/hooks/use-double-touch.hook'
 function UsersList() {
 	const { limit, offset, page, setSelected, selected, selectMode } =
 		useUsersStore(state => state)
-	const getUsers = async ({ pageParam }: { pageParam: number }) => {
-		return (
-			await usersService.getUsers({
-				limit,
-				offset: pageParam
-			})
-		).data
-	}
 
-	const { data, fetchNextPage } = useInfiniteQuery({
-		queryKey: ['getUsers', page],
-		queryFn: getUsers,
-		initialPageParam: 0,
-		getNextPageParam: (lastPage, pages) =>
-			!lastPage.users.length ? undefined : lastPage.offset + 6
+	const { data } = useQuery({
+		queryKey: ['getUsers', offset, limit],
+		queryFn: () => usersService.getUsers({ limit, offset })
 	})
 
 	const handleSelected = (
@@ -50,12 +41,19 @@ function UsersList() {
 		return selected.find(item => item.id === id)
 	}
 
+	const totalPage = useMemo(() => {
+		console.log(data?.data.count ? Math.round(data?.data.count / limit) : 0)
+		return data?.data.count ? Math.round(data?.data.count / limit) : 0
+	}, [data?.data.count])
+
+	const handleChangePage = (page: number) => {}
+
 	return (
 		<div className='w-full h-full flex flex-col select-none'>
 			<UserActionBar />
 			<div className='h-full w-full overflow-y-auto'>
-				{!!data?.pages[page - 1]?.users?.length &&
-					data?.pages[page - 1]?.users.map(item => (
+				{!!data?.data?.users?.length &&
+					data?.data?.users.map(item => (
 						<UserItem
 							data={item}
 							key={item.id}
@@ -64,6 +62,11 @@ function UsersList() {
 						/>
 					))}
 			</div>
+			<Pagination
+				currentPage={page}
+				totalPages={totalPage}
+				onPageChange={handleChangePage}
+			/>
 		</div>
 	)
 }

@@ -15,3 +15,5 @@ export interface IUserActive {
 	active?: boolean
 	roles?: EnumRoles
 }
+
+export type TypeUserActions = 'delete' | 'selectAll' | null

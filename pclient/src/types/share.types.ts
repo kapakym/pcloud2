@@ -8,7 +8,12 @@ export interface IShareLink {
 	type: string
 }
 
-export type TypeShareActions = 'edit' | 'delete' | 'download' | null
+export type TypeShareActions =
+	| 'edit'
+	| 'delete'
+	| 'download'
+	| 'selectAll'
+	| null
 
 export interface IShareFolder extends IFolder {
 	status?: string

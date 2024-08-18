@@ -30,6 +30,17 @@ class UsersService {
 			}
 		})
 	}
+
+	async deleteUser(data: { id: string }) {
+		const response = await requestBuilder<{ id: string }, boolean>({
+			url: 'user/delete',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+	}
 }
 
 export const usersService = new UsersService()

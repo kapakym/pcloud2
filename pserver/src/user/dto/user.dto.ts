@@ -51,3 +51,8 @@ export class ActivateUserDto {
   @IsOptional()
   roles?: $Enums.Roles;
 }
+
+export class DeleteUserDto {
+  @IsString()
+  id: string;
+}

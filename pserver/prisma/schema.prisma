@@ -36,7 +36,7 @@ model Photos {
   longitude  String?
   latitude   String?
 
-  user   User?   @relation(fields: [userId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String? @map("user_id")
   faces  Faces[]
 
@@ -50,7 +50,7 @@ model Faces {
   right  Int?
   top    Int?
   bottom Int?
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   photo     Photos?   @relation(fields: [photosId], references: [id])
   photosId  String?   @map("photo_id")
@@ -68,7 +68,7 @@ model Clusters {
 
   name String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
   @@map("clusters")
@@ -83,7 +83,7 @@ model Shares {
   userId   String
   filename String
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("shares")
 }

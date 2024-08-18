@@ -3,11 +3,27 @@ import { $Enums } from '@prisma/client';
 import { hash } from 'argon2';
 import { AuthDto } from 'src/auth/dto/auth.dto';
 import { PrismaService } from 'src/prisma.service';
-import { ActivateUserDto, GetUserListDto, UserDto } from './dto/user.dto';
+import * as fs from 'fs';
+import * as path from 'path';
+import {
+  ActivateUserDto,
+  DeleteUserDto,
+  GetUserListDto,
+  UserDto,
+} from './dto/user.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  tempPrefix = null;
+  cloudFolder = null;
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {
+    this.tempPrefix = this.configService.get('TEMP_PREFIX');
+    this.cloudFolder = this.configService.get('CLOUD_PATH');
+  }
 
   async getById(id: string) {
     return this.prisma.user.findUnique({
@@ -72,6 +88,23 @@ export class UserService {
       });
       return true;
     } catch {
+      return false;
+    }
+  }
+
+  async deleteUser(dto: DeleteUserDto, idUser: string) {
+    if (dto.id === idUser) return;
+    console.log(dto.id);
+    try {
+      const fullPath = path?.join(this.cloudFolder, dto.id);
+      await this.prisma.user.delete({ where: { id: dto.id } });
+      fs.rmdirSync(fullPath, { recursive: true });
+      fs.rmdirSync(
+        path.join(this.cloudFolder, dto.id + '-' + this.tempPrefix),
+        { recursive: true },
+      );
+      return true;
+    } catch (error) {
       return false;
     }
   }

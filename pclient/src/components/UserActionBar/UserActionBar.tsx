@@ -1,85 +1,101 @@
+import Button from '../ui/Button/Button'
+import { EButtonType } from '../ui/Button/button.enums'
+import { Modal } from '../ui/Modal/Modal'
+import { VSeparator } from '../ui/VSeparator/VSeparator'
 import { shareService } from '@/services/share.service'
-import { useShareStore } from '@/stores/share.store'
+import { usersService } from '@/services/users.service'
+import { useUsersStore } from '@/stores/users.store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ClipboardCopy, Edit, Trash } from 'lucide-react'
+import cn from 'clsx'
+import { Check, CheckCheck, Trash } from 'lucide-react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 
-import { TypeShareActions } from '@/types/share.types'
-
-import { handleCopyToClipboard } from '@/utils/clipboard.utils'
+import { EnumRoles } from '@/types/auth.types'
+import { TypeUserActions } from '@/types/users.types'
 
 export default function UserActionBar() {
 	const queryClient = useQueryClient()
-	const {
-		register,
-		handleSubmit,
-		reset,
-		formState: { errors },
-		setValue
-	} = useForm<{ name: string }>({
-		mode: 'onChange'
-	})
+	const isAccess = localStorage.getItem('role') === EnumRoles.admin
 
 	const [open, setOpen] = useState(false)
-	const [openEdit, setOpenEdit] = useState(false)
 
 	const handleClose = () => setOpen(false)
-	const handleCloseEdit = () => setOpenEdit(false)
 
-	const { setAction, selected } = useShareStore(state => state)
+	const { setAction, selected, setSelectMode, selectMode, page } =
+		useUsersStore(state => state)
 
-	const { mutate: mutateDeleteShareLink } = useMutation({
-		mutationKey: ['deleteShareLink'],
-		mutationFn: (data: { id: string }) => shareService.deleteShare(data),
+	const { mutate: mutateDeleteUser } = useMutation({
+		mutationKey: ['deleteUser'],
+		mutationFn: (data: { id: string }) => usersService.deleteUser(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['queryGetHareLinks'] })
+			queryClient.invalidateQueries({ queryKey: ['getUsers', page] })
 		}
 	})
 
-	const handleSetAction = (action: TypeShareActions) => {
+	const handleSetAction = (action: TypeUserActions) => {
 		setAction(action)
 	}
 
-	const handleEdit = () => {
-		setOpenEdit(true)
-	}
-	const handleDelete = () => {
-		if (selected) {
-			mutateDeleteShareLink({ id: selected?.id })
-		}
-		setOpen(false)
+	const handleDeleteUsers = () => {
+		selected.forEach(item => {
+			mutateDeleteUser({ id: item.id })
+		})
 	}
 
-	const copyToClipBoard = () => {}
+	const handleOpenDeleteModal = () => {
+		if (selected.length > 0) setOpen(true)
+	}
 
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>
 			<div className='flex space-x-2'>
-				{selected && (
+				{isAccess && (
 					<>
-						<ClipboardCopy
-							size={28}
-							className='text-slate-400 hover:text-slate-200 cursor-pointer'
-							onClick={() =>
-								handleCopyToClipboard(
-									`${window.location.host}/share/${selected.id}`
-								)
-							}
-						/>
-						<Edit
-							size={28}
-							className='text-slate-400 hover:text-slate-200 cursor-pointer'
-							onClick={() => handleEdit()}
-						/>
+						<div className='flex items-center space-x-1'>
+							<Check
+								size={28}
+								className={cn(
+									'  cursor-pointer ',
+									selectMode
+										? 'text-green-500'
+										: 'text-slate-400 hover:text-slate-200'
+								)}
+								onClick={() => setSelectMode(!selectMode)}
+							/>
+
+							<CheckCheck
+								size={28}
+								className='text-slate-400 hover:text-slate-200 cursor-pointer'
+								onClick={() => handleSetAction('selectAll')}
+							/>
+							<VSeparator />
+						</div>
 						<Trash
 							size={28}
 							className='text-slate-400 hover:text-slate-200 cursor-pointer'
-							onClick={() => setOpen(true)}
+							onClick={handleOpenDeleteModal}
 						/>
 					</>
 				)}
 			</div>
+			<Modal
+				open={open}
+				onClose={handleClose}
+				title={'Delete users'}
+				renderButtons={() => (
+					<div className='flex space-x-2'>
+						<Button onClick={handleClose}>Cancel</Button>
+						<Button
+							typeButton={EButtonType.WARNING}
+							onClick={handleDeleteUsers}
+						>
+							Delete
+						</Button>
+					</div>
+				)}
+			>
+				Do you really want to delete the selected {selected?.length} users ?
+			</Modal>
 		</div>
 	)
 }

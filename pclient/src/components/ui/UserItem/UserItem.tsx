@@ -13,10 +13,11 @@ import { IUserActive } from '@/types/users.types'
 interface UserItemProps {
 	data: IUser
 	selected?: boolean
+	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const UserItem = (props: UserItemProps) => {
-	const { data, selected = false } = props
+	const { data, selected = false, onClick } = props
 	const { page } = useUsersStore(state => state)
 	const [role, setRole] = useState<SingleValue<IOptionSelect>>(
 		roleOptions.find(item => item.value === EnumRoles[data.roles]) || {
@@ -46,6 +47,7 @@ export const UserItem = (props: UserItemProps) => {
 
 	return (
 		<div
+			onClick={onClick}
 			className={cn(
 				'md:grid flex flex-col md:grid-cols-4 hover:bg-slate-700 cursor-pointer p-2 w-full space-x-1 border-b-[1px] border-b-solid border-b-slate-700',
 				selected ? 'bg-slate-600' : 'even:bg-slate-800'

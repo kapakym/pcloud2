@@ -7,8 +7,13 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import UserActionBar from '@/components/UserActionBar/UserActionBar'
 import { UserItem } from '@/components/ui/UserItem/UserItem'
 
+import { IUser } from '@/types/auth.types'
+
+import { useDoubleTouchHook } from '@/hooks/use-double-touch.hook'
+
 function UsersList() {
-	const { limit, offset, page } = useUsersStore(state => state)
+	const { limit, offset, page, setSelected, selected, selectMode } =
+		useUsersStore(state => state)
 	const getUsers = async ({ pageParam }: { pageParam: number }) => {
 		return (
 			await usersService.getUsers({
@@ -26,7 +31,24 @@ function UsersList() {
 			!lastPage.users.length ? undefined : lastPage.offset + 6
 	})
 
-	console.log(data)
+	const handleSelected = (
+		event: React.MouseEvent<HTMLElement, MouseEvent>,
+		user: IUser
+	) => {
+		if (event.shiftKey || selectMode) {
+			selected.find(item => item.id === user.id)
+				? setSelected(selected.filter(item => item.id !== user.id))
+				: setSelected([...selected, user])
+		} else {
+			selected.find(item => item.id === user.id)
+				? setSelected([])
+				: setSelected([user])
+		}
+	}
+
+	const isSelected = (id: string) => {
+		return selected.find(item => item.id === id)
+	}
 
 	return (
 		<div className='w-full h-full flex flex-col select-none'>
@@ -37,6 +59,8 @@ function UsersList() {
 						<UserItem
 							data={item}
 							key={item.id}
+							onClick={event => handleSelected(event, item)}
+							selected={!!isSelected(item.id)}
 						/>
 					))}
 			</div>

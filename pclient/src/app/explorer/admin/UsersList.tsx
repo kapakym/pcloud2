@@ -1,27 +1,14 @@
 'use client'
 
-import { filesService } from '@/services/files.service'
 import { usersService } from '@/services/users.service'
-import { useFileActionsStore } from '@/stores/file-actions.store'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useUsersStore } from '@/stores/users.store'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
-import FileActionBar from '@/components/FileActionBar/FileActionBar'
 import UserActionBar from '@/components/UserActionBar/UserActionBar'
-import { FileItemRow } from '@/components/ui/FileItems/FileItemRow'
-import { ModalPreview } from '@/components/ui/ModalPreview/ModalPreview'
 import { UserItem } from '@/components/ui/UserItem/UserItem'
 
-import { IUser } from '@/types/auth.types'
-import { TypeFiles } from '@/types/files.types'
-
-import { useDoubleTouchHook } from '@/hooks/use-double-touch.hook'
-import { useFilesActions } from '@/hooks/use-files-actions.hook'
-
 function UsersList() {
-	const [limit, setLimit] = useState(5)
-	const [currentPage, setCurrentPage] = useState(1)
-
+	const { limit, offset, page } = useUsersStore(state => state)
 	const getUsers = async ({ pageParam }: { pageParam: number }) => {
 		return (
 			await usersService.getUsers({
@@ -32,7 +19,7 @@ function UsersList() {
 	}
 
 	const { data, fetchNextPage } = useInfiniteQuery({
-		queryKey: ['getUsers'],
+		queryKey: ['getUsers', page],
 		queryFn: getUsers,
 		initialPageParam: 0,
 		getNextPageParam: (lastPage, pages) =>
@@ -45,11 +32,12 @@ function UsersList() {
 		<div className='w-full h-full flex flex-col select-none'>
 			<UserActionBar />
 			<div className='h-full w-full overflow-y-auto'>
-				{!!data?.pages[currentPage - 1]?.users?.length &&
-					data?.pages[currentPage - 1]?.users?.map(item => (
+				{!!data?.pages[page - 1]?.users?.length &&
+					data?.pages[page - 1]?.users?.map(item => (
 						<UserItem
 							data={item}
 							key={item.id}
+							// onActive={handleActive()}
 						/>
 					))}
 			</div>

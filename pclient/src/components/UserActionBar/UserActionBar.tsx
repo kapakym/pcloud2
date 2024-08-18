@@ -1,5 +1,3 @@
-import { ModalDeleteShareLink } from './ModalDeleteShareLink/ModalDeleteShareLink'
-import { ModalEditShare } from './ModalEditShareLink/ModalEditShare'
 import { shareService } from '@/services/share.service'
 import { useShareStore } from '@/stores/share.store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -11,7 +9,7 @@ import { TypeShareActions } from '@/types/share.types'
 
 import { handleCopyToClipboard } from '@/utils/clipboard.utils'
 
-export default function ShareActionBar() {
+export default function UserActionBar() {
 	const queryClient = useQueryClient()
 	const {
 		register,
@@ -82,17 +80,6 @@ export default function ShareActionBar() {
 					</>
 				)}
 			</div>
-			<ModalDeleteShareLink
-				filename={selected?.filename}
-				onClick={handleDelete}
-				onClose={() => setOpen(false)}
-				open={open}
-			/>
-			<ModalEditShare
-				open={openEdit}
-				link={selected}
-				setOpen={setOpenEdit}
-			/>
 		</div>
 	)
 }

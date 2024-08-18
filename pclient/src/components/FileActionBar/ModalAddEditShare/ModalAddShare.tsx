@@ -108,29 +108,31 @@ export const ModalAddShare = (props: ModalAddEditShareProps) => {
 			)}
 			{!shareUrl && (
 				<form
-					className=' flex flex-col w-full px-2 text-left'
+					className=' flex flex-col w-full px-2 text-left h-full justify-between'
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<div>{selected[0]?.name}</div>
-					<InputField
-						type={'date'}
-						label='Active to'
-						placeholder='Enter password'
-						{...register('timeLive', {})}
-						error={errors.timeLive?.message}
-					/>
-					<InputField
-						label='Password'
-						placeholder='Enter password'
-						{...register('password', {})}
-						error={errors.password?.message}
-					/>
-					<InputField
-						label='Retry password'
-						placeholder='Retry password'
-						{...register('retryPassword', {})}
-						error={errors.retryPassword?.message}
-					/>
+					<div>
+						<div>{selected[0]?.name}</div>
+						<InputField
+							type={'date'}
+							label='Active to'
+							placeholder='Enter password'
+							{...register('timeLive', {})}
+							error={errors.timeLive?.message}
+						/>
+						<InputField
+							label='Password'
+							placeholder='Enter password'
+							{...register('password', {})}
+							error={errors.password?.message}
+						/>
+						<InputField
+							label='Retry password'
+							placeholder='Retry password'
+							{...register('retryPassword', {})}
+							error={errors.retryPassword?.message}
+						/>
+					</div>
 
 					<div className='flex space-x-2'>
 						<Button onClick={handleClose}>Cancel</Button>

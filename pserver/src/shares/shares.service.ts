@@ -205,8 +205,9 @@ export class SharesService {
       shareLink.path,
       shareLink.filename,
       dto.path,
-      dto.filename,
+      shareLink.type === 'file' ? '' : dto.filename,
     );
+    console.log(basePath);
     if (fs.existsSync(basePath)) {
       return res.download(basePath, path.basename(basePath));
     }

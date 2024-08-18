@@ -3,7 +3,7 @@ import { $Enums } from '@prisma/client';
 import { hash } from 'argon2';
 import { AuthDto } from 'src/auth/dto/auth.dto';
 import { PrismaService } from 'src/prisma.service';
-import { UserDto } from './dto/user.dto';
+import { GetUserListDto, UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -41,5 +41,26 @@ export class UserService {
     }
 
     return this.prisma.user.update({ where: { id }, data });
+  }
+
+  async getUsers(dto: GetUserListDto) {
+    const users = await this.prisma.user.findMany({
+      skip: dto.offset,
+      take: dto.limit,
+      select: {
+        active: true,
+        email: true,
+        id: true,
+        roles: true,
+      },
+    });
+    const count = await this.prisma.user.count();
+    console.log(count);
+    return {
+      limit: dto.limit,
+      offset: dto.offset,
+      users,
+      count,
+    };
   }
 }

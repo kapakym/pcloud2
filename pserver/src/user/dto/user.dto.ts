@@ -2,6 +2,7 @@ import { $Enums } from '@prisma/client';
 import {
   IsBoolean,
   IsEmail,
+  IsNumber,
   IsOptional,
   IsString,
   MinLength,
@@ -28,4 +29,12 @@ export class UserDto {
   @IsString()
   @IsOptional()
   roles?: $Enums.Roles;
+}
+
+export class GetUserListDto {
+  @IsNumber()
+  limit?: number;
+
+  @IsNumber()
+  offset?: number;
 }

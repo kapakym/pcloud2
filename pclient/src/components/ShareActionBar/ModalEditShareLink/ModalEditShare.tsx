@@ -42,7 +42,11 @@ export const ModalEditShare = (props: ModalAddEditShareProps) => {
 
 	const { selected, path } = useFileActionsStore(state => state)
 
-	const { mutate: mutateUpdateShareLink, data } = useMutation({
+	const {
+		mutate: mutateUpdateShareLink,
+		data,
+		reset
+	} = useMutation({
 		mutationKey: ['mutateUpdateShareLink'],
 		mutationFn: (data: IUpdateShareLinkReq) => shareService.updateShare(data)
 	})
@@ -52,6 +56,12 @@ export const ModalEditShare = (props: ModalAddEditShareProps) => {
 			setValue('timeLive', link.timeLive)
 		}
 	}, [link])
+
+	useEffect(() => {
+		if (open) {
+			reset()
+		}
+	}, [open])
 
 	const handleClose = () => {
 		setOpen(false)
@@ -99,31 +109,33 @@ export const ModalEditShare = (props: ModalAddEditShareProps) => {
 					<Button onClick={handleClose}>Close</Button>
 				</div>
 			)}
-			{link && (
+			{link && !data?.data && (
 				<form
-					className=' flex flex-col w-full px-2 text-left'
+					className=' flex flex-col w-full px-2 text-left justify-between h-full'
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<div>{selected[0]?.name}</div>
-					<InputField
-						type={'date'}
-						label='Active to'
-						placeholder='Enter password'
-						{...register('timeLive', {})}
-						error={errors.timeLive?.message}
-					/>
-					<InputField
-						label='Password'
-						placeholder='Enter password'
-						{...register('password', {})}
-						error={errors.password?.message}
-					/>
-					<InputField
-						label='Retry password'
-						placeholder='Retry password'
-						{...register('retryPassword', {})}
-						error={errors.retryPassword?.message}
-					/>
+					<div>
+						<div>{selected[0]?.name}</div>
+						<InputField
+							type={'date'}
+							label='Active to'
+							placeholder='Enter password'
+							{...register('timeLive', {})}
+							error={errors.timeLive?.message}
+						/>
+						<InputField
+							label='Password'
+							placeholder='Enter password'
+							{...register('password', {})}
+							error={errors.password?.message}
+						/>
+						<InputField
+							label='Retry password'
+							placeholder='Retry password'
+							{...register('retryPassword', {})}
+							error={errors.retryPassword?.message}
+						/>
+					</div>
 
 					<div className='flex space-x-2'>
 						<Button onClick={handleClose}>Cancel</Button>

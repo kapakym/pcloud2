@@ -55,7 +55,6 @@ export class UserService {
       },
     });
     const count = await this.prisma.user.count();
-    console.log(count);
     return {
       limit: dto.limit,
       offset: dto.offset,
@@ -64,7 +63,8 @@ export class UserService {
     };
   }
 
-  async setActiveUser(dto: ActivateUserDto) {
+  async setActiveUser(dto: ActivateUserDto, idUser: string) {
+    if (dto.id === idUser && dto.active === false) return;
     try {
       await this.prisma.user.update({
         where: { id: dto.id },

@@ -3,6 +3,7 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { ActivateUserDto, GetUserListDto } from './dto/user.dto';
 import { UserService } from './user.service';
+import { CurrentUser } from 'src/auth/decorators/user.decorator';
 
 @Controller('user')
 export class UserController {
@@ -18,7 +19,10 @@ export class UserController {
   @Auth()
   @Post('active')
   @Roles('admin')
-  async setActive(@Body() dto: ActivateUserDto) {
-    return this.userService.setActiveUser(dto);
+  async setActive(
+    @Body() dto: ActivateUserDto,
+    @CurrentUser('id') idUser: string,
+  ) {
+    return this.userService.setActiveUser(dto, idUser);
   }
 }

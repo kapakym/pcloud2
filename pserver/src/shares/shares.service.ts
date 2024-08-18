@@ -98,8 +98,6 @@ export class SharesService {
 
     if (!shareLink) return { status: 'not_found' as TypesStatusShareLink };
 
-    console.log(dto);
-
     const result = await this.checkAuthShareLink(shareLink, dto, shareToken);
     if (shareLink.password && result.status !== 'ok') return result;
 
@@ -120,10 +118,6 @@ export class SharesService {
       shareLink.filename,
       dto.path,
     );
-
-    console.log(basePath);
-
-    // await this.isValidHomeDir(fullPath);
 
     const items = fs.readdirSync(basePath, { withFileTypes: true });
     const folders = items
@@ -207,7 +201,6 @@ export class SharesService {
       dto.path,
       shareLink.type === 'file' ? '' : dto.filename,
     );
-    console.log(basePath);
     if (fs.existsSync(basePath)) {
       return res.download(basePath, path.basename(basePath));
     }

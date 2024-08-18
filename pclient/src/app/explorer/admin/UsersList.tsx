@@ -33,11 +33,10 @@ function UsersList() {
 			<UserActionBar />
 			<div className='h-full w-full overflow-y-auto'>
 				{!!data?.pages[page - 1]?.users?.length &&
-					data?.pages[page - 1]?.users?.map(item => (
+					data?.pages[page - 1]?.users.map(item => (
 						<UserItem
 							data={item}
 							key={item.id}
-							// onActive={handleActive()}
 						/>
 					))}
 			</div>

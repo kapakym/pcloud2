@@ -42,14 +42,11 @@ export class AuthService {
   async register(dto: AuthDto) {
     const oldUser = await this.userService.getByEmail(dto.email);
 
-    console.log(oldUser);
-
     if (oldUser) throw new BadRequestException('User already exists');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = await this.userService.create(dto);
 
     if (user) {
-      console.log(this.cloudFolder, user.id);
       // Функция для создания директории где хранятся облачные данные
       fs.mkdir(
         path.join(this.cloudFolder, user.id),
@@ -60,7 +57,6 @@ export class AuthService {
               `Ошибка при создании директории: ${err.message}`,
             );
           }
-          console.log('Директория успешно создана!');
         },
       );
       // Функция для создания директории где хранятся облачные данные
@@ -73,7 +69,6 @@ export class AuthService {
               `Ошибка при создании директории: ${err.message}`,
             );
           }
-          console.log('Директория успешно создана!');
         },
       );
     }
@@ -130,7 +125,6 @@ export class AuthService {
 
   async getNewTokens(refreshToken: string) {
     const result = await this.jwt.verifyAsync(refreshToken);
-    console.log(result);
 
     if (!result) {
       throw new UnauthorizedException('Invalid refresh token');

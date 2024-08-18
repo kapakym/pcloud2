@@ -325,7 +325,6 @@ export class PhotosService {
       'faces',
       file.path,
     );
-    console.log(pathFace);
     if (fs.existsSync(pathFace)) {
       return res.download(pathFace, path.basename(file.path));
     }

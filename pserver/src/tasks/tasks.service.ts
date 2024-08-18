@@ -13,7 +13,6 @@ export class TasksService {
   }
 
   update(data: string) {
-    console.log(data);
     // client.emit('updateTask')
     return `This action updates a #${data} task`;
   }

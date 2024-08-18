@@ -36,6 +36,7 @@ function Auth() {
 			if (data.data.user) {
 				localStorage.setItem('role', data.data.user.roles)
 				localStorage.setItem('name', data.data.user.name)
+				localStorage.setItem('email', data.data.user.email)
 			}
 		}
 	})

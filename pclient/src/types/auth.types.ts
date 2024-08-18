@@ -26,3 +26,8 @@ export interface IAuthRes {
 	accessToken: string
 	user: IUser
 }
+
+export const roleOptions = Object.values(EnumRoles).map(role => ({
+	value: role,
+	label: role.charAt(0).toUpperCase() + role.slice(1) // Преобразуем первую букву в верхний регистр
+}))

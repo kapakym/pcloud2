@@ -1,4 +1,4 @@
-import { IUser } from './auth.types'
+import { EnumRoles, IUser } from './auth.types'
 
 export interface IGetUsersReq {
 	limit: number
@@ -12,5 +12,6 @@ export interface IGetUsersResponse extends IGetUsersReq {
 
 export interface IUserActive {
 	id: string
-	active: boolean
+	active?: boolean
+	roles?: EnumRoles
 }

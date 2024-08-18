@@ -44,5 +44,10 @@ export class ActivateUserDto {
   id: string;
 
   @IsBoolean()
-  active: boolean;
+  @IsOptional()
+  active?: boolean;
+
+  @IsString()
+  @IsOptional()
+  roles?: $Enums.Roles;
 }

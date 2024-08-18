@@ -68,7 +68,7 @@ export class UserService {
     try {
       await this.prisma.user.update({
         where: { id: dto.id },
-        data: { active: dto.active },
+        data: { active: dto.active, roles: dto.roles },
       });
       return true;
     } catch {

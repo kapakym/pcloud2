@@ -1,10 +1,13 @@
 import { Checkbox } from '../Checkbox/Checkbox'
+import CustomSelect, { IOptionSelect } from '../CustomSelect/CustomSelect'
 import { usersService } from '@/services/users.service'
 import { useUsersStore } from '@/stores/users.store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import cn from 'clsx'
+import { useState } from 'react'
+import { SingleValue } from 'react-select'
 
-import { EnumRoles, IUser } from '@/types/auth.types'
+import { EnumRoles, IUser, roleOptions } from '@/types/auth.types'
 import { IUserActive } from '@/types/users.types'
 
 interface UserItemProps {
@@ -15,6 +18,12 @@ interface UserItemProps {
 export const UserItem = (props: UserItemProps) => {
 	const { data, selected = false } = props
 	const { page } = useUsersStore(state => state)
+	const [role, setRole] = useState<SingleValue<IOptionSelect>>(
+		roleOptions.find(item => item.value === EnumRoles[data.roles]) || {
+			value: '',
+			label: ''
+		}
+	)
 	const queryClient = useQueryClient()
 	const { data: dataActivate, mutate: mutateSetActivate } = useMutation({
 		mutationKey: ['setActivateMutation'],
@@ -26,6 +35,12 @@ export const UserItem = (props: UserItemProps) => {
 
 	const handleChangeActivate = () => {
 		mutateSetActivate({ id: data.id, active: !data.active })
+	}
+	const handleChangeRole = (value: SingleValue<IOptionSelect>) => {
+		if (value?.value) {
+			mutateSetActivate({ id: data.id, roles: value.value as EnumRoles })
+			setRole(value)
+		}
 	}
 
 	return (
@@ -44,7 +59,13 @@ export const UserItem = (props: UserItemProps) => {
 					checked={data.active}
 				/>
 			</div>
-			<div>{EnumRoles[data.roles]}</div>
+			<div>
+				<CustomSelect
+					options={roleOptions}
+					value={role}
+					onChange={value => handleChangeRole(value)}
+				/>
+			</div>
 		</div>
 	)
 }

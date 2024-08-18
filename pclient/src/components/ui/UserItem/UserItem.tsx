@@ -1,6 +1,10 @@
+import { Checkbox } from '../Checkbox/Checkbox'
+import { usersService } from '@/services/users.service'
+import { useMutation } from '@tanstack/react-query'
 import cn from 'clsx'
 
 import { EnumRoles, IUser } from '@/types/auth.types'
+import { IUserActive } from '@/types/users.types'
 
 interface UserItemProps {
 	data: IUser
@@ -9,6 +13,15 @@ interface UserItemProps {
 
 export const UserItem = (props: UserItemProps) => {
 	const { data, selected = false } = props
+	const { data: dataActivate, mutate: mutateSetActivate } = useMutation({
+		mutationKey: ['setActivateMutation'],
+		mutationFn: (data: IUserActive) => usersService.setActiveUser(data)
+	})
+
+	const handleChangeActivate = () => {
+		mutateSetActivate({ id: data.id, active: !data.active })
+	}
+
 	return (
 		<div
 			className={cn(
@@ -18,7 +31,13 @@ export const UserItem = (props: UserItemProps) => {
 		>
 			<div>{data.name || 'noname'}</div>
 			<div>{data.email}</div>
-			<div>{data.active}</div>
+			<div>
+				<Checkbox
+					label={data.active ? 'active' : 'not active'}
+					onChange={handleChangeActivate}
+					checked={data.active}
+				/>
+			</div>
 			<div>{EnumRoles[data.roles]}</div>
 		</div>
 	)

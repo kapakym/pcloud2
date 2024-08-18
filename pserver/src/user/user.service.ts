@@ -3,7 +3,7 @@ import { $Enums } from '@prisma/client';
 import { hash } from 'argon2';
 import { AuthDto } from 'src/auth/dto/auth.dto';
 import { PrismaService } from 'src/prisma.service';
-import { GetUserListDto, UserDto } from './dto/user.dto';
+import { ActivateUserDto, GetUserListDto, UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -62,5 +62,17 @@ export class UserService {
       users,
       count,
     };
+  }
+
+  async setActiveUser(dto: ActivateUserDto) {
+    try {
+      await this.prisma.user.update({
+        where: { id: dto.id },
+        data: { active: dto.active },
+      });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }

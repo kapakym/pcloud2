@@ -38,3 +38,11 @@ export class GetUserListDto {
   @IsNumber()
   offset?: number;
 }
+
+export class ActivateUserDto {
+  @IsString()
+  id: string;
+
+  @IsBoolean()
+  active: boolean;
+}

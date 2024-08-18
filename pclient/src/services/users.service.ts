@@ -1,5 +1,9 @@
 import { IGetPeoplesReq, IPeopleResponse } from '@/types/photos.types'
-import { IGetUsersReq, IGetUsersResponse } from '@/types/users.types'
+import {
+	IGetUsersReq,
+	IGetUsersResponse,
+	IUserActive
+} from '@/types/users.types'
 
 import { requestBuilder } from '@/api/requestBuilder'
 
@@ -14,6 +18,17 @@ class UsersService {
 			}
 		})
 		return response
+	}
+
+	async setActiveUser(data: IUserActive) {
+		const response = await requestBuilder<IUserActive, boolean>({
+			url: 'user/active',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
 	}
 }
 

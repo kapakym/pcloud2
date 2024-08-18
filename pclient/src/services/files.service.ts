@@ -75,10 +75,14 @@ class FilesService {
 		return response
 	}
 
-	async downloadFile(data: IDownloadFilesReq) {
+	async downloadFile(
+		data: IDownloadFilesReq,
+		progressFnDw: (progress: number) => void
+	) {
 		const response = await requestBuilder<IDownloadFilesReq, Blob>({
 			url: 'files/download',
 			method: 'post',
+			progressFnDw,
 			options: {
 				isAuth: true,
 				data,

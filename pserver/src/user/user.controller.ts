@@ -11,13 +11,13 @@ export class UserController {
   @Auth()
   @Post('list')
   @Roles('user', 'admin')
-  async getFiles(@Body() dto: GetUserListDto) {
+  async getUsers(@Body() dto: GetUserListDto) {
     return this.userService.getUsers(dto);
   }
 
   @Auth()
   @Post('active')
-  @Roles('user', 'admin')
+  @Roles('admin')
   async setActive(@Body() dto: ActivateUserDto) {
     return this.userService.setActiveUser(dto);
   }

@@ -30,9 +30,13 @@ function Auth() {
 	const { mutate, isError, error, data } = useMutation({
 		mutationKey: ['login'],
 		mutationFn: (data: IAuthFrom) => authService.login(data),
-		onSuccess: () => {
+		onSuccess: data => {
 			reset()
 			push(DASHBOARD_PAGES.FILE_EXPLORER)
+			if (data.data.user) {
+				localStorage.setItem('role', data.data.user.roles)
+				localStorage.setItem('name', data.data.user.name)
+			}
 		}
 	})
 

@@ -24,6 +24,7 @@ export const UserItem = (props: UserItemProps) => {
 			label: ''
 		}
 	)
+	const isAccess = localStorage.getItem('role') === EnumRoles.admin
 	const queryClient = useQueryClient()
 	const { data: dataActivate, mutate: mutateSetActivate } = useMutation({
 		mutationKey: ['setActivateMutation'],
@@ -53,18 +54,22 @@ export const UserItem = (props: UserItemProps) => {
 			<div>{data.name || 'noname'}</div>
 			<div>{data.email}</div>
 			<div>
-				<Checkbox
-					label={data.active ? 'active' : 'not active'}
-					onChange={handleChangeActivate}
-					checked={data.active}
-				/>
+				{isAccess && (
+					<Checkbox
+						label={data.active ? 'active' : 'not active'}
+						onChange={handleChangeActivate}
+						checked={data.active}
+					/>
+				)}
 			</div>
 			<div>
-				<CustomSelect
-					options={roleOptions}
-					value={role}
-					onChange={value => handleChangeRole(value)}
-				/>
+				{isAccess && (
+					<CustomSelect
+						options={roleOptions}
+						value={role}
+						onChange={value => handleChangeRole(value)}
+					/>
+				)}
 			</div>
 		</div>
 	)

@@ -5,7 +5,6 @@ import { useShareStore } from '@/stores/share.store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ClipboardCopy, Edit, Trash } from 'lucide-react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 
 import { TypeShareActions } from '@/types/share.types'
 
@@ -13,21 +12,9 @@ import { handleCopyToClipboard } from '@/utils/clipboard.utils'
 
 export default function ShareActionBar() {
 	const queryClient = useQueryClient()
-	const {
-		register,
-		handleSubmit,
-		reset,
-		formState: { errors },
-		setValue
-	} = useForm<{ name: string }>({
-		mode: 'onChange'
-	})
 
 	const [open, setOpen] = useState(false)
 	const [openEdit, setOpenEdit] = useState(false)
-
-	const handleClose = () => setOpen(false)
-	const handleCloseEdit = () => setOpenEdit(false)
 
 	const { setAction, selected } = useShareStore(state => state)
 
@@ -52,8 +39,6 @@ export default function ShareActionBar() {
 		}
 		setOpen(false)
 	}
-
-	const copyToClipBoard = () => {}
 
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>

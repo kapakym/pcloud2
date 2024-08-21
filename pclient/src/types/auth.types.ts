@@ -20,6 +20,13 @@ export interface IUser {
 	roles: EnumRoles
 }
 
+export interface IUserUpdate {
+	email?: string
+	name?: string
+	oldPassword?: string
+	newPassword?: string
+}
+
 export type IUserUpdateReq = Partial<Omit<IUser, 'id'>>
 
 export interface IAuthRes {

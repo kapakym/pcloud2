@@ -1,3 +1,4 @@
+import { IUser, IUserUpdate } from '@/types/auth.types'
 import { IGetPeoplesReq, IPeopleResponse } from '@/types/photos.types'
 import {
 	IGetUsersReq,
@@ -29,6 +30,7 @@ class UsersService {
 				data
 			}
 		})
+		return response
 	}
 
 	async deleteUser(data: { id: string }) {
@@ -40,6 +42,30 @@ class UsersService {
 				data
 			}
 		})
+		return response
+	}
+
+	async getUserProfile() {
+		const response = await requestBuilder<unknown, IUser>({
+			url: 'user/profile',
+			method: 'get',
+			options: {
+				isAuth: true
+			}
+		})
+		return response
+	}
+
+	async updateProfile(data: IUserUpdate) {
+		const response = await requestBuilder<IUserUpdate, IUser>({
+			url: 'user/profile',
+			method: 'put',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
 	}
 }
 

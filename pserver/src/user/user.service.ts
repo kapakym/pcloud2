@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { $Enums } from '@prisma/client';
-import { hash } from 'argon2';
+import { hash, verify } from 'argon2';
 import { AuthDto } from 'src/auth/dto/auth.dto';
 import { PrismaService } from 'src/prisma.service';
 import * as fs from 'fs';
@@ -9,6 +10,7 @@ import {
   ActivateUserDto,
   DeleteUserDto,
   GetUserListDto,
+  UpdateUserDto,
   UserDto,
 } from './dto/user.dto';
 import { ConfigService } from '@nestjs/config';
@@ -106,6 +108,36 @@ export class UserService {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  async getUserProfile(id: string) {
+    if (id) {
+      const user = await this.prisma.user.findUnique({
+        where: { id },
+      });
+      const { password, ...response } = user;
+      return response;
+    }
+  }
+
+  async updateProfile(dto: UpdateUserDto, id: string) {
+    const { name, email, newPassword, oldPassword } = dto;
+    if (id) {
+      const user = await this.prisma.user.update({
+        where: { id },
+        data: { name, email },
+      });
+      const isValid = await verify(user.password, oldPassword);
+      if (oldPassword && isValid) {
+        console.log('update');
+        await this.prisma.user.update({
+          where: { id },
+          data: { password: await hash(newPassword) },
+        });
+      }
+      const { password, ...response } = user;
+      return response;
     }
   }
 }

@@ -2,7 +2,7 @@
 
 import { usersService } from '@/services/users.service'
 import { useUsersStore } from '@/stores/users.store'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
 import Pagination from '@/components/Pagination/Pagination'
@@ -10,8 +10,6 @@ import UserActionBar from '@/components/UserActionBar/UserActionBar'
 import { UserItem } from '@/components/ui/UserItem/UserItem'
 
 import { IUser } from '@/types/auth.types'
-
-import { useDoubleTouchHook } from '@/hooks/use-double-touch.hook'
 
 function UsersList() {
 	const { limit, offset, page, setSelected, selected, selectMode } =

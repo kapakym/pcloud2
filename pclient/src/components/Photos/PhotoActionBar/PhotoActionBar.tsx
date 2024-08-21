@@ -42,7 +42,8 @@ export default function PhotoActionBar() {
 		setOpenPeoplesBar,
 		openPeoplesBar,
 		setShowPeople,
-		showPeople
+		showPeople,
+		setAction
 	} = usePhotosStore(state => state)
 
 	const [open, setOpen] = useState(false)
@@ -50,10 +51,6 @@ export default function PhotoActionBar() {
 
 	const handleClose = () => setOpen(false)
 	const handleCloseRename = () => setOpenRename(false)
-
-	const { setAction, selectMode, setSelectMode } = usePhotosStore(
-		state => state
-	)
 
 	const handleSetAction = (action: TypePhotosActions) => {
 		setAction(action)

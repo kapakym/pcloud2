@@ -56,3 +56,21 @@ export class DeleteUserDto {
   @IsString()
   id: string;
 }
+
+export class UpdateUserDto {
+  @IsString()
+  @IsOptional()
+  name: string;
+
+  @IsString()
+  @IsOptional()
+  email: string;
+
+  @IsString()
+  @IsOptional()
+  oldPassword: string;
+
+  @IsString()
+  @IsOptional()
+  newPassword: string;
+}

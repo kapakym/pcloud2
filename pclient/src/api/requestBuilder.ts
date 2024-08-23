@@ -14,7 +14,7 @@ import {
 	RBAxiosRequestConfig
 } from '@/types/api.types'
 
-import { DASHBOARD_PAGES } from '@/config/page-url.config'
+import { AUTH_IGNORE_PAGES, DASHBOARD_PAGES } from '@/config/page-url.config'
 
 const axiosCreate = axios.create()
 
@@ -45,7 +45,7 @@ axiosCreate.interceptors.response.use(
 			) {
 				originalRequest._isRetry = true
 				try {
-					// await authService.getNewTokens()
+					await authService.getNewTokens()
 					return axiosCreate.request(originalRequest)
 				} catch (error) {
 					if (errorCatch(error) === 'jwt expired') {
@@ -103,7 +103,9 @@ const requestBuilder = async <Req, Res, Params = undefined>({
 	} catch (e: any) {
 		console.log(e)
 		if (e?.response?.status === 401)
-			window.location.replace(DASHBOARD_PAGES.AUTH)
+			if (!AUTH_IGNORE_PAGES.includes(window.location.pathname)) {
+				window.location.replace(DASHBOARD_PAGES.AUTH)
+			}
 		throw new Error(e?.response?.data?.message, { cause: e?.response?.data })
 	}
 }

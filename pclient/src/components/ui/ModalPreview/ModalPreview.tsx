@@ -23,7 +23,6 @@ function ModalPreview() {
 		if (!open) setShowImage(false)
 	}, [open])
 
-	console.log(showImage)
 	const ShowContent = ({ src }: { src: IPreviewFile | null }) => {
 		const allowImages = ['image/png', 'image/jpeg', 'image/gif']
 		const allowVideo = ['video/mp4', 'video/quicktime']

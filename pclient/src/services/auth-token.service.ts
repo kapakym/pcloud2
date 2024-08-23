@@ -55,6 +55,26 @@ class AuthService {
 
 		return response
 	}
+
+	async getNewTokens() {
+		const response = await requestBuilder<unknown, IAuthRes>({
+			url: 'auth/login/access-token',
+			method: 'post'
+		})
+		if (response?.data.accessToken) {
+			saveTokenStorage(response.data.accessToken)
+		}
+		console.log(response)
+		return response
+	}
+
+	async logout() {
+		const response = await requestBuilder<unknown, boolean>({
+			url: 'auth/logout',
+			method: 'post'
+		})
+		return response
+	}
 }
 
 export const authService = new AuthService()

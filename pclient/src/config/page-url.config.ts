@@ -12,3 +12,5 @@ class DASHBOARD {
 }
 
 export const DASHBOARD_PAGES = new DASHBOARD()
+
+export const AUTH_IGNORE_PAGES = [DASHBOARD_PAGES.AUTH]

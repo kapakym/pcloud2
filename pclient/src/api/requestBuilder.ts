@@ -101,7 +101,6 @@ const requestBuilder = async <Req, Res, Params = undefined>({
 
 		return response
 	} catch (e: any) {
-		console.log(e)
 		if (e?.response?.status === 401)
 			if (!AUTH_IGNORE_PAGES.includes(window.location.pathname)) {
 				window.location.replace(DASHBOARD_PAGES.AUTH)

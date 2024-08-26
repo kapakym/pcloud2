@@ -5,7 +5,6 @@ import cn from 'clsx'
 
 export const SortByPeoples = () => {
 	const { peopleSelected } = usePhotosStore(state => state)
-	console.log(peopleSelected)
 	return (
 		<>
 			{!!peopleSelected.length &&

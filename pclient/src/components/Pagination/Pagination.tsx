@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import React from 'react'
 
 interface PaginationProps {
@@ -33,7 +34,7 @@ const Pagination: React.FC<PaginationProps> = ({
 						className={`px-3 py-1 mx-1 rounded ${
 							i === currentPage
 								? ' text-green-600'
-								: ' text-gray-700  hover:text-white'
+								: ' text-gray-300  hover:text-white'
 						}`}
 					>
 						{i}
@@ -63,19 +64,18 @@ const Pagination: React.FC<PaginationProps> = ({
 			<button
 				onClick={() => handlePageChange(currentPage - 1)}
 				disabled={currentPage === 1}
-				className='px-3 py-1 mx-1 rounded  text-gray-700  hover:text-white  disabled:text-gray-500 cursor-pointer'
+				className='px-3 py-1 mx-1 rounded  text-gray-300  hover:text-white  disabled:text-gray-500 cursor-pointer'
 			>
-				Previous
+				<ArrowLeft size={28} />
 			</button>
-
-			{renderPageNumbers()}
+			<div>{renderPageNumbers()}</div>
 
 			<button
 				onClick={() => handlePageChange(currentPage + 1)}
 				disabled={currentPage === totalPages}
-				className='px-3 py-1 mx-1 rounded  text-gray-700  hover:text-white  disabled:text-gray-500 cursor-pointer'
+				className='px-3 py-1 mx-1 rounded  text-gray-300  hover:text-white  disabled:text-gray-500 cursor-pointer'
 			>
-				Next
+				<ArrowRight size={28} />
 			</button>
 		</div>
 	)

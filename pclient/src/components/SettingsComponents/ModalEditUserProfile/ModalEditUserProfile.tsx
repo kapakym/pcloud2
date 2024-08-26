@@ -107,28 +107,28 @@ export const ModalEditUserProfile = (props: ModalEditUserProfileProps) => {
 					<InputField
 						label='Email'
 						placeholder='Enter email'
-						{...register('email', {})}
+						{...register('email')}
 						error={errors.email?.message}
 					/>
 					<InputField
 						type='password'
 						label='Current password'
 						placeholder='Enter current password'
-						{...register('oldPassword', {})}
+						{...register('oldPassword')}
 						error={errors.oldPassword?.message}
 					/>
 					<InputField
 						type='password'
 						label='New password'
 						placeholder='Enter new password'
-						{...register('password', {})}
+						{...register('password')}
 						error={errors.password?.message}
 					/>
 					<InputField
 						type='password'
 						label='Retry new password'
 						placeholder='Retry new password'
-						{...register('retryPassword', {})}
+						{...register('retryPassword')}
 						error={errors.retryPassword?.message}
 					/>
 				</div>

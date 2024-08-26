@@ -96,7 +96,6 @@ export class UserService {
 
   async deleteUser(dto: DeleteUserDto, idUser: string) {
     if (dto.id === idUser) return;
-    console.log(dto.id);
     try {
       const fullPath = path?.join(this.cloudFolder, dto.id);
       await this.prisma.user.delete({ where: { id: dto.id } });
@@ -130,7 +129,6 @@ export class UserService {
       });
       const isValid = await verify(user.password, oldPassword);
       if (oldPassword && isValid) {
-        console.log('update');
         await this.prisma.user.update({
           where: { id },
           data: { password: await hash(newPassword) },

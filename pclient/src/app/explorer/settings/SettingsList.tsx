@@ -1,9 +1,7 @@
 'use client'
 
-import { usersService } from '@/services/users.service'
 import { usePhotosStore } from '@/stores/photos.store'
-import { useQuery } from '@tanstack/react-query'
-import { Edit, Edit2Icon, FileScan, ScanFace, UserSearch } from 'lucide-react'
+import { FileScan, ScanFace, UserSearch } from 'lucide-react'
 
 import { SettingUserProfile } from '@/components/SettingsComponents/SettingUserProfile/SettingUserProfile'
 import { SettingItem } from '@/components/ui/SettingItem/SettingItem'
@@ -11,7 +9,6 @@ import { SettingItem } from '@/components/ui/SettingItem/SettingItem'
 import { TypePhotosActions } from '@/types/photos.types'
 
 function SettingsList() {
-	console.log()
 	const {
 		setSortBy,
 		setSortWay,

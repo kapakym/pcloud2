@@ -33,7 +33,6 @@ export const ShareLink = () => {
 
 	useEffect(() => {
 		if (id) {
-			console.log({ id })
 			mutateGetShareFiles({ id, path })
 		}
 	}, [id, path])

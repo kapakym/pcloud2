@@ -7,14 +7,18 @@ import { usePhotosStore } from '@/stores/photos.store'
 import { useQueryClient } from '@tanstack/react-query'
 import cn from 'clsx'
 import {
+	ArrowDownAZ,
+	ArrowUpAZ,
 	ArrowUpDown,
 	Calendar,
 	Check,
 	CheckCheck,
 	FileScan,
+	Image,
 	Laugh,
 	PanelBottomOpen,
 	ScanFace,
+	Settings,
 	SortAsc,
 	UserSearch
 } from 'lucide-react'
@@ -22,6 +26,8 @@ import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { TypePhotosActions } from '@/types/photos.types'
+
+import { DASHBOARD_PAGES } from '@/config/page-url.config'
 
 export default function PhotoActionBar() {
 	const {
@@ -120,12 +126,8 @@ export default function PhotoActionBar() {
 				)}
 
 				<VSeparator />
-				<ArrowUpDown
-					size={28}
-					className='text-slate-400 hover:text-slate-200 cursor-pointer'
-					onClick={() => handleSortWay()}
-				/>
-				<SortAsc
+
+				<Image
 					size={28}
 					className={cn(
 						'  cursor-pointer ',
@@ -143,24 +145,29 @@ export default function PhotoActionBar() {
 					)}
 					onClick={() => handleSortByDate()}
 				/>
+				{sortWay === 'asc' && (
+					<ArrowUpAZ
+						size={28}
+						className='text-slate-400 hover:text-slate-200 cursor-pointer'
+						onClick={() => handleSortWay()}
+					/>
+				)}
+				{sortWay === 'desc' && (
+					<ArrowDownAZ
+						size={28}
+						className='text-slate-400 hover:text-slate-200 cursor-pointer'
+						onClick={() => handleSortWay()}
+					/>
+				)}
+
 				<VSeparator />
 				<>
-					<UserSearch
+					<Settings
 						size={28}
 						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSetAction('updateClusters')}
-					/>
-
-					<ScanFace
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSetAction('scanFaces')}
-					/>
-
-					<FileScan
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSetAction('scanAll')}
+						onClick={() =>
+							window.location.replace(DASHBOARD_PAGES.SETTINGS_EXPLORER)
+						}
 					/>
 				</>
 			</div>

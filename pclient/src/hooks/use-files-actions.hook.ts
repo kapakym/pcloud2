@@ -89,7 +89,6 @@ export const useFilesActions = (
 		mutationFn: (data: IDeleteFilesReq) => filesService.deleteFiles(data),
 		onSuccess: (data, variables, context) => {
 			queryClient.invalidateQueries({ queryKey: ['getFiles', path] })
-			console.log(data)
 			setCompletedTask({
 				uuid: context.uuid,
 				description: JSON.stringify(data.data, null, 2)

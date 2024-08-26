@@ -9,7 +9,7 @@ const drawerClass = tv({
 	base: '  fixed top-1/2 left-1/2  bg-slate-800 transition-all duration-500 flex flex-col p-3 -translate-x-1/2 -translate-y-1/2 rounded-xl',
 	variants: {
 		state: {
-			open: ' lg:w-1/2 w-[95%] h-[95%]  lg:m-0 lg:h-auto scale-100',
+			open: ' lg:w-1/2 w-[95%] h-[95%]  lg:m-0 lg:h-full scale-100',
 			close: 'w-0 h-0 scale-0 invisible'
 		}
 	}
@@ -51,7 +51,6 @@ function ModalPreview() {
 		}
 
 		if (allowPdf.includes(src.type)) {
-			console.log(src)
 			window.open(src.src)
 
 			return <div>PDF - файл открыт в новой вкладке</div>

@@ -79,7 +79,7 @@ export class AuthService {
   }
 
   private issueTokens(data: { id: string; role: $Enums.Roles }) {
-    const accessToken = this.jwt.sign(data, { expiresIn: '1s' });
+    const accessToken = this.jwt.sign(data, { expiresIn: '1h' });
 
     const refreshToken = this.jwt.sign(data, { expiresIn: '7d' });
 

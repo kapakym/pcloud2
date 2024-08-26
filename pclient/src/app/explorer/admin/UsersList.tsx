@@ -40,7 +40,6 @@ function UsersList() {
 	}
 
 	const totalPage = useMemo(() => {
-		console.log(data?.data.count ? Math.round(data?.data.count / limit) : 0)
 		return data?.data.count ? Math.round(data?.data.count / limit) : 0
 	}, [data?.data.count])
 

@@ -46,6 +46,7 @@ model Photos {
 model Faces {
   id     String @id @default(cuid())
   path   String @unique
+  name   String @default("")
   left   Int?
   right  Int?
   top    Int?
@@ -62,7 +63,9 @@ model Faces {
 }
 
 model Clusters {
-  id String @id
+  id String @id @default(cuid())
+
+  key String
 
   faces Faces[]
 

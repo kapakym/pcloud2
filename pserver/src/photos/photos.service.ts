@@ -91,6 +91,10 @@ export class PhotosService {
     return response;
   }
 
+  // async updatePeopleName(dto: { id: string }) {
+  //   this.prisma.faces.update({ where: { id }, data:{} });
+  // }
+
   async findLimit(dto: GetPhotoListDto, id: string) {
     const { sortBy, sortWay } = dto;
     if (!id) throw new UnauthorizedException('Error');
@@ -246,17 +250,19 @@ export class PhotosService {
     }>(url, {
       path: path.join(this.cloudFolder, id + '-' + this.tempPrefix, 'faces'),
     });
+    console.log(result);
     for (const key in result.data.clusters) {
-      let isExistCluster: any = await this.prisma.clusters.findUnique({
+      let isExistCluster: any = await this.prisma.clusters.findFirst({
         where: {
-          id: key,
+          key,
+          userId: id,
         },
       });
       !isExistCluster
         ? (isExistCluster = await this.prisma.clusters.create({
             data: {
               userId: id,
-              id: key,
+              key,
               name: 'noname',
             },
           }))

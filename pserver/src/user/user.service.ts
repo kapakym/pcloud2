@@ -40,12 +40,13 @@ export class UserService {
   }
 
   async create(dto: AuthDto) {
+    const countUsers = await this.prisma.user.count();
     const user = {
       email: dto.email,
       name: '',
-      roles: $Enums.Roles.user,
+      roles: countUsers > 0 ? $Enums.Roles.user : $Enums.Roles.admin,
       password: await hash(dto.password),
-      active: false,
+      active: !countUsers,
     };
 
     return this.prisma.user.create({ data: user });

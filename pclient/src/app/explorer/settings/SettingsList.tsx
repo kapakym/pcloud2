@@ -8,22 +8,17 @@ import { SettingItem } from '@/components/ui/SettingItem/SettingItem'
 
 import { TypePhotosActions } from '@/types/photos.types'
 
+import { usePhotosActions } from '@/hooks/use-photos-actions.hook'
+
 function SettingsList() {
-	const {
-		setSortBy,
-		setSortWay,
-		sortWay,
-		sortBy,
-		setOpenPeoplesBar,
-		openPeoplesBar,
-		setShowPeople,
-		showPeople,
-		setAction
-	} = usePhotosStore(state => state)
+	const { setAction } = usePhotosStore(state => state)
+
+	usePhotosActions()
 
 	const handleSetAction = (action: TypePhotosActions) => {
 		setAction(action)
 	}
+
 	return (
 		<div className='w-full h-full flex flex-col select-none'>
 			<div className='w-full  overflow-y-auto h-full '>

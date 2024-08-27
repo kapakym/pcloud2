@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       - POSTGRES_PASSWORD=Pedan1982
-      - POSTGRES_DB=pclouddb
+      - POSTGRES_DB=pcloud2db
     ports:
       - 5432
     networks:

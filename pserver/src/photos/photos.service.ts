@@ -53,7 +53,7 @@ export class PhotosService {
 
     const response = [];
     for (const people of peoples) {
-      if (people.id !== '-1') {
+      if (people.key !== '-1') {
         const photos = await this.prisma.photos.findMany({
           where: {
             userId: id,

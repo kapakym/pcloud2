@@ -1,0 +1,8 @@
+quart>=0.6.7
+hypercorn>=0.3
+face_recognition
+opencv-python
+datetime
+uuid
+numpy
+scikit-learn

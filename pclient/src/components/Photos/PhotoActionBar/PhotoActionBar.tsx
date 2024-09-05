@@ -4,23 +4,15 @@ import { InputField } from '../../ui/Fields/InputField'
 import { Modal } from '../../ui/Modal/Modal'
 import { VSeparator } from '../../ui/VSeparator/VSeparator'
 import { usePhotosStore } from '@/stores/photos.store'
-import { useQueryClient } from '@tanstack/react-query'
 import cn from 'clsx'
 import {
 	ArrowDownAZ,
 	ArrowUpAZ,
-	ArrowUpDown,
 	Calendar,
-	Check,
-	CheckCheck,
-	FileScan,
-	Image,
+	Image as ImageIco,
 	Laugh,
 	PanelBottomOpen,
-	ScanFace,
-	Settings,
-	SortAsc,
-	UserSearch
+	Settings
 } from 'lucide-react'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -127,7 +119,7 @@ export default function PhotoActionBar() {
 
 				<VSeparator />
 
-				<Image
+				<ImageIco
 					size={28}
 					className={cn(
 						'  cursor-pointer ',

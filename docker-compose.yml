@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   postgres:
     image: postgres:11.5-alpine
@@ -14,33 +12,49 @@ services:
     volumes:
       - ./postgres-db:/var/lib/postgresql/data
 
-  server:
-    container_name: pcloud-server
+  pythonface:
+    container_name: pcloud-python
     restart: unless-stopped
-    image: pcloud-server:1
+    image: pcloud-python:1
     build:
-      context: ./server
+      context: ./pyserver
 #      target: production
       dockerfile: Dockerfile
     ports:
-      - 8001
+      - 6000
+    networks:
+      - shared-network
+    volumes:
+      - ./share:/var/share
+
+  server:
+    container_name: pcloud2-server
+    restart: unless-stopped
+    image: pcloud2-server:1
+    build:
+      context: ./pserver
+#      target: production
+      dockerfile: Dockerfile
+    ports:
+      - 5554:5554
     networks:
       - shared-network
     depends_on:
       - postgres
+      - pythonface
     volumes:
       - ./share:/var/share
 
   client:
-    container_name: pcloud-client
+    container_name: pcloud2-client
     restart: unless-stopped
-    image: pcloud-client:1
+    image: pcloud2-client:1
     build:
-      context: ./client
+      context: ./pclient
 #      target: production
       dockerfile: Dockerfile
     ports:
-      - 4000:80
+      - 4000:3000
     networks:
       - shared-network
     depends_on:

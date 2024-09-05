@@ -68,5 +68,6 @@ export const usePhotosActions = () => {
 					break
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [action])
 }

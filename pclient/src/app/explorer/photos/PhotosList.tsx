@@ -53,7 +53,7 @@ export default function PhotosList() {
 
 	const totalPages = useMemo(
 		() => Math.floor(data?.data?.total ? data?.data?.total / limit : 0),
-		[data?.data?.total]
+		[data?.data?.total, limit]
 	)
 
 	const handleChangePage = (page: number) => {

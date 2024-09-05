@@ -1,5 +1,6 @@
 import { IPreviewFile, usePreviewStore } from '@/stores/preivew.store'
 import { XCircle } from 'lucide-react'
+import Image from 'next/image'
 import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import { tv } from 'tailwind-variants'
 

@@ -68,7 +68,10 @@ const requestBuilder = async <Req, Res, Params = undefined>({
 	progressFnDw
 }: PropsRequestBuilder<Req, Params>): Promise<AxiosResponse<Res, Res>> => {
 	const config: RBAxiosRequestConfig = {
-		baseURL: 'http://localhost:5555/api/',
+		baseURL:
+			process.env.NEXT_PUBLIC_MODE === 'dev'
+				? 'http://localhost:5555/api/'
+				: 'http://localhost:5554/api/',
 		isAuth: options?.isAuth,
 		method,
 		responseType: options?.responseType,

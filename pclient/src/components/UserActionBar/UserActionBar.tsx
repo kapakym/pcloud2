@@ -8,14 +8,18 @@ import { useUsersStore } from '@/stores/users.store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import cn from 'clsx'
 import { Check, CheckCheck, Trash } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { EnumRoles } from '@/types/auth.types'
 import { TypeUserActions } from '@/types/users.types'
 
 export default function UserActionBar() {
 	const queryClient = useQueryClient()
-	const isAccess = localStorage.getItem('role') === EnumRoles.admin
+	const [isAccess, setIsAccess] = useState(false)
+
+	useEffect(() => {
+		setIsAccess(window.localStorage.getItem('role') === EnumRoles.admin)
+	}, [])
 
 	const [open, setOpen] = useState(false)
 

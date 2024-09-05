@@ -73,7 +73,8 @@ class ShareService {
 			method: 'post',
 			options: {
 				headers: {
-					'X-Authorization-Share': localStorage.getItem('shareToken') || ''
+					'X-Authorization-Share':
+						window.localStorage.getItem('shareToken') || ''
 				},
 				data
 			}
@@ -87,7 +88,8 @@ class ShareService {
 			method: 'post',
 			options: {
 				headers: {
-					'X-Authorization-Share': localStorage.getItem('shareToken') || ''
+					'X-Authorization-Share':
+						window.localStorage.getItem('shareToken') || ''
 				},
 				data,
 				responseType: 'blob'

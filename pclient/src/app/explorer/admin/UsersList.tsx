@@ -41,7 +41,7 @@ function UsersList() {
 
 	const totalPage = useMemo(() => {
 		return data?.data.count ? Math.round(data?.data.count / limit) : 0
-	}, [data?.data.count])
+	}, [data?.data.count, limit])
 
 	const handleChangePage = (page: number) => {}
 

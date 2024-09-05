@@ -55,13 +55,13 @@ export const ModalEditShare = (props: ModalAddEditShareProps) => {
 		if (link) {
 			setValue('timeLive', link.timeLive)
 		}
-	}, [link])
+	}, [link, setValue])
 
 	useEffect(() => {
 		if (open) {
 			reset()
 		}
-	}, [open])
+	}, [open, reset])
 
 	const handleClose = () => {
 		setOpen(false)

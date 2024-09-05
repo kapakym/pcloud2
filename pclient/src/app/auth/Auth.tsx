@@ -3,6 +3,7 @@
 import { authService } from '@/services/auth-token.service'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import Button from '@/components/ui/Button/Button'
@@ -33,13 +34,16 @@ function Auth() {
 		onSuccess: data => {
 			reset()
 			push(DASHBOARD_PAGES.FILE_EXPLORER)
-			if (data.data.user) {
-				localStorage.setItem('role', data.data.user.roles)
-				localStorage.setItem('name', data.data.user.name)
-				localStorage.setItem('email', data.data.user.email)
-			}
 		}
 	})
+
+	useEffect(() => {
+		if (data?.data.user) {
+			localStorage.setItem('role', data.data.user.roles)
+			localStorage.setItem('name', data.data.user.name)
+			localStorage.setItem('email', data.data.user.email)
+		}
+	}, [data?.data.user])
 
 	const onSubmit: SubmitHandler<IAuthFrom> = formData => {
 		mutate(formData)

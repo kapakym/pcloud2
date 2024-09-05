@@ -35,7 +35,7 @@ export const ShareLink = () => {
 		if (id) {
 			mutateGetShareFiles({ id, path })
 		}
-	}, [id, path])
+	}, [id, path, mutateGetShareFiles])
 
 	useShareLinkActions(id)
 
@@ -46,16 +46,18 @@ export const ShareLink = () => {
 					setOpen(true)
 					break
 				case 'token':
-					localStorage.setItem(
-						'shareToken',
-						data?.data?.token ? data?.data?.token : ''
-					)
+					if (typeof window !== 'undefined') {
+						localStorage.setItem(
+							'shareToken',
+							data?.data?.token ? data?.data?.token : ''
+						)
+					}
 					mutateGetShareFiles({ id, path })
 					setOpen(false)
 					break
 			}
 		}
-	}, [data])
+	}, [data, id, mutateGetShareFiles, path])
 
 	useEffect(() => {
 		if (password) {
@@ -65,7 +67,7 @@ export const ShareLink = () => {
 				path
 			})
 		}
-	}, [password])
+	}, [password, id, path, mutateGetShareFiles])
 
 	const handleEnterFolder = (folderName: string) => {
 		setPath(path + '/' + folderName)

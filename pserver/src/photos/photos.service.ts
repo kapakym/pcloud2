@@ -4,13 +4,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { WebSocketServer } from '@nestjs/websockets';
 import axios, { AxiosResponse } from 'axios';
 import * as ExifReader from 'exifreader';
 import { Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PrismaService } from 'src/prisma.service';
+import { TasksGateway } from 'src/tasks/tasks.gateway';
 import { filterImages, getFilesNonRecursively } from 'src/utils/files.utils';
 import {
   GetPeoplesListDto,
@@ -19,11 +19,9 @@ import {
   ScanPhotoDto,
   TaskIdDto,
 } from './dto/photo.dto';
-import { TasksGateway } from 'src/tasks/tasks.gateway';
 
 @Injectable()
 export class PhotosService {
-  @WebSocketServer() server;
   tempPrefix = null;
   serverPythonUrl = null;
   cloudFolder = null;

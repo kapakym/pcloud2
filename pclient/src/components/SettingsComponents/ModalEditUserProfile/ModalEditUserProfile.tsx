@@ -58,7 +58,7 @@ export const ModalEditUserProfile = (props: ModalEditUserProfileProps) => {
 			setValue('name', data?.name)
 			setValue('email', data?.email)
 		}
-	}, [open])
+	}, [open, data, register, setValue, reset])
 
 	const handleClose = () => {
 		setOpen(false)

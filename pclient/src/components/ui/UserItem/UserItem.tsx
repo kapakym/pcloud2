@@ -4,7 +4,7 @@ import { usersService } from '@/services/users.service'
 import { useUsersStore } from '@/stores/users.store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import cn from 'clsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SingleValue } from 'react-select'
 
 import { EnumRoles, IUser, roleOptions } from '@/types/auth.types'
@@ -25,7 +25,8 @@ export const UserItem = (props: UserItemProps) => {
 			label: ''
 		}
 	)
-	const isAccess = localStorage.getItem('role') === EnumRoles.admin
+
+	const [isAccess, setIsAccess] = useState(false)
 	const queryClient = useQueryClient()
 	const { data: dataActivate, mutate: mutateSetActivate } = useMutation({
 		mutationKey: ['setActivateMutation'],
@@ -34,6 +35,10 @@ export const UserItem = (props: UserItemProps) => {
 			queryClient.invalidateQueries({ queryKey: ['getUsers', offset, limit] })
 		}
 	})
+
+	useEffect(() => {
+		setIsAccess(window.localStorage.getItem('role') === EnumRoles.admin)
+	}, [])
 
 	const handleChangeActivate = () => {
 		mutateSetActivate({ id: data.id, active: !data.active })

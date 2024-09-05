@@ -25,9 +25,10 @@ export class TasksGateway
   @WebSocketServer() server: Server;
   public clients: Map<string, Socket> = new Map();
 
-  afterInit(server: Server) {
-    console.log('WebSocket server initialized', server);
+  afterInit() {
+    console.log('WebSocket server initialized');
   }
+
   handleConnection(client: Socket) {
     this.server.emit('tasks', 'run');
     client.send({ id: client.id });

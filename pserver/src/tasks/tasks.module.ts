@@ -4,5 +4,6 @@ import { TasksGateway } from './tasks.gateway';
 
 @Module({
   providers: [TasksGateway, TasksService],
+  exports: [TasksGateway],
 })
 export class TasksModule {}

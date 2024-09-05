@@ -4,9 +4,6 @@ import cv2
 from datetime import datetime
 import socket_server
 import uuid
-import asyncio
-import time
-from deepface import DeepFace
 
 async def findFaces(image_path, dest_path, image_uuid, sid):
     print(image_path)

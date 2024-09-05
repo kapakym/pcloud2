@@ -2,6 +2,7 @@ import { photosService } from '@/services/photos.service'
 import { usePhotosStore } from '@/stores/photos.store'
 import { useQuery } from '@tanstack/react-query'
 import cn from 'clsx'
+import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 
 import { IPeopleResponse } from '@/types/photos.types'

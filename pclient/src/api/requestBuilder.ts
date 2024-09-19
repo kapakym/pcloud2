@@ -70,8 +70,8 @@ const requestBuilder = async <Req, Res, Params = undefined>({
 	const config: RBAxiosRequestConfig = {
 		baseURL:
 			process.env.NEXT_PUBLIC_MODE === 'dev'
-				? 'http://localhost:5555/api/'
-				: 'http://localhost:5554/api/',
+				? `http://${window.location.host}:5555/api/`
+				: `http://${window.location.host}:5554/api/`,
 		isAuth: options?.isAuth,
 		method,
 		responseType: options?.responseType,

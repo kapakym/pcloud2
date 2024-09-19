@@ -16,7 +16,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  EXPIRE_DAY_REFRESH_TOKEN = 1;
+  EXPIRE_DAY_REFRESH_TOKEN = 7;
   REFRESH_TOKEN_NAME = 'refreshToken';
   tempPrefix = null;
   cloudFolder = null;

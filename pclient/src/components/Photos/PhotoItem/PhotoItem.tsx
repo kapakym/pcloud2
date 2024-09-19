@@ -3,7 +3,6 @@
 import { photosService } from '@/services/photos.service'
 import { usePreviewStore } from '@/stores/preivew.store'
 import { useQuery } from '@tanstack/react-query'
-import Image from 'next/image'
 import { memo, useEffect, useState } from 'react'
 
 import { IPhoto } from '@/types/photos.types'

@@ -1,5 +1,5 @@
-import { PeopleItem } from '../PeopleItem/PeopleItem'
 import { PhotoItem } from '../PhotoItem/PhotoItem'
+import { FaceIcon } from './FaceIcon'
 import { usePhotosStore } from '@/stores/photos.store'
 import cn from 'clsx'
 
@@ -10,16 +10,7 @@ export const SortByPeoples = () => {
 			{!!peopleSelected.length &&
 				peopleSelected.map(face => (
 					<div key={face.faceId}>
-						<div className=''>
-							<div className='px-4 pt-4 flex flex-col justify-center items-center'>
-								<div>
-									<PeopleItem face={face} />
-								</div>
-
-								<h2 className=' pt-2'>{face.name}</h2>
-							</div>
-						</div>
-
+						<FaceIcon face={face} />
 						<div className={cn(`w-full l grid grid-cols-3 gap-4 p-2`)}>
 							{face?.photos?.length &&
 								face.photos.map(item => (

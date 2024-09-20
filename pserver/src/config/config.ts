@@ -16,7 +16,7 @@ export default () => ({
       : '/Users/alex/cloudTest',
   TEMP_PREFIX: 'temp',
   SERVER_PYTHON:
-    process.env.NODE_ENV === 'production'
+    process.env.NODE_ENV == 'production'
       ? 'http://pythonface:6000'
       : 'http://localhost:6000',
   DOMAIN: process.env.NODE_ENV === 'production' ? '192.168.0.100' : 'localhost',

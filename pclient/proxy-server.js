@@ -17,7 +17,6 @@ const server = http.createServer((req, res) => {
 // Обработка WebSocket соединений
 server.on('upgrade', (req, socket, head) => {
 	// Прокси WebSocket соединений
-	console.log('dddddd')
 	proxy.ws(req, socket, head)
 })
 

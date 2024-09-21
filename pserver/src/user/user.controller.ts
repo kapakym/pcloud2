@@ -9,6 +9,7 @@ import {
   UpdateUserDto,
 } from './dto/user.dto';
 import { UserService } from './user.service';
+import { $Enums } from '@prisma/client';
 
 @Controller('user')
 export class UserController {

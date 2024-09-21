@@ -154,7 +154,12 @@ export class PhotosService {
     const imageFiles = filterImages(allFiles);
 
     for (const item of imageFiles) {
-      const tags = await ExifReader.load(item);
+      let tags = undefined;
+      try {
+        tags = await ExifReader.load(item);
+      } catch (error) {
+        console.log(error);
+      }
 
       const existImage = await this.prisma.photos.findUnique({
         where: {

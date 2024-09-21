@@ -16,6 +16,8 @@ async def findFaces(image_path, dest_path, image_uuid, sid):
 
         image = cv2.imread(image_path)
 
+        if image is None:
+            raise ValueError("Unable to load image")
 
         rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 

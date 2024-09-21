@@ -9,8 +9,8 @@ export const UseWsTasks = () => {
 		// const socket = io(`http://localhost:5555/tasks`)
 		const socket = io(
 			process.env.NEXT_PUBLIC_MODE === 'dev'
-				? 'http://localhost:5555/tasks'
-				: 'http://localhost:5554/tasks'
+				? `http://localhost:5555/tasks`
+				: `http://${window.location.hostname}:5554/tasks`
 		)
 
 		console.log('init')

@@ -154,6 +154,7 @@ export class PhotosService {
     const imageFiles = filterImages(allFiles);
 
     for (const item of imageFiles) {
+      console.log(item);
       let tags = undefined;
       try {
         tags = await ExifReader.load(item);
@@ -168,7 +169,7 @@ export class PhotosService {
       });
 
       let dateCreate = null;
-      if (tags['DateTime']?.description) {
+      if (tags && tags['DateTime']?.description) {
         const dateArr = tags['DateTime']?.description?.split(' ');
         dateArr[0] = dateArr[0].replaceAll(':', '-');
         dateCreate = dateArr.join(' ');
@@ -179,12 +180,14 @@ export class PhotosService {
           data: {
             userId: id,
             path: item,
-            latitude: tags['GPSLatitude']?.description
-              ? String(tags['GPSLatitude']?.description)
-              : undefined,
-            longitude: tags['GPSLongitude']?.description
-              ? String(tags['GPSLongitude']?.description)
-              : undefined,
+            latitude:
+              tags && tags['GPSLatitude']?.description
+                ? String(tags['GPSLatitude']?.description)
+                : undefined,
+            longitude:
+              tags && tags['GPSLongitude']?.description
+                ? String(tags['GPSLongitude']?.description)
+                : undefined,
             dateCreate: dateCreate
               ? new Date(Date.parse(dateCreate))
               : undefined,

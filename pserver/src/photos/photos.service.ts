@@ -213,7 +213,10 @@ export class PhotosService {
     });
     if (photos.length) {
       const url = `${this.serverPythonUrl}/find_faces`;
+      let current = 0;
       for (const photo of photos) {
+        current++;
+        console.log('scan: total,current', photos.length, current);
         if (!photo.faces.length) {
           const result: any = await axios.post(url, {
             path: photo.path,
@@ -223,6 +226,9 @@ export class PhotosService {
               'faces',
             ),
           });
+
+          console.log(result?.data?.status);
+          if (result?.data?.status === 'error') continue;
           for (const element of result.data.faces) {
             await this.prisma.faces.create({
               data: {

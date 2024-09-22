@@ -34,7 +34,7 @@ async def create_clusters(images_path):
     face_encodings = np.array(face_encodings)
     
     # Кластеризация с использованием DBSCAN
-    clustering = DBSCAN(eps=0.6, min_samples=2, metric='euclidean').fit(face_encodings)
+    clustering = DBSCAN(eps=0.5, min_samples=2, metric='euclidean').fit(face_encodings)
     
     # Получение меток кластеров
     labels = clustering.labels_

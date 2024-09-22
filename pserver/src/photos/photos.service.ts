@@ -62,6 +62,7 @@ export class PhotosService {
             },
           },
         });
+        console.log('-1', photos);
         const item = {
           id: people.id,
           name: people.name,
@@ -82,6 +83,7 @@ export class PhotosService {
             faceId: face.id,
             photos: [photo],
           };
+          console.log('faces', photo);
           response.push(item);
         }
       }

@@ -64,10 +64,10 @@ export class PhotosService {
         });
         console.log('-1', photos);
         const item = {
-          id: people.id,
-          name: people.name,
-          face: people.faces[0].path,
-          faceId: people.faces[0].id,
+          id: people?.id,
+          name: people?.name,
+          face: people?.faces[0]?.path,
+          faceId: people?.faces[0]?.id,
           photos: photos,
         };
         response.push(item);
@@ -77,10 +77,10 @@ export class PhotosService {
             where: { id: face.photosId },
           });
           const item = {
-            id: people.id,
-            name: people.name,
-            face: face.path,
-            faceId: face.id,
+            id: people?.id,
+            name: people?.name,
+            face: face?.path,
+            faceId: face?.id,
             photos: [photo],
           };
           console.log('faces', photo);

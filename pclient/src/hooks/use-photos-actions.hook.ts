@@ -7,7 +7,7 @@ import { Vibrate } from 'lucide-react'
 import { useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { IScanPhotosReq } from '@/types/photos.types'
+import { IScanPhotosReq, TypePhotosActions } from '@/types/photos.types'
 
 export const usePhotosActions = () => {
 	const { action, setAction, previewPhoto } = usePhotosStore(state => state)
@@ -16,6 +16,46 @@ export const usePhotosActions = () => {
 	const { addTask, setCompletedTask, setPercent } = useLogsStore(state => state)
 
 	const queryClient = useQueryClient()
+
+	const actionsFunctions: Record<string, (uuid: string) => void> = {
+		scanAll: uuid => {
+			addTask({
+				completed: false,
+				title: 'scan photos',
+				id: uuid,
+				typeProgress: 'infinity'
+			})
+			mutateScanPhotos({ uuidTask: uuid })
+		},
+		scanFaces: uuid => {
+			addTask({
+				completed: false,
+				title: 'scan faces',
+				id: uuid,
+				typeProgress: 'infinity'
+			})
+			mutateScanFace({ uuidTask: uuid })
+		},
+		updateClusters: uuid => {
+			addTask({
+				completed: false,
+				title: 'update clusters',
+				id: uuid,
+				typeProgress: 'infinity'
+			})
+			mutateUpdateClusters({ uuidTask: uuid })
+		},
+
+		clearCluster: uuid => {
+			addTask({
+				completed: false,
+				title: 'clear clusters',
+				id: uuid,
+				typeProgress: 'infinity'
+			})
+			mutateClearCluster()
+		}
+	}
 
 	const { mutate: mutateScanPhotos } = useMutation({
 		mutationKey: ['scanPhotos'],
@@ -34,39 +74,16 @@ export const usePhotosActions = () => {
 			photosService.updateClusters(data)
 	})
 
+	const { mutate: mutateClearCluster } = useMutation({
+		mutationKey: ['mutateClearClusters'],
+		mutationFn: () => photosService.clearCluster()
+	})
+
 	useEffect(() => {
 		setAction(null)
 		if (action) {
 			const uuid = uuidv4()
-			switch (action) {
-				case 'scanAll':
-					addTask({
-						completed: false,
-						title: 'scan photos',
-						id: uuid,
-						typeProgress: 'infinity'
-					})
-					mutateScanPhotos({ uuidTask: uuid })
-					break
-				case 'scanFaces':
-					addTask({
-						completed: false,
-						title: 'scan faces',
-						id: uuid,
-						typeProgress: 'infinity'
-					})
-					mutateScanFace({ uuidTask: uuid })
-					break
-				case 'updateClusters':
-					addTask({
-						completed: false,
-						title: 'update clusters',
-						id: uuid,
-						typeProgress: 'infinity'
-					})
-					mutateUpdateClusters({ uuidTask: uuid })
-					break
-			}
+			actionsFunctions[action](uuid)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [action])

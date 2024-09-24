@@ -94,6 +94,17 @@ class PhotosService {
 		})
 		return response
 	}
+
+	async clearCluster() {
+		const response = await requestBuilder<unknown, any>({
+			url: 'photos/clear_cluster',
+			method: 'post',
+			options: {
+				isAuth: true
+			}
+		})
+		return response
+	}
 }
 
 export const photosService = new PhotosService()

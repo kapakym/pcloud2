@@ -37,6 +37,7 @@ export type TypePhotosActions =
 	| 'updateClusters'
 	| 'preview'
 	| 'show_faces'
+	| 'clearCluster'
 	| null
 
 export type TypeSortPhotos = 'dateCreate' | 'peoples' | undefined

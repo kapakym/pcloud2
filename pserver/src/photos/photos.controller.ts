@@ -22,6 +22,12 @@ export class PhotosController {
   }
 
   @Auth()
+  @Post('clear_cluster')
+  clearCluster(@CurrentUser('id') id: string) {
+    return this.photosService.clearCluster(id);
+  }
+
+  @Auth()
   @Post('get_by_id')
   findById(
     @Body() dto: GetPhotoByIdtDto,

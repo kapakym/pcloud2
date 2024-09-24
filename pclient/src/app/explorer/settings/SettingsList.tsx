@@ -1,7 +1,7 @@
 'use client'
 
 import { usePhotosStore } from '@/stores/photos.store'
-import { FileScan, ScanFace, UserSearch } from 'lucide-react'
+import { FileScan, ScanFace, UserSearch, UserX } from 'lucide-react'
 
 import { SettingUserProfile } from '@/components/SettingsComponents/SettingUserProfile/SettingUserProfile'
 import { SettingItem } from '@/components/ui/SettingItem/SettingItem'
@@ -28,6 +28,14 @@ function SettingsList() {
 					</SettingItem>
 					<SettingItem title='Photos tools'>
 						<div className='flex flex-col space-y-2'>
+							<div className='flex flex-row items-center space-x-4'>
+								<UserX
+									size={38}
+									className='text-slate-400 hover:text-slate-200 cursor-pointer '
+									onClick={() => handleSetAction('clearCluster')}
+								/>
+								<div className='text-sm'>Clear clusters</div>
+							</div>
 							<div className='flex flex-row items-center space-x-4'>
 								<UserSearch
 									size={38}

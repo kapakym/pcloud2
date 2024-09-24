@@ -70,7 +70,9 @@ export class PhotosService {
           faceId: people?.faces[0]?.id,
           photos: photos,
         };
-        response.push(item);
+        if (photos.length) {
+          response.push(item);
+        }
       } else {
         for (const face of people.faces) {
           const photo = await this.prisma.photos.findUnique({
@@ -252,6 +254,14 @@ export class PhotosService {
       status: 'completed',
       description: JSON.stringify({ count: photos.length }),
     });
+  }
+
+  async clearCluster(id: string) {
+    const result = await this.prisma.clusters.deleteMany({
+      where: { userId: id },
+    });
+
+    return result;
   }
 
   async updateClusters(dto: TaskIdDto, id: string) {

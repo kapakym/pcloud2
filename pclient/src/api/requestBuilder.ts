@@ -70,7 +70,8 @@ const requestBuilder = async <Req, Res, Params = undefined>({
 	const baseURL =
 		process.env.NEXT_PUBLIC_MODE === 'dev'
 			? `http://${window.location.hostname}:5555/api/`
-			: `http://${window.location.hostname}:5554/api/`
+			: // `http://192.168.0.100:5554/api/`
+				`http://${window.location.hostname}:5554/api/`
 	console.log(baseURL)
 	const config: RBAxiosRequestConfig = {
 		baseURL,

@@ -209,46 +209,57 @@ export class PhotosService {
 
   async scanFaces(dto: TaskIdDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
-
+    // Получение списка не отсканированных фотографий
     const photos = await this.prisma.photos.findMany({
-      include: {
-        faces: true,
+      where: {
+        isFacesScanned: false,
       },
     });
     if (photos.length) {
       const url = `${this.serverPythonUrl}/find_faces`;
       let current = 0;
+
       for (const photo of photos) {
         current++;
+        // Проход по списку фото и вытаскивание из них лиц
         console.log('scan: total,current', photos.length, current);
-        if (!photo.faces.length) {
-          const result: any = await axios.post(url, {
-            path: photo.path,
-            dest_path: path.join(
-              this.cloudFolder,
-              id + '-' + this.tempPrefix,
-              'faces',
-            ),
-          });
+        const result: any = await axios.post(url, {
+          path: photo.path,
+          dest_path: path.join(
+            this.cloudFolder,
+            id + '-' + this.tempPrefix,
+            'faces',
+          ),
+        });
 
-          console.log(result?.data?.status);
-          if (result?.data?.status === 'error') continue;
-          for (const element of result.data.faces) {
-            await this.prisma.faces.create({
-              data: {
-                userId: id,
-                path: element.filename,
-                photosId: photo.id,
-                left: element.position.left,
-                right: element.position.right,
-                top: element.position.top,
-                bottom: element.position.bottom,
-              },
-            });
-          }
+        console.log(result?.data?.status);
+        // Установка для фото статуса отсканирована
+        this.prisma.photos.update({
+          where: {
+            id: photo.id,
+          },
+          data: {
+            isFacesScanned: true,
+          },
+        });
+        if (result?.data?.status === 'error') continue;
+        for (const element of result.data.faces) {
+          // Добавление информации в БД о найденных лицах
+          await this.prisma.faces.create({
+            data: {
+              userId: id,
+              path: element.filename,
+              photosId: photo.id,
+              left: element.position.left,
+              right: element.position.right,
+              top: element.position.top,
+              bottom: element.position.bottom,
+            },
+          });
         }
       }
     }
+    // Отправка информации, о том что задача завершена
     this.taskGateWay.server.emit('tasks', {
       id: dto.uuidTask,
       status: 'completed',
@@ -258,6 +269,41 @@ export class PhotosService {
 
   async clearCluster(id: string) {
     const result = await this.prisma.clusters.deleteMany({
+      where: { userId: id },
+    });
+
+    return result;
+  }
+  async clearFaces(id: string) {
+    await this.clearCluster(id);
+    await this.prisma.photos.updateMany({
+      where: { userId: id },
+      data: {
+        isFacesScanned: false,
+      },
+    });
+
+    const result = await this.prisma.faces.deleteMany({
+      where: { userId: id },
+    });
+
+    fs.rm(
+      path.join(this.cloudFolder, id + '-' + this.tempPrefix, 'faces', '*'),
+      { recursive: true },
+      (err) => {
+        if (err) {
+          return console.error(`Error in delete faces: ${err.message}`);
+        }
+      },
+    );
+
+    return result;
+  }
+
+  async clearPhotos(id: string) {
+    await this.clearCluster(id);
+    await this.clearFaces(id);
+    const result = await this.prisma.photos.deleteMany({
       where: { userId: id },
     });
 

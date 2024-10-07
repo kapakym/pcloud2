@@ -38,6 +38,8 @@ export type TypePhotosActions =
 	| 'preview'
 	| 'show_faces'
 	| 'clearCluster'
+	| 'clearFaces'
+	| 'clearPhotos'
 	| null
 
 export type TypeSortPhotos = 'dateCreate' | 'peoples' | undefined

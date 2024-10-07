@@ -54,6 +54,26 @@ export const usePhotosActions = () => {
 				typeProgress: 'infinity'
 			})
 			mutateClearCluster()
+		},
+
+		clearPhotos: uuid => {
+			addTask({
+				completed: false,
+				title: 'clear clusters',
+				id: uuid,
+				typeProgress: 'infinity'
+			})
+			mutateClearPhotos()
+		},
+
+		clearFaces: uuid => {
+			addTask({
+				completed: false,
+				title: 'clear clusters',
+				id: uuid,
+				typeProgress: 'infinity'
+			})
+			mutateClearFaces()
 		}
 	}
 
@@ -77,6 +97,16 @@ export const usePhotosActions = () => {
 	const { mutate: mutateClearCluster } = useMutation({
 		mutationKey: ['mutateClearClusters'],
 		mutationFn: () => photosService.clearCluster()
+	})
+
+	const { mutate: mutateClearPhotos } = useMutation({
+		mutationKey: ['mutateClearPhotos'],
+		mutationFn: () => photosService.clearPhotos()
+	})
+
+	const { mutate: mutateClearFaces } = useMutation({
+		mutationKey: ['mutateClearFaces'],
+		mutationFn: () => photosService.clearFaces()
 	})
 
 	useEffect(() => {

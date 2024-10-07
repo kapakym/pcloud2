@@ -105,6 +105,28 @@ class PhotosService {
 		})
 		return response
 	}
+
+	async clearPhotos() {
+		const response = await requestBuilder<unknown, any>({
+			url: 'photos/clear_photos',
+			method: 'post',
+			options: {
+				isAuth: true
+			}
+		})
+		return response
+	}
+
+	async clearFaces() {
+		const response = await requestBuilder<unknown, any>({
+			url: 'photos/clear_faces',
+			method: 'post',
+			options: {
+				isAuth: true
+			}
+		})
+		return response
+	}
 }
 
 export const photosService = new PhotosService()

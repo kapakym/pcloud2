@@ -28,6 +28,18 @@ export class PhotosController {
   }
 
   @Auth()
+  @Post('clear_photos')
+  clearPhotos(@CurrentUser('id') id: string) {
+    return this.photosService.clearPhotos(id);
+  }
+
+  @Auth()
+  @Post('clear_faces')
+  clearFaces(@CurrentUser('id') id: string) {
+    return this.photosService.clearFaces(id);
+  }
+
+  @Auth()
   @Post('get_by_id')
   findById(
     @Body() dto: GetPhotoByIdtDto,

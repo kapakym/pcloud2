@@ -5,6 +5,7 @@ import { FilesModule } from './files/files.module';
 import { PhotosModule } from './photos/photos.module';
 import { UserModule } from './user/user.module';
 import { SharesModule } from './shares/shares.module';
+import { VideosModule } from './videos/videos.module';
 import config from './config/config';
 
 @Module({
@@ -18,7 +19,7 @@ import config from './config/config';
     FilesModule,
     PhotosModule,
     SharesModule,
+    VideosModule,
   ],
-  providers: [],
 })
 export class AppModule {}

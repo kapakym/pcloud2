@@ -1,7 +1,14 @@
 'use client'
 
 import { usePhotosStore } from '@/stores/photos.store'
-import { FileScan, ImageOff, ScanFace, UserSearch, UserX } from 'lucide-react'
+import {
+	FileScan,
+	ImageOff,
+	ScanFace,
+	SearchX,
+	UserSearch,
+	UserX
+} from 'lucide-react'
 
 import { SettingUserProfile } from '@/components/SettingsComponents/SettingUserProfile/SettingUserProfile'
 import { SettingItem } from '@/components/ui/SettingItem/SettingItem'
@@ -37,7 +44,7 @@ function SettingsList() {
 								<div className='text-sm'>Clear faces</div>
 							</div>
 							<div className='flex flex-row items-center space-x-4'>
-								<ImageOff
+								<SearchX
 									size={38}
 									className='text-slate-400 hover:text-slate-200 cursor-pointer '
 									onClick={() => handleSetAction('clearPhotos')}

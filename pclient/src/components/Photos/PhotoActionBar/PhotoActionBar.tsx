@@ -9,6 +9,7 @@ import {
 	ArrowDownAZ,
 	ArrowUpAZ,
 	Calendar,
+	CalendarSearch,
 	Image as ImageIco,
 	Laugh,
 	PanelBottomOpen,
@@ -91,6 +92,8 @@ export default function PhotoActionBar() {
 	const handleSetSortPeoples = async () => {
 		setShowPeople(!showPeople)
 	}
+
+	const handleSetDateRange = async () => {}
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>
 			<div className='flex space-x-2'>
@@ -103,6 +106,16 @@ export default function PhotoActionBar() {
 							: 'text-slate-400 hover:text-slate-200'
 					)}
 					onClick={() => handleSetSortPeoples()}
+				/>
+				<CalendarSearch
+					size={28}
+					className={cn(
+						'  cursor-pointer ',
+						showPeople
+							? 'text-green-500'
+							: 'text-slate-400 hover:text-slate-200'
+					)}
+					onClick={() => handleSetDateRange()}
 				/>
 				{showPeople && (
 					<PanelBottomOpen

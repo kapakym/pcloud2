@@ -8,7 +8,7 @@ export default () => ({
       : 'postgresql://postgres:Pedan1982@localhost:5432/pcloud2db?schema=public',
   JWT_SECRET: 'dfsfadsfsad',
   JWT_SECRET_SHARE: 'fffffdfadfadsfasdfdsaf',
-  PORT: process.env.NODE_ENV === 'production' ? 5554 : 5555,
+  PORT: process.env.NODE_ENV === 'production' ? 5555 : 5555,
   STATIC_FOLDER: 'static',
   CLOUD_PATH:
     process.env.NODE_ENV === 'production'

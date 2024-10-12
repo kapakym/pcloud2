@@ -17,7 +17,7 @@ function ExplorerLayout({ children }: PropsWithChildren<unknown>) {
 	UseWsTasks()
 
 	return (
-		<div className=' min-h-screen  flex flex-col h-screen max-h-screen overflow-hidden'>
+		<div className='   flex flex-col  overflow-hidden w-[100dvw] h-[100dvh]'>
 			<Header />
 
 			<div className='flex h-full  overflow-hidden'>

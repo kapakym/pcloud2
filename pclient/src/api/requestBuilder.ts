@@ -69,7 +69,7 @@ const requestBuilder = async <Req, Res, Params = undefined>({
 }: PropsRequestBuilder<Req, Params>): Promise<AxiosResponse<Res, Res>> => {
 	const baseURL =
 		process.env.NEXT_PUBLIC_MODE === 'dev'
-			? `http://${window.location.hostname}:5555/api/`
+			? `http://${window.location.hostname}:5555/api/` //`http://${window.location.hostname}:5555/api/`
 			: '/api/' // `http://192.168.0.100:5554/api/`
 	// `http://${window.location.hostname}:1082/api/`
 	console.log(baseURL)

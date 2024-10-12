@@ -7,7 +7,7 @@ const nextConfig = {
 				source: '/api/:path*', // Прокси все запросы, начинающиеся с /api
 				destination:
 					process.env.NODE_ENV === 'production'
-						? 'http://server:5555/api/:path*'
+						? 'http://server:5554/api/:path*'
 						: 'http://localhost:5555/api/:path*' // Прокси запросы на NestJS контейнер,
 			}
 		]

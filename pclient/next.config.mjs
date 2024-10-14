@@ -11,6 +11,40 @@ const nextConfig = {
 						: 'http://localhost:5555/api/:path*' // Прокси запросы на NestJS контейнер,
 			}
 		]
+	},
+
+	async headers() {
+		return [
+			{
+				// Добавляем заголовки для обработки WebSocket-запросов
+				source: '/api/:path*',
+				headers: [
+					{
+						key: 'Connection',
+						value: 'Upgrade'
+					},
+					{
+						key: 'Upgrade',
+						value: 'websocket'
+					}
+				]
+			}
+		]
+	},
+
+	webpackDevMiddleware: config => {
+		config.watchOptions = {
+			poll: 1000,
+			aggregateTimeout: 300
+		}
+		return config
+	},
+
+	async onProxyInit(proxy) {
+		proxy.on('proxyReqWs', (proxyReq, req, socket, options, head) => {
+			// Обработка WebSocket соединений
+			console.log('WebSocket proxy initiated')
+		})
 	}
 }
 

@@ -11,7 +11,7 @@ const nextConfig = {
 						: 'http://localhost:5555/api/:path*' // Прокси запросы на NestJS контейнер,
 			},
 			{
-				source: '/tasks/:path*', // Прокси все запросы, начинающиеся с /api
+				source: '/socket.io/:path*', // Прокси все запросы, начинающиеся с /api
 				destination:
 					process.env.NODE_ENV === 'production'
 						? 'http://server:5554/tasks/:path*'
@@ -24,7 +24,7 @@ const nextConfig = {
 		return [
 			{
 				// Добавляем заголовки для обработки WebSocket-запросов
-				source: '/tasks/:path*',
+				source: '/socket.io/:path*',
 				headers: [
 					{
 						key: 'Connection',

@@ -4,6 +4,7 @@ import { immer } from 'zustand/middleware/immer'
 export interface IPreviewFile {
 	src: string
 	type: string
+	mode?: string
 }
 
 interface IDrawerStore {

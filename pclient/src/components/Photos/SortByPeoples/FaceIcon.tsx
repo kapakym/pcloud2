@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 
 import { InputField } from '@/components/ui/Fields/InputField'
 
-import { IPeopleResponse } from '@/types/photos.types'
+import { IPeopleResponse } from '@/types/media.types'
 
 export const FaceIcon = ({ face }: { face: IPeopleResponse }) => {
 	const [isEditName, setIsEditName] = useState(false)

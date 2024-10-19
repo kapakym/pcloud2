@@ -1,16 +1,15 @@
-import { photosService } from '@/services/photos.service'
+import { mediaService } from '@/services/media.service'
 import { useLogsStore } from '@/stores/logs.store'
-import { usePhotosStore } from '@/stores/photos.store'
+import { useMediaStore } from '@/stores/media.store'
 import { usePreviewStore } from '@/stores/preivew.store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Vibrate } from 'lucide-react'
 import { useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { IScanPhotosReq, TypePhotosActions } from '@/types/photos.types'
+import { IScanMediaReq } from '@/types/media.types'
 
-export const usePhotosActions = () => {
-	const { action, setAction, previewPhoto } = usePhotosStore(state => state)
+export const useMediaActions = () => {
+	const { action, setAction, previewPhoto } = useMediaStore(state => state)
 	const { setPreviewFile, setOpen, setTitle } = usePreviewStore(state => state)
 
 	const { addTask, setCompletedTask, setPercent } = useLogsStore(state => state)
@@ -21,11 +20,11 @@ export const usePhotosActions = () => {
 		scanAll: uuid => {
 			addTask({
 				completed: false,
-				title: 'scan photos',
+				title: 'scan media',
 				id: uuid,
 				typeProgress: 'infinity'
 			})
-			mutateScanPhotos({ uuidTask: uuid })
+			mutateScanMedia({ uuidTask: uuid })
 		},
 		scanFaces: uuid => {
 			addTask({
@@ -56,14 +55,14 @@ export const usePhotosActions = () => {
 			mutateClearCluster()
 		},
 
-		clearPhotos: uuid => {
+		clearMedia: uuid => {
 			addTask({
 				completed: false,
 				title: 'clear clusters',
 				id: uuid,
 				typeProgress: 'infinity'
 			})
-			mutateClearPhotos()
+			mutateClearMedia()
 		},
 
 		clearFaces: uuid => {
@@ -77,36 +76,36 @@ export const usePhotosActions = () => {
 		}
 	}
 
-	const { mutate: mutateScanPhotos } = useMutation({
-		mutationKey: ['scanPhotos'],
-		mutationFn: (data: IScanPhotosReq = { uuidTask: '' }) =>
-			photosService.scanPhotos(data)
+	const { mutate: mutateScanMedia } = useMutation({
+		mutationKey: ['scanFiles'],
+		mutationFn: (data: IScanMediaReq = { uuidTask: '' }) =>
+			mediaService.scanFiles(data)
 	})
 
 	const { mutate: mutateScanFace } = useMutation({
 		mutationKey: ['mutateScanFace'],
-		mutationFn: (data: { uuidTask: string }) => photosService.scanFaces(data)
+		mutationFn: (data: { uuidTask: string }) => mediaService.scanFaces(data)
 	})
 
 	const { mutate: mutateUpdateClusters } = useMutation({
 		mutationKey: ['mutateUpdateClusters'],
 		mutationFn: (data: { uuidTask: string }) =>
-			photosService.updateClusters(data)
+			mediaService.updateClusters(data)
 	})
 
 	const { mutate: mutateClearCluster } = useMutation({
 		mutationKey: ['mutateClearClusters'],
-		mutationFn: () => photosService.clearCluster()
+		mutationFn: () => mediaService.clearCluster()
 	})
 
-	const { mutate: mutateClearPhotos } = useMutation({
-		mutationKey: ['mutateClearPhotos'],
-		mutationFn: () => photosService.clearPhotos()
+	const { mutate: mutateClearMedia } = useMutation({
+		mutationKey: ['mutateClearMedia'],
+		mutationFn: () => mediaService.clearMedia()
 	})
 
 	const { mutate: mutateClearFaces } = useMutation({
 		mutationKey: ['mutateClearFaces'],
-		mutationFn: () => photosService.clearFaces()
+		mutationFn: () => mediaService.clearFaces()
 	})
 
 	useEffect(() => {

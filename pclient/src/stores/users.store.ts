@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
 import { IUser } from '@/types/auth.types'
-import { TypePhotosActions } from '@/types/photos.types'
+import { TypePhotosActions } from '@/types/media.types'
 import { TypeUserActions } from '@/types/users.types'
 
 interface IUsersStore {

@@ -1,29 +1,44 @@
 import {
+	IGetMediaReq,
+	IGetMediaRes,
 	IGetPeoplesReq,
-	IGetPhotosReq,
-	IGetPhotosRes,
 	IPeopleResponse,
-	IScanPhotosReq
-} from '@/types/photos.types'
+	IScanMediaReq
+} from '@/types/media.types'
 
 import { requestBuilder } from '@/api/requestBuilder'
 
-class PhotosService {
+class MediaService {
+	async getPlayById(params: { id: string }) {
+		return await requestBuilder<unknown, Blob>({
+			url: `media/play/${params.id}`,
+			method: 'get',
+			options: {
+				isAuth: true,
+				responseType: 'blob',
+				headers: {
+					Accept: 'video/mp4;charset=UTF-8'
+				}
+			}
+		})
+	}
+
 	async getPeoples(data?: IGetPeoplesReq) {
 		const response = await requestBuilder<IGetPeoplesReq, IPeopleResponse[]>({
-			url: 'photos/peoples',
+			url: 'media/peoples',
 			method: 'post',
 			options: {
 				isAuth: true,
-				data
+				data,
+				responseType: 'blob'
 			}
 		})
 		return response
 	}
 
-	async getPhotos(data: IGetPhotosReq) {
-		const response = await requestBuilder<IGetPhotosReq, IGetPhotosRes>({
-			url: 'photos/get',
+	async getMediaFiles(data: IGetMediaReq) {
+		const response = await requestBuilder<IGetMediaReq, IGetMediaRes>({
+			url: 'media/get',
 			method: 'post',
 			options: {
 				isAuth: true,
@@ -34,8 +49,8 @@ class PhotosService {
 	}
 
 	async scanFaces(data: { uuidTask: string }) {
-		const response = await requestBuilder<{ uuidTask: string }, IGetPhotosRes>({
-			url: 'photos/scan_faces',
+		const response = await requestBuilder<{ uuidTask: string }, IGetMediaRes>({
+			url: 'media/scan_faces',
 			method: 'post',
 			options: {
 				isAuth: true,
@@ -46,8 +61,8 @@ class PhotosService {
 	}
 
 	async updateClusters(data: { uuidTask: string }) {
-		const response = await requestBuilder<{ uuidTask: string }, IGetPhotosRes>({
-			url: 'photos/update_clusters',
+		const response = await requestBuilder<{ uuidTask: string }, IGetMediaRes>({
+			url: 'media/update_clusters',
 			method: 'post',
 			options: {
 				isAuth: true,
@@ -57,9 +72,9 @@ class PhotosService {
 		return response
 	}
 
-	async getPhotosById(data: { id: string }) {
+	async getMediaFileById(data: { id: string }) {
 		const response = await requestBuilder<{ id: string }, Blob>({
-			url: 'photos/get_by_id',
+			url: 'media/get_by_id',
 			method: 'post',
 			options: {
 				isAuth: true,
@@ -72,7 +87,7 @@ class PhotosService {
 
 	async getFaceById(data: { id: string }) {
 		const response = await requestBuilder<{ id: string }, Blob>({
-			url: 'photos/get_face_by_id',
+			url: 'media/get_face_by_id',
 			method: 'post',
 			options: {
 				isAuth: true,
@@ -83,9 +98,9 @@ class PhotosService {
 		return response
 	}
 
-	async scanPhotos(data: IScanPhotosReq) {
-		const response = await requestBuilder<IScanPhotosReq, string>({
-			url: 'photos/scan',
+	async scanFiles(data: IScanMediaReq) {
+		const response = await requestBuilder<IScanMediaReq, string>({
+			url: 'media/scan',
 			method: 'post',
 			options: {
 				isAuth: true,
@@ -97,7 +112,7 @@ class PhotosService {
 
 	async clearCluster() {
 		const response = await requestBuilder<unknown, any>({
-			url: 'photos/clear_cluster',
+			url: 'media/clear_cluster',
 			method: 'post',
 			options: {
 				isAuth: true
@@ -106,9 +121,9 @@ class PhotosService {
 		return response
 	}
 
-	async clearPhotos() {
+	async clearMedia() {
 		const response = await requestBuilder<unknown, any>({
-			url: 'photos/clear_photos',
+			url: 'media/clear_media',
 			method: 'post',
 			options: {
 				isAuth: true
@@ -119,7 +134,7 @@ class PhotosService {
 
 	async clearFaces() {
 		const response = await requestBuilder<unknown, any>({
-			url: 'photos/clear_faces',
+			url: 'media/clear_faces',
 			method: 'post',
 			options: {
 				isAuth: true
@@ -129,4 +144,4 @@ class PhotosService {
 	}
 }
 
-export const photosService = new PhotosService()
+export const mediaService = new MediaService()

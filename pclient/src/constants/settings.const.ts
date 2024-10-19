@@ -3,7 +3,7 @@ const settings: { name: string }[] = [
 	{ name: 'E-mail' },
 	{ name: 'Role' },
 	{ name: 'version app' },
-	{ name: 'scan photos' },
+	{ name: 'scan media' },
 	{ name: 'scan faces' },
 	{ name: 'update clusters' }
 ] as const

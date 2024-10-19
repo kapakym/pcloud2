@@ -1,10 +1,10 @@
-import { PhotoItem } from '../PhotoItem/PhotoItem'
+import { MediaItem } from '../MediaItem/MediaItem'
 import { FaceIcon } from './FaceIcon'
-import { usePhotosStore } from '@/stores/photos.store'
+import { useMediaStore } from '@/stores/media.store'
 import cn from 'clsx'
 
 export const SortByPeoples = () => {
-	const { peopleSelected } = usePhotosStore(state => state)
+	const { peopleSelected } = useMediaStore(state => state)
 	return (
 		<>
 			{!!peopleSelected.length &&
@@ -15,7 +15,7 @@ export const SortByPeoples = () => {
 							{face?.photos?.length &&
 								face.photos.map(item => (
 									<div key={`${item.id}${item.path}`}>
-										<PhotoItem photo={item}></PhotoItem>
+										<MediaItem mediaFile={item}></MediaItem>
 									</div>
 								))}
 						</div>

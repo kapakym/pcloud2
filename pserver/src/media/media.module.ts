@@ -6,8 +6,8 @@ import { getJwtConfig } from 'src/config/jwt.config';
 import { PrismaService } from 'src/prisma.service';
 import { TasksModule } from 'src/tasks/tasks.module';
 import { TasksService } from 'src/tasks/tasks.service';
-import { PhotosController } from './photos.controller';
-import { PhotosService } from './photos.service';
+import { MediaController } from './media.controller';
+import { MediaService } from './media.service';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { PhotosService } from './photos.service';
       useFactory: getJwtConfig,
     }),
   ],
-  controllers: [PhotosController],
-  providers: [PhotosService, PrismaService, TasksService],
+  controllers: [MediaController],
+  providers: [MediaService, PrismaService, TasksService],
 })
-export class PhotosModule {}
+export class MediaModule {}

@@ -3,7 +3,7 @@ import { EButtonType } from '../../ui/Button/button.enums'
 import { InputField } from '../../ui/Fields/InputField'
 import { Modal } from '../../ui/Modal/Modal'
 import { VSeparator } from '../../ui/VSeparator/VSeparator'
-import { usePhotosStore } from '@/stores/photos.store'
+import { useMediaStore } from '@/stores/media.store'
 import cn from 'clsx'
 import {
 	ArrowDownAZ,
@@ -18,11 +18,11 @@ import {
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { TypePhotosActions } from '@/types/photos.types'
+import { TypeMediaActions } from '@/types/media.types'
 
 import { DASHBOARD_PAGES } from '@/config/page-url.config'
 
-export default function PhotoActionBar() {
+export default function MediaActionBar() {
 	const {
 		register,
 		handleSubmit,
@@ -43,7 +43,7 @@ export default function PhotoActionBar() {
 		setShowPeople,
 		showPeople,
 		setAction
-	} = usePhotosStore(state => state)
+	} = useMediaStore(state => state)
 
 	const [open, setOpen] = useState(false)
 	const [openRename, setOpenRename] = useState(false)
@@ -51,7 +51,7 @@ export default function PhotoActionBar() {
 	const handleClose = () => setOpen(false)
 	const handleCloseRename = () => setOpenRename(false)
 
-	const handleSetAction = (action: TypePhotosActions) => {
+	const handleSetAction = (action: TypeMediaActions) => {
 		setAction(action)
 	}
 

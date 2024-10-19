@@ -1,5 +1,5 @@
 import { IUser, IUserUpdate } from '@/types/auth.types'
-import { IGetPeoplesReq, IPeopleResponse } from '@/types/photos.types'
+import { IGetPeoplesReq, IPeopleResponse } from '@/types/media.types'
 import {
 	IGetUsersReq,
 	IGetUsersResponse,

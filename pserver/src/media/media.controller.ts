@@ -1,23 +1,34 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
+import { Response, Request } from 'express';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import {
   GetPeoplesListDto,
-  GetPhotoByIdtDto,
-  GetPhotoListDto,
-  ScanPhotoDto,
+  GetMediaByIdtDto,
+  GetMediaListDto,
+  ScanMediaDto,
   TaskIdDto,
-} from './dto/photo.dto';
-import { PhotosService } from './photos.service';
+} from './dto/media.dto';
+import { MediaService } from './media.service';
 
-@Controller('photos')
-export class PhotosController {
-  constructor(private readonly photosService: PhotosService) {}
+@Controller('media')
+export class MediaController {
+  constructor(private readonly photosService: MediaService) {}
+
+  @Auth()
+  @Get('play/:id')
+  playById(
+    @Param('id') idVideo: string,
+    @CurrentUser('id') id: string,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    return this.photosService.playById(idVideo, id, req, res);
+  }
 
   @Auth()
   @Post('get')
-  findLimit(@Body() dto: GetPhotoListDto, @CurrentUser('id') id: string) {
+  findLimit(@Body() dto: GetMediaListDto, @CurrentUser('id') id: string) {
     return this.photosService.findLimit(dto, id);
   }
 
@@ -29,8 +40,8 @@ export class PhotosController {
 
   @Auth()
   @Post('clear_photos')
-  clearPhotos(@CurrentUser('id') id: string) {
-    return this.photosService.clearPhotos(id);
+  clearMedia(@CurrentUser('id') id: string) {
+    return this.photosService.clearMedia(id);
   }
 
   @Auth()
@@ -42,7 +53,7 @@ export class PhotosController {
   @Auth()
   @Post('get_by_id')
   findById(
-    @Body() dto: GetPhotoByIdtDto,
+    @Body() dto: GetMediaByIdtDto,
     @CurrentUser('id') id: string,
     @Res() res: Response,
   ) {
@@ -52,7 +63,7 @@ export class PhotosController {
   @Auth()
   @Post('get_face_by_id')
   findFaceById(
-    @Body() dto: GetPhotoByIdtDto,
+    @Body() dto: GetMediaByIdtDto,
     @CurrentUser('id') id: string,
     @Res() res: Response,
   ) {
@@ -61,7 +72,7 @@ export class PhotosController {
 
   @Auth()
   @Post('scan')
-  scanAll(@Body() dto: ScanPhotoDto, @CurrentUser('id') id: string) {
+  scanAll(@Body() dto: ScanMediaDto, @CurrentUser('id') id: string) {
     // Фоновая задача
     this.photosService.scanAll(dto, id);
     return { message: 'taskStarted' };

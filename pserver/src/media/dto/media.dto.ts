@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
 
-export class ScanPhotoDto {
+export class ScanMediaDto {
   @IsString()
   path: string;
 
@@ -8,7 +8,7 @@ export class ScanPhotoDto {
   uuidTask: string;
 }
 
-export class GetPhotoListDto {
+export class GetMediaListDto {
   @IsNumber()
   limit: number;
 
@@ -36,7 +36,7 @@ export class GetPeoplesListDto {
   sortWay?: string;
 }
 
-export class GetPhotoByIdtDto {
+export class GetMediaByIdtDto {
   @IsString()
   id: string;
 }

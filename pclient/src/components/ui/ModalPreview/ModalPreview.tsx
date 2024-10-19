@@ -1,7 +1,8 @@
+import { getAccessToken } from '@/services/auth-token.service'
+import { mediaService } from '@/services/media.service'
 import { IPreviewFile, usePreviewStore } from '@/stores/preivew.store'
 import { XCircle } from 'lucide-react'
-import Image from 'next/image'
-import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { HSeparator } from '@/components/HSepartor/HSeparator'
@@ -16,9 +17,13 @@ const drawerClass = tv({
 	}
 })
 
+const accessToken = getAccessToken()
+
 function ModalPreview() {
 	const { onClose, open, title, previewFile } = usePreviewStore(state => state)
 	const [showImage, setShowImage] = useState(false)
+	const [playVideoUrl, setPlayVideoUrl] = useState('')
+	const videoRef = useRef<HTMLVideoElement>(null)
 
 	useEffect(() => {
 		if (!open) setShowImage(false)
@@ -43,10 +48,11 @@ function ModalPreview() {
 		if (allowVideo.includes(src.type)) {
 			return (
 				<video
-					src={src.src}
+					src={previewFile?.mode === 'stream' ? playVideoUrl : src.src}
 					className='h-full object-contain'
 					autoPlay={true}
 					controls={true}
+					ref={videoRef}
 				/>
 			)
 		}
@@ -60,8 +66,18 @@ function ModalPreview() {
 		return <div>Формат файла не поддерживается</div>
 	}
 
-	const handleTransitionEnd = () => {
+	const handleTransitionEnd = async () => {
 		if (open) setShowImage(true)
+		if (open && previewFile?.mode === 'stream') {
+			const response = await mediaService.getPlayById({ id: previewFile.src })
+			const videoBlob = new Blob([response.data], { type: 'video/mp4' })
+			const url = URL.createObjectURL(videoBlob)
+			setPlayVideoUrl(url)
+			if (videoRef.current) {
+				videoRef.current.src = url
+				// videoRef.current.play()
+			}
+		}
 	}
 
 	return (

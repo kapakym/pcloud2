@@ -1,21 +1,17 @@
-import { PhotoItem } from '../PhotoItem/PhotoItem'
+import { MediaItem } from '../MediaItem/MediaItem'
 
-import { IGetPhotosRes, IPhoto } from '@/types/photos.types'
+import { IGetMediaRes, IMedia } from '@/types/media.types'
 
-export const SortNotFilter = ({
-	data
-}: {
-	data: IGetPhotosRes | undefined
-}) => {
+export const SortNotFilter = ({ data }: { data: IGetMediaRes | undefined }) => {
 	return (
 		<>
-			{!!data?.photos?.length && (
+			{!!data?.files?.length && (
 				<div className='w-full  grid grid-cols-2 md:grid-cols-3 gap-4 p-2'>
-					{data?.photos?.map((item: IPhoto) => (
-						<PhotoItem
-							key={item.id + 'photo'}
-							photo={item}
-						></PhotoItem>
+					{data?.files?.map((item: IMedia) => (
+						<MediaItem
+							key={item.id + 'media'}
+							mediaFile={item}
+						></MediaItem>
 					))}
 				</div>
 			)}

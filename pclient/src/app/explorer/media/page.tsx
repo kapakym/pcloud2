@@ -1,4 +1,4 @@
-import PhotosList from './PhotosList'
+import { MediaList } from './MediaList'
 import { Metadata } from 'next'
 
 import { NO_INDEX_PAGE } from '@/constants/seo.constants'
@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 }
 
 export default function FilesPage() {
-	return <PhotosList />
+	return <MediaList />
 }

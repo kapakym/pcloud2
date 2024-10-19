@@ -1,6 +1,6 @@
 'use client'
 
-import { usePhotosStore } from '@/stores/photos.store'
+import { useMediaStore } from '@/stores/media.store'
 import {
 	FileScan,
 	ImageOff,
@@ -13,16 +13,16 @@ import {
 import { SettingUserProfile } from '@/components/SettingsComponents/SettingUserProfile/SettingUserProfile'
 import { SettingItem } from '@/components/ui/SettingItem/SettingItem'
 
-import { TypePhotosActions } from '@/types/photos.types'
+import { TypeMediaActions } from '@/types/media.types'
 
-import { usePhotosActions } from '@/hooks/use-photos-actions.hook'
+import { useMediaActions } from '@/hooks/use-media-actions.hook'
 
 function SettingsList() {
-	const { setAction } = usePhotosStore(state => state)
+	const { setAction } = useMediaStore(state => state)
 
-	usePhotosActions()
+	useMediaActions()
 
-	const handleSetAction = (action: TypePhotosActions) => {
+	const handleSetAction = (action: TypeMediaActions) => {
 		setAction(action)
 	}
 
@@ -33,7 +33,7 @@ function SettingsList() {
 					<SettingItem title='User profile'>
 						<SettingUserProfile />
 					</SettingItem>
-					<SettingItem title='Photos tools'>
+					<SettingItem title='Media tools'>
 						<div className='flex flex-col space-y-2'>
 							<div className='flex flex-row items-center space-x-4'>
 								<ImageOff
@@ -47,9 +47,9 @@ function SettingsList() {
 								<SearchX
 									size={38}
 									className='text-slate-400 hover:text-slate-200 cursor-pointer '
-									onClick={() => handleSetAction('clearPhotos')}
+									onClick={() => handleSetAction('clearMedia')}
 								/>
-								<div className='text-sm'>Clear photos</div>
+								<div className='text-sm'>Clear media</div>
 							</div>
 							<div className='flex flex-row items-center space-x-4'>
 								<UserX
@@ -83,7 +83,16 @@ function SettingsList() {
 									className='text-slate-400 hover:text-slate-200 cursor-pointer'
 									onClick={() => handleSetAction('scanAll')}
 								/>
-								<div className='text-sm'>Scan media</div>
+								<div className='text-sm'>Scan images</div>
+							</div>
+
+							<div className='flex flex-row items-center space-x-4 '>
+								<FileScan
+									size={38}
+									className='text-slate-400 hover:text-slate-200 cursor-pointer'
+									onClick={() => handleSetAction('scanAll')}
+								/>
+								<div className='text-sm'>Scan video</div>
 							</div>
 						</div>
 					</SettingItem>

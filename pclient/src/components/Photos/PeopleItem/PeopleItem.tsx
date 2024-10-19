@@ -1,29 +1,29 @@
-import { photosService } from '@/services/photos.service'
-import { usePhotosStore } from '@/stores/photos.store'
+import { mediaService } from '@/services/media.service'
+import { useMediaStore } from '@/stores/media.store'
 import { useQuery } from '@tanstack/react-query'
 import cn from 'clsx'
 import { useEffect, useMemo, useState } from 'react'
 
-import { IPeopleResponse } from '@/types/photos.types'
+import { IPeopleResponse } from '@/types/media.types'
 
 interface FaceItemProps {
 	face: IPeopleResponse
 }
 
 export const PeopleItem = ({ face }: FaceItemProps) => {
-	const { peopleSelected, setPeoplesSelected } = usePhotosStore(state => state)
+	const { peopleSelected, setPeoplesSelected } = useMediaStore(state => state)
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['getFaceById', face.faceId],
-		queryFn: () => photosService.getFaceById({ id: face.faceId })
+		queryFn: () => mediaService.getFaceById({ id: face.faceId })
 	})
 
-	const [photoUrl, setPhotoUrl] = useState('')
+	const [mediaUrl, setMediaUrl] = useState('')
 
 	useEffect(() => {
 		if (data?.data instanceof Blob) {
 			const url = window.URL.createObjectURL(new Blob([data.data]))
-			setPhotoUrl(url)
+			setMediaUrl(url)
 		}
 	}, [data])
 
@@ -51,7 +51,7 @@ export const PeopleItem = ({ face }: FaceItemProps) => {
 			{!isLoading && (
 				<img
 					onClick={handleClickPeople}
-					src={photoUrl}
+					src={mediaUrl}
 					alt=''
 					className=' h-full w-full object-contain aspect-square'
 				/>

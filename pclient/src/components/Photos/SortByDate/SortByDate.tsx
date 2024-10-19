@@ -1,12 +1,12 @@
-import { PhotoItem } from '../PhotoItem/PhotoItem'
+import { MediaItem } from '../MediaItem/MediaItem'
 import { InfiniteData } from '@tanstack/react-query'
 import cn from 'clsx'
 import dayjs from 'dayjs'
 
-import { IGetPhotosRes, IPhoto } from '@/types/photos.types'
+import { IGetMediaRes, IMedia } from '@/types/media.types'
 
-export const SortByDate = ({ data }: { data: IGetPhotosRes | undefined }) => {
-	const groupedItems = data?.photos?.reduce(
+export const SortByDate = ({ data }: { data: IGetMediaRes | undefined }) => {
+	const groupedItems = data?.files?.reduce(
 		(acc, item) => {
 			const date = dayjs(item.dateCreate).format('DD-MM-YYYY')
 
@@ -18,7 +18,7 @@ export const SortByDate = ({ data }: { data: IGetPhotosRes | undefined }) => {
 			}
 			return acc
 		},
-		{} as Record<string, IPhoto[]>
+		{} as Record<string, IMedia[]>
 	)
 	return (
 		<>
@@ -36,7 +36,7 @@ export const SortByDate = ({ data }: { data: IGetPhotosRes | undefined }) => {
 						>
 							{items.map(item => (
 								<div key={`${item.id}${item.path}`}>
-									<PhotoItem photo={item}></PhotoItem>
+									<MediaItem mediaFile={item}></MediaItem>
 								</div>
 							))}
 						</div>

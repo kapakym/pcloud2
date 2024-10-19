@@ -14,7 +14,7 @@ function ExplorerLayout({ children }: PropsWithChildren<unknown>) {
 		state => state
 	)
 
-	UseWsTasks()
+	// UseWsTasks()
 
 	return (
 		<div className='   flex flex-col  overflow-hidden w-[100dvw] h-[100dvh]'>

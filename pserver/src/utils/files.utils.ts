@@ -11,6 +11,17 @@ const imageExtensions = new Set([
   '.svg',
 ]);
 
+const videoExtensions = new Set([
+  '.mp4',
+  '.mov',
+  '.wmv',
+  '.webm',
+  '.avi',
+  '.flv',
+  '.mkv',
+  '.mts',
+]);
+
 export const getFilesNonRecursively = (directory: string): string[] => {
   const results: string[] = [];
   const queue: string[] = [directory];
@@ -38,5 +49,13 @@ export const filterImages = (files: string[]): string[] => {
   return files.filter((file) => {
     const ext = path.extname(file).toLowerCase();
     return imageExtensions.has(ext);
+  });
+};
+
+export const filterVideo = (files: string[]): string[] => {
+  return files.filter((file) => {
+    const ext = path.extname(file).toLowerCase();
+    console.log(ext, videoExtensions.has(ext));
+    return videoExtensions.has(ext);
   });
 };

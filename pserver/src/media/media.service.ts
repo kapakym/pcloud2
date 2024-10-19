@@ -6,22 +6,27 @@ import {
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosResponse } from 'axios';
 import * as ExifReader from 'exifreader';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PrismaService } from 'src/prisma.service';
 import { TasksGateway } from 'src/tasks/tasks.gateway';
-import { filterImages, getFilesNonRecursively } from 'src/utils/files.utils';
+import {
+  filterImages,
+  filterVideo,
+  getFilesNonRecursively,
+} from 'src/utils/files.utils';
 import {
   GetPeoplesListDto,
-  GetPhotoByIdtDto,
-  GetPhotoListDto,
-  ScanPhotoDto,
+  GetMediaByIdtDto,
+  GetMediaListDto,
+  ScanMediaDto,
   TaskIdDto,
-} from './dto/photo.dto';
+} from './dto/media.dto';
+import { $Enums } from '@prisma/client';
 
 @Injectable()
-export class PhotosService {
+export class MediaService {
   tempPrefix = null;
   serverPythonUrl = null;
   cloudFolder = null;
@@ -52,7 +57,7 @@ export class PhotosService {
     const response = [];
     for (const people of peoples) {
       if (people.key !== '-1') {
-        const photos = await this.prisma.photos.findMany({
+        const media = await this.prisma.media.findMany({
           where: {
             userId: id,
             faces: {
@@ -62,28 +67,28 @@ export class PhotosService {
             },
           },
         });
-        console.log('-1', photos);
+        console.log('-1', media);
         const item = {
           id: people?.id,
           name: people?.name,
           face: people?.faces[0]?.path,
           faceId: people?.faces[0]?.id,
-          photos: photos,
+          media: media,
         };
-        if (photos.length) {
+        if (media.length) {
           response.push(item);
         }
       } else {
         for (const face of people.faces) {
-          const photo = await this.prisma.photos.findUnique({
-            where: { id: face.photosId },
+          const photo = await this.prisma.media.findUnique({
+            where: { id: face.mediaId },
           });
           const item = {
             id: people?.id,
             name: people?.name,
             face: face?.path,
             faceId: face?.id,
-            photos: [photo],
+            media: [photo],
           };
           console.log('faces', photo);
           response.push(item);
@@ -97,7 +102,7 @@ export class PhotosService {
   //   this.prisma.faces.update({ where: { id }, data:{} });
   // }
 
-  async findLimit(dto: GetPhotoListDto, id: string) {
+  async findLimit(dto: GetMediaListDto, id: string) {
     const { sortBy, sortWay } = dto;
     if (!id) throw new UnauthorizedException('Error');
 
@@ -107,7 +112,7 @@ export class PhotosService {
         }
       : undefined;
 
-    const imageFiles = await this.prisma.photos.findMany({
+    const imageFiles = await this.prisma.media.findMany({
       skip: dto.offset,
       take: dto.limit,
       orderBy: {
@@ -121,7 +126,7 @@ export class PhotosService {
       },
     });
 
-    const total = await this.prisma.photos.count({
+    const total = await this.prisma.media.count({
       where: {
         userId: id,
       },
@@ -131,7 +136,8 @@ export class PhotosService {
       limit: dto.limit,
       offset: dto.offset >= total ? dto.offset - dto.limit : dto.offset,
       total,
-      photos: imageFiles.map((item) => ({
+      files: imageFiles.map((item) => ({
+        type: item.type,
         id: item.id,
         path: item.path,
         dateCreate: item.dateCreate ? item.dateCreate : undefined,
@@ -143,7 +149,7 @@ export class PhotosService {
     return response;
   }
 
-  async scanAll(dto: ScanPhotoDto, id: string) {
+  async scanAll(dto: ScanMediaDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
 
     // this.tasksGateway.server.
@@ -155,50 +161,16 @@ export class PhotosService {
     }
 
     const allFiles = getFilesNonRecursively(fullPath);
+
+    // Scan and add photos
     const imageFiles = filterImages(allFiles);
+    this.addMediaInDB(imageFiles, id, $Enums.TypesMedia.image);
 
-    for (const item of imageFiles) {
-      console.log(item);
-      let tags = undefined;
-      try {
-        tags = await ExifReader.load(item);
-      } catch (error) {
-        console.log(error);
-      }
+    // Scan and add video
+    const videoFiles = filterVideo(allFiles);
+    console.log('------>', videoFiles);
+    this.addMediaInDB(videoFiles, id, $Enums.TypesMedia.video);
 
-      const existImage = await this.prisma.photos.findUnique({
-        where: {
-          path: item,
-        },
-      });
-
-      let dateCreate = null;
-      if (tags && tags['DateTime']?.description) {
-        const dateArr = tags['DateTime']?.description?.split(' ');
-        dateArr[0] = dateArr[0].replaceAll(':', '-');
-        dateCreate = dateArr.join(' ');
-      }
-
-      if (!existImage) {
-        await this.prisma.photos.create({
-          data: {
-            userId: id,
-            path: item,
-            latitude:
-              tags && tags['GPSLatitude']?.description
-                ? String(tags['GPSLatitude']?.description)
-                : undefined,
-            longitude:
-              tags && tags['GPSLongitude']?.description
-                ? String(tags['GPSLongitude']?.description)
-                : undefined,
-            dateCreate: dateCreate
-              ? new Date(Date.parse(dateCreate))
-              : undefined,
-          },
-        });
-      }
-    }
     this.taskGateWay.server.emit('tasks', {
       id: dto.uuidTask,
       status: 'completed',
@@ -210,19 +182,19 @@ export class PhotosService {
   async scanFaces(dto: TaskIdDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
     // Получение списка не отсканированных фотографий
-    const photos = await this.prisma.photos.findMany({
+    const media = await this.prisma.media.findMany({
       where: {
         isFacesScanned: false,
       },
     });
-    if (photos.length) {
+    if (media.length) {
       const url = `${this.serverPythonUrl}/find_faces`;
       let current = 0;
 
-      for (const photo of photos) {
+      for (const photo of media) {
         current++;
         // Проход по списку фото и вытаскивание из них лиц
-        console.log('scan: total,current', photos.length, current);
+        console.log('scan: total,current', media.length, current);
         const result: any = await axios.post(url, {
           path: photo.path,
           dest_path: path.join(
@@ -234,7 +206,7 @@ export class PhotosService {
 
         console.log(result?.data?.status);
         // Установка для фото статуса отсканирована
-        this.prisma.photos.update({
+        this.prisma.media.update({
           where: {
             id: photo.id,
           },
@@ -249,7 +221,7 @@ export class PhotosService {
             data: {
               userId: id,
               path: element.filename,
-              photosId: photo.id,
+              mediaId: photo.id,
               left: element.position.left,
               right: element.position.right,
               top: element.position.top,
@@ -263,7 +235,7 @@ export class PhotosService {
     this.taskGateWay.server.emit('tasks', {
       id: dto.uuidTask,
       status: 'completed',
-      description: JSON.stringify({ count: photos.length }),
+      description: JSON.stringify({ count: media.length }),
     });
   }
 
@@ -276,7 +248,7 @@ export class PhotosService {
   }
   async clearFaces(id: string) {
     await this.clearCluster(id);
-    await this.prisma.photos.updateMany({
+    await this.prisma.media.updateMany({
       where: { userId: id },
       data: {
         isFacesScanned: false,
@@ -300,10 +272,10 @@ export class PhotosService {
     return result;
   }
 
-  async clearPhotos(id: string) {
+  async clearMedia(id: string) {
     await this.clearCluster(id);
     await this.clearFaces(id);
-    const result = await this.prisma.photos.deleteMany({
+    const result = await this.prisma.media.deleteMany({
       where: { userId: id },
     });
 
@@ -368,10 +340,10 @@ export class PhotosService {
     });
   }
 
-  async findById(dto: GetPhotoByIdtDto, id: string, res: Response) {
+  async findById(dto: GetMediaByIdtDto, id: string, res: Response) {
     if (!id) throw new UnauthorizedException('Error');
 
-    const file = await this.prisma.photos.findUnique({
+    const file = await this.prisma.media.findUnique({
       where: {
         userId: id,
         id: dto.id,
@@ -386,7 +358,51 @@ export class PhotosService {
     throw new BadRequestException('file not found');
   }
 
-  async findFaceById(dto: GetPhotoByIdtDto, id: string, res: Response) {
+  async playById(videoId: string, id: string, req: Request, res: Response) {
+    console.log(videoId);
+    // if (!id) throw new UnauthorizedException('Error');
+
+    const file = await this.prisma.media.findUnique({
+      where: {
+        // userId: id,
+        id: videoId,
+      },
+    });
+
+    if (!file) throw new BadRequestException('file not found');
+
+    const stat = fs.statSync(file.path);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+
+    // Если запрос не содержит заголовок Range, отправляем полный файл
+    if (!range) {
+      const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'video/mp4',
+      };
+      res.writeHead(200, head);
+      fs.createReadStream(file.path).pipe(res);
+    } else {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunkSize = end - start + 1;
+
+      const videoFile = fs.createReadStream(file.path, { start, end });
+      const head = {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunkSize,
+        'Content-Type': 'video/mp4',
+      };
+
+      res.writeHead(206, head);
+      videoFile.pipe(res);
+    }
+  }
+
+  async findFaceById(dto: GetMediaByIdtDto, id: string, res: Response) {
     const file = await this.prisma.faces.findUnique({
       where: {
         id: dto.id,
@@ -405,5 +421,56 @@ export class PhotosService {
       return res.download(pathFace, path.basename(file.path));
     }
     throw new BadRequestException('file not found');
+  }
+
+  async addMediaInDB(
+    imageFiles: string[],
+    id: string,
+    typeMedia: $Enums.TypesMedia,
+  ) {
+    for (const item of imageFiles) {
+      console.log(item);
+      let tags = undefined;
+      try {
+        tags = await ExifReader.load(item);
+      } catch (error) {
+        console.log(error);
+        if (typeMedia === $Enums.TypesMedia.image) continue;
+      }
+
+      const existImage = await this.prisma.media.findUnique({
+        where: {
+          path: item,
+        },
+      });
+
+      let dateCreate = null;
+      if (tags && tags['DateTime']?.description) {
+        const dateArr = tags['DateTime']?.description?.split(' ');
+        dateArr[0] = dateArr[0].replaceAll(':', '-');
+        dateCreate = dateArr.join(' ');
+      }
+
+      if (!existImage) {
+        await this.prisma.media.create({
+          data: {
+            type: typeMedia,
+            userId: id,
+            path: item,
+            latitude:
+              tags && tags['GPSLatitude']?.description
+                ? String(tags['GPSLatitude']?.description)
+                : undefined,
+            longitude:
+              tags && tags['GPSLongitude']?.description
+                ? String(tags['GPSLongitude']?.description)
+                : undefined,
+            dateCreate: dateCreate
+              ? new Date(Date.parse(dateCreate))
+              : undefined,
+          },
+        });
+      }
+    }
   }
 }

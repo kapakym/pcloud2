@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:Pedan1982@postgres:5432/pcloud2db?schema=public"
+  url      = "postgresql://postgres:Pedan1982@localhost:5432/pcloud2db?schema=public"
 }
 
 model User {
@@ -21,37 +21,29 @@ model User {
   active   Boolean @default(true)
   roles    Roles   @default(user)
 
-  photos   Photos[]
+  Media    Media[]
   Clusters Clusters[]
   Faces    Faces[]
   Shares   Shares[]
-  Videos   Videos[]
+  Tasks    Tasks[]
 
   @@map("users")
 }
 
-model Photos {
-  id             String    @id @default(cuid())
-  path           String    @unique
-  dateCreate     DateTime? @map("date_create")
+model Media {
+  id             String     @id @default(cuid())
+  path           String     @unique
+  dateCreate     DateTime?  @map("date_create")
   longitude      String?
   latitude       String?
-  isFacesScanned Boolean   @default(false) @map("is_faces_scaned")
+  isFacesScanned Boolean    @default(false) @map("is_faces_scaned")
+  type           TypesMedia
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String? @map("user_id")
   faces  Faces[]
 
-  @@map("photos")
-}
-
-model Videos {
-  id         String   @id @default(cuid())
-  path       String   @unique
-  dateCreate DateTime @map("date_create")
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
+  @@map("media")
 }
 
 model Faces {
@@ -64,8 +56,8 @@ model Faces {
   bottom Int?
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  photo     Photos?   @relation(fields: [photosId], references: [id])
-  photosId  String?   @map("photo_id")
+  media     Media?    @relation(fields: [mediaId], references: [id])
+  mediaId   String?   @map("media_id")
   clusters  Clusters? @relation(fields: [clusterId], references: [id])
   clusterId String?   @map("cluster_id")
   userId    String    @map("user_id")
@@ -102,6 +94,17 @@ model Shares {
   @@map("shares")
 }
 
+model Tasks {
+  id          String         @id @default(cuid())
+  status      TypeStatusTask
+  description String?
+  dateCreate  DateTime       @default(now()) @map("date_create")
+  dateClose   DateTime       @map("date_close")
+  userId      String
+
+  user User @relation(fields: [userId], references: [id])
+}
+
 enum Roles {
   user
   admin
@@ -110,4 +113,15 @@ enum Roles {
 enum TypeShare {
   folder
   file
+}
+
+enum TypeStatusTask {
+  completed
+  progress
+  error
+}
+
+enum TypesMedia {
+  image
+  video
 }

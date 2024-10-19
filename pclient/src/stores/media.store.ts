@@ -1,24 +1,23 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { TypeFiles, TypeFilesActions } from '@/types/files.types'
 import {
+	IMedia,
 	IPeopleResponse,
-	IPhoto,
-	TypePhotosActions,
-	TypeSortPhotos,
+	TypeMediaActions,
+	TypeSortMedia,
 	TypeSortWay
-} from '@/types/photos.types'
+} from '@/types/media.types'
 
-interface IPhotoActionsStore {
-	action: TypePhotosActions
+interface IMediaActionsStore {
+	action: TypeMediaActions
 	limit: number
 	offset: number
 	total: number
-	photoList: IPhoto[]
+	mediaFileList: IMedia[]
 	selectMode: boolean
 	previewPhoto: string | null
-	sortBy: TypeSortPhotos
+	sortBy: TypeSortMedia
 	sortWay: TypeSortWay
 	openPeoplesBar: boolean
 	peopleSelected: IPeopleResponse[] | []
@@ -27,24 +26,24 @@ interface IPhotoActionsStore {
 	setLimit: (payload: number) => void
 	setOffset: (payload: number) => void
 	setTotal: (payload: number) => void
-	setPhotoList: (payload: IPhoto[]) => void
-	setAction: (payload: TypePhotosActions) => void
+	setMediaFileList: (payload: IMedia[]) => void
+	setAction: (payload: TypeMediaActions) => void
 	setSelectMode: (payload: boolean) => void
 	setPreviewPhoto: (payload: string) => void
-	setSortBy: (payload: TypeSortPhotos) => void
+	setSortBy: (payload: TypeSortMedia) => void
 	setSortWay: (payload: TypeSortWay) => void
 	setOpenPeoplesBar: (payload: boolean) => void
 	setPeoplesSelected: (payload: IPeopleResponse[]) => void
 	setShowPeople: (payload: boolean) => void
 }
 
-export const usePhotosStore = create<IPhotoActionsStore>()(
+export const useMediaStore = create<IMediaActionsStore>()(
 	immer(set => ({
 		action: null,
 		limit: 6,
 		offset: 0,
 		total: 0,
-		photoList: [],
+		mediaFileList: [],
 		selectMode: false,
 		previewPhoto: null,
 		sortBy: undefined,
@@ -56,7 +55,7 @@ export const usePhotosStore = create<IPhotoActionsStore>()(
 		setLimit: payload => set(() => ({ limit: payload })),
 		setTotal: payload => set(() => ({ total: payload })),
 		setOffset: payload => set(() => ({ offset: payload })),
-		setPhotoList: payload => set(() => ({ photoList: payload })),
+		setMediaFileList: payload => set(() => ({ mediaFileList: payload })),
 		setAction: payload => set(() => ({ action: payload })),
 		setSelectMode: payload => set(() => ({ selectMode: payload })),
 		setPreviewPhoto: payload => set(() => ({ previewPhoto: payload })),

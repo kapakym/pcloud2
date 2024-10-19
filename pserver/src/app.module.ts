@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { FilesModule } from './files/files.module';
-import { PhotosModule } from './photos/photos.module';
-import { UserModule } from './user/user.module';
-import { SharesModule } from './shares/shares.module';
-import { VideosModule } from './videos/videos.module';
 import config from './config/config';
+import { FilesModule } from './files/files.module';
+import { LoggerMiddleware } from './logger/logger';
+import { MediaModule } from './media/media.module';
+import { SharesModule } from './shares/shares.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -17,9 +17,14 @@ import config from './config/config';
     AuthModule,
     UserModule,
     FilesModule,
-    PhotosModule,
+    MediaModule,
     SharesModule,
-    VideosModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware) // Применяем middleware
+      .forRoutes('*'); // Логируем все маршруты
+  }
+}

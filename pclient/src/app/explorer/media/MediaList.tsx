@@ -1,22 +1,22 @@
 'use client'
 
-import { photosService } from '@/services/photos.service'
-import { usePhotosStore } from '@/stores/photos.store'
+import { mediaService } from '@/services/media.service'
+import { useMediaStore } from '@/stores/media.store'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 import Pagination from '@/components/Pagination/Pagination'
+import PhotoActionBar from '@/components/Photos/MediaActionBar/MediaActionBar'
 import { PeopleBar } from '@/components/Photos/PeopleBar/PeopleBar'
-import PhotoActionBar from '@/components/Photos/PhotoActionBar/PhotoActionBar'
 import { SortByDate } from '@/components/Photos/SortByDate/SortByDate'
 import { SortByPeoples } from '@/components/Photos/SortByPeoples/SortByPeoples'
 import { SortNotFilter } from '@/components/Photos/SortNotFilter.tsx/SortNotFilter'
 import { ModalPreview } from '@/components/ui/ModalPreview/ModalPreview'
 
-import { usePhotosActions } from '@/hooks/use-photos-actions.hook'
+import { useMediaActions } from '@/hooks/use-media-actions.hook'
 
-export default function PhotosList() {
+export function MediaList() {
 	const {
 		limit,
 		offset,
@@ -27,16 +27,17 @@ export default function PhotosList() {
 		sortWay,
 		openPeoplesBar,
 		showPeople
-	} = usePhotosStore(state => state)
+	} = useMediaStore(state => state)
 
 	const { data } = useQuery({
-		queryKey: ['getPhotos', offset, sortBy, sortWay, limit],
-		queryFn: () => photosService.getPhotos({ offset, sortBy, sortWay, limit })
+		queryKey: ['getMediaFiles', offset, sortBy, sortWay, limit],
+		queryFn: () =>
+			mediaService.getMediaFiles({ offset, sortBy, sortWay, limit })
 	})
 
 	const [page, setPage] = useState(1)
 
-	usePhotosActions()
+	useMediaActions()
 
 	const getContent = () => {
 		if (showPeople) {
@@ -78,5 +79,3 @@ export default function PhotosList() {
 		</div>
 	)
 }
-
-export { PhotosList }

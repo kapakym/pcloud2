@@ -123,7 +123,7 @@ export default function FileActionBar() {
 					</>
 				)}
 				<VSeparator />
-				<label htmlFor={'upload-photo'}>
+				<label htmlFor={'upload-media'}>
 					<UploadCloud
 						size={28}
 						className='text-slate-400 hover:text-slate-200 cursor-pointer'
@@ -134,7 +134,7 @@ export default function FileActionBar() {
 					multiple
 					type='file'
 					onChange={e => handleUploadFiles(e)}
-					id='upload-photo'
+					id='upload-media'
 					className='hidden'
 				/>
 

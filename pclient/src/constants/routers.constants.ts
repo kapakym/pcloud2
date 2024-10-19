@@ -16,8 +16,8 @@ export const ROUTERS: IRoute[] = [
 		icon: Folder
 	},
 	{
-		name: 'Photos',
-		path: DASHBOARD_PAGES.PHOTOS_EXPLORER,
+		name: 'Media',
+		path: DASHBOARD_PAGES.MEDIA_EXPLORER,
 		icon: Image
 	},
 	{

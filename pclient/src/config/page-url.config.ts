@@ -5,7 +5,7 @@ class DASHBOARD {
 	AUTH = '/auth'
 	REGISTER = '/register'
 	FILE_EXPLORER = '/explorer/files'
-	PHOTOS_EXPLORER = '/explorer/photos'
+	MEDIA_EXPLORER = '/explorer/media'
 	ADMIN_EXPLORER = '/explorer/admin'
 	SETTINGS_EXPLORER = '/explorer/settings'
 	SHARE_EXPLORER = '/explorer/share'

@@ -9,16 +9,17 @@ import { memo, useEffect, useState } from 'react'
 import { IMedia } from '@/types/media.types'
 
 // eslint-disable-next-line react/display-name
-export const MediaItem = memo(({ mediaFile }: { mediaFile: IMedia }) => {
+export const MediaItemVideo = memo(({ mediaFile }: { mediaFile: IMedia }) => {
 	const { setPreviewFile, setOpen, setTitle } = usePreviewStore(state => state)
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['getMediaFileById', mediaFile.id],
-		queryFn: () => mediaService.getMediaFileById({ id: mediaFile?.id })
+		queryKey: ['getThumbFileById', mediaFile.id],
+		queryFn: () => mediaService.getThumbFileById({ id: mediaFile?.id })
 	})
 
 	const [mediaUrl, setMediaUrl] = useState('')
 
+	console.info(mediaFile)
 	useEffect(() => {
 		if (data?.data instanceof Blob) {
 			const url = window.URL.createObjectURL(new Blob([data.data]))
@@ -33,16 +34,16 @@ export const MediaItem = memo(({ mediaFile }: { mediaFile: IMedia }) => {
 	}
 
 	return (
-		<div className=' border-[1px] border-solid border-slate-400 rounded-xl flex justify-center items-center overflow-hidden object-cover  relative aspect-square'>
-			{mediaUrl && (
-				<img
-					onClick={() => handlePreview(mediaUrl, 'image/jpeg')}
-					className='w-full h-full object-cover hover:scale-110 scale-100 duration-300 transition-all cursor-pointer'
-					src={mediaUrl}
-					alt=''
-				/>
-			)}
-
+		<div
+			onClick={() => handlePreview(`${mediaFile.id}`, 'video/mp4', 'stream')}
+			className='cursor-pointer border-[1px] border-solid border-slate-400 rounded-xl flex justify-center items-center overflow-hidden object-cover  relative aspect-square'
+		>
+			<img
+				className='w-full h-full object-cover hover:scale-110 scale-100 duration-300 transition-all '
+				src={mediaUrl}
+				alt=''
+			/>
+			<PlayCircle className='w-16 h-16 text-white absolute translate-x-[1/2] translate-y-[1/2]' />
 			{isLoading && (
 				<div className='p-4 w-full h-full flex justify-center items-center'>
 					<span className='loader '></span>

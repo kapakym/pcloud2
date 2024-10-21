@@ -27,6 +27,17 @@ export class MediaController {
   }
 
   @Auth()
+  @Get('play/:id')
+  showById(
+    @Param('id') idVideo: string,
+    @CurrentUser('id') id: string,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    return this.photosService.playById(idVideo, id, req, res);
+  }
+
+  @Auth()
   @Post('get')
   findLimit(@Body() dto: GetMediaListDto, @CurrentUser('id') id: string) {
     return this.photosService.findLimit(dto, id);
@@ -39,7 +50,7 @@ export class MediaController {
   }
 
   @Auth()
-  @Post('clear_photos')
+  @Post('clear_media')
   clearMedia(@CurrentUser('id') id: string) {
     return this.photosService.clearMedia(id);
   }
@@ -58,6 +69,16 @@ export class MediaController {
     @Res() res: Response,
   ) {
     return this.photosService.findById(dto, id, res);
+  }
+
+  @Auth()
+  @Post('get_thumb_by_id')
+  findThumbById(
+    @Body() dto: GetMediaByIdtDto,
+    @CurrentUser('id') id: string,
+    @Res() res: Response,
+  ) {
+    return this.photosService.findThumbById(dto, id, res);
   }
 
   @Auth()

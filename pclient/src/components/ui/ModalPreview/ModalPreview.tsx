@@ -26,7 +26,28 @@ function ModalPreview() {
 	const videoRef = useRef<HTMLVideoElement>(null)
 
 	useEffect(() => {
-		if (!open) setShowImage(false)
+		if (!open) {
+			setShowImage(false)
+		}
+
+		if (open && previewFile?.mode === 'stream') {
+			mediaService.getPlayById({ id: previewFile.src }).then(response => {
+				const videoBlob = new Blob([response.data], { type: 'video/mp4' })
+				const url = URL.createObjectURL(videoBlob)
+				setPlayVideoUrl(url)
+				if (videoRef.current) {
+					videoRef.current.src = url
+				}
+			})
+		}
+
+		return () => {
+			if (videoRef.current) {
+				videoRef.current.pause()
+				videoRef.current.src = ''
+				videoRef.current.srcObject = null
+			}
+		}
 	}, [open])
 
 	const ShowContent = ({ src }: { src: IPreviewFile | null }) => {
@@ -68,16 +89,15 @@ function ModalPreview() {
 
 	const handleTransitionEnd = async () => {
 		if (open) setShowImage(true)
-		if (open && previewFile?.mode === 'stream') {
-			const response = await mediaService.getPlayById({ id: previewFile.src })
-			const videoBlob = new Blob([response.data], { type: 'video/mp4' })
-			const url = URL.createObjectURL(videoBlob)
-			setPlayVideoUrl(url)
-			if (videoRef.current) {
-				videoRef.current.src = url
-				// videoRef.current.play()
-			}
-		}
+		// if (open && previewFile?.mode === 'stream') {
+		// 	const response = await mediaService.getPlayById({ id: previewFile.src })
+		// 	const videoBlob = new Blob([response.data], { type: 'video/mp4' })
+		// 	const url = URL.createObjectURL(videoBlob)
+		// 	setPlayVideoUrl(url)
+		// 	if (videoRef.current) {
+		// 		videoRef.current.src = url
+		// 	}
+		// }
 	}
 
 	return (

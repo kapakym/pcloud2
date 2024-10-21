@@ -36,6 +36,7 @@ model Media {
   dateCreate     DateTime?  @map("date_create")
   longitude      String?
   latitude       String?
+  thumbs         String?    @unique
   isFacesScanned Boolean    @default(false) @map("is_faces_scaned")
   type           TypesMedia
 

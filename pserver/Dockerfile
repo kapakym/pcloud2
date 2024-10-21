@@ -9,6 +9,8 @@ RUN npm install --legacy-peer-deps
 
 COPY . .
 
+RUN apt install ffmpeg
+
 # # Генерация Prisma Client
 RUN npx prisma generate
 

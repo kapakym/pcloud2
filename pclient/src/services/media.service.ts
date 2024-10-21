@@ -85,6 +85,19 @@ class MediaService {
 		return response
 	}
 
+	async getThumbFileById(data: { id: string }) {
+		const response = await requestBuilder<{ id: string }, Blob>({
+			url: 'media/get_thumb_by_id',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data,
+				responseType: 'blob'
+			}
+		})
+		return response
+	}
+
 	async getFaceById(data: { id: string }) {
 		const response = await requestBuilder<{ id: string }, Blob>({
 			url: 'media/get_face_by_id',

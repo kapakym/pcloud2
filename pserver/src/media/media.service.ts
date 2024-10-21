@@ -11,6 +11,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { PrismaService } from 'src/prisma.service';
 import { TasksGateway } from 'src/tasks/tasks.gateway';
+import { v4 as uuidv4 } from 'uuid';
 import {
   filterImages,
   filterVideo,
@@ -24,12 +25,14 @@ import {
   TaskIdDto,
 } from './dto/media.dto';
 import { $Enums } from '@prisma/client';
+import { spawn } from 'child_process';
 
 @Injectable()
 export class MediaService {
   tempPrefix = null;
   serverPythonUrl = null;
   cloudFolder = null;
+  thumbPrefix = 'thumbs';
 
   constructor(
     private configService: ConfigService,
@@ -279,6 +282,18 @@ export class MediaService {
       where: { userId: id },
     });
 
+    const thumbPath = path.join(
+      this.cloudFolder,
+      id + '-' + this.tempPrefix,
+      'thumbs',
+      '*',
+    );
+    fs.rm(thumbPath, { recursive: true }, (err) => {
+      if (err) {
+        return console.error(`Error in delete faces: ${err.message}`);
+      }
+    });
+
     return result;
   }
 
@@ -358,18 +373,60 @@ export class MediaService {
     throw new BadRequestException('file not found');
   }
 
-  async playById(videoId: string, id: string, req: Request, res: Response) {
-    console.log(videoId);
-    // if (!id) throw new UnauthorizedException('Error');
+  async findThumbById(dto: GetMediaByIdtDto, id: string, res: Response) {
+    if (!id) throw new UnauthorizedException('Error');
 
     const file = await this.prisma.media.findUnique({
       where: {
-        // userId: id,
-        id: videoId,
+        userId: id,
+        id: dto.id,
       },
     });
 
     if (!file) throw new BadRequestException('file not found');
+
+    if (fs.existsSync(file.thumbs)) {
+      return res.download(file.thumbs, path.basename(file.thumbs));
+    }
+    throw new BadRequestException('file not found');
+  }
+
+  async showById(videoId: string, id: string, req: Request, res: Response) {
+    if (!id) throw new UnauthorizedException('Error');
+
+    const file = await this.prisma.media.findUnique({
+      where: {
+        userId: id,
+        id: videoId,
+      },
+    });
+
+    if (!file || !fs.existsSync(file.path))
+      throw new BadRequestException('file not found');
+    // Определите путь к изображению (например, в директории images)
+
+    // Установите правильный заголовок Content-Type для изображения
+    res.setHeader('Content-Type', 'image/jpeg'); // замените на нужный тип
+    res.setHeader('Content-Disposition', 'inline');
+
+    // Создайте поток и передайте изображение в ответ
+    const readStream = fs.createReadStream(file.path);
+    readStream.pipe(res);
+  }
+
+  async playById(videoId: string, id: string, req: Request, res: Response) {
+    console.log(videoId);
+    if (!id) throw new UnauthorizedException('Error');
+
+    const file = await this.prisma.media.findUnique({
+      where: {
+        userId: id,
+        id: videoId,
+      },
+    });
+
+    if (!file || !fs.existsSync(file.path))
+      throw new BadRequestException('file not found');
 
     const stat = fs.statSync(file.path);
     const fileSize = stat.size;
@@ -387,6 +444,7 @@ export class MediaService {
       const parts = range.replace(/bytes=/, '').split('-');
       const start = parseInt(parts[0], 10);
       const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      console.log(start, end);
       const chunkSize = end - start + 1;
 
       const videoFile = fs.createReadStream(file.path, { start, end });
@@ -431,11 +489,13 @@ export class MediaService {
     for (const item of imageFiles) {
       console.log(item);
       let tags = undefined;
-      try {
-        tags = await ExifReader.load(item);
-      } catch (error) {
-        console.log(error);
-        if (typeMedia === $Enums.TypesMedia.image) continue;
+      if (typeMedia === $Enums.TypesMedia.image) {
+        try {
+          tags = await ExifReader.load(item);
+        } catch (error) {
+          console.log(error);
+          if (typeMedia === $Enums.TypesMedia.image) continue;
+        }
       }
 
       const existImage = await this.prisma.media.findUnique({
@@ -450,10 +510,40 @@ export class MediaService {
         dateArr[0] = dateArr[0].replaceAll(':', '-');
         dateCreate = dateArr.join(' ');
       }
-
+      const thumbPath = path.join(
+        this.cloudFolder,
+        id + '-' + this.tempPrefix,
+        'thumbs',
+        path.basename(item),
+      );
+      console.log('dddddd', thumbPath);
       if (!existImage) {
+        const thumbPath = path.join(
+          this.cloudFolder,
+          id + '-' + this.tempPrefix,
+          'thumbs',
+          uuidv4() + '.jpg',
+        );
+        if (typeMedia === $Enums.TypesMedia.video) {
+          // let thumb = null;
+          try {
+            await spawn('ffmpeg', [
+              '-i',
+              item, // путь к видео
+              '-ss',
+              '00:00:01', // захват кадра на 1-й секунде
+              '-vframes',
+              '1', // только один кадр
+              thumbPath, // путь к сохранению миниатюры
+            ]);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        console.log('thumbPath', thumbPath);
         await this.prisma.media.create({
           data: {
+            thumbs: thumbPath,
             type: typeMedia,
             userId: id,
             path: item,

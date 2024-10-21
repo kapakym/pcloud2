@@ -71,6 +71,18 @@ export class AuthService {
           }
         },
       );
+      // Функция для создания директории где хранятся thumbs
+      fs.mkdir(
+        path.join(this.cloudFolder, user.id + '-' + this.tempPrefix, 'thumbs'),
+        { recursive: true },
+        (err) => {
+          if (err) {
+            return console.error(
+              `Ошибка при создании директории: ${err.message}`,
+            );
+          }
+        },
+      );
     }
 
     const tokens = this.issueTokens({ role: user.roles, id: user.id });

@@ -28,21 +28,6 @@ function ModalPreviewVideo() {
 	useEffect(() => {
 		if (!openVideoPlayer) {
 			setShowImage(false)
-		}
-
-		if (openVideoPlayer && previewFile?.mode === 'stream') {
-			mediaService.getPlayById({ id: previewFile.src }).then(response => {
-				const videoBlob = new Blob([response.data], { type: 'video/mp4' })
-				const url = URL.createObjectURL(videoBlob)
-				setPlayVideoUrl(url)
-				console.log(url)
-				// if (videoRef.current) {
-				// 	videoRef.current.src = url
-				// }
-			})
-		}
-
-		return () => {
 			if (videoRef.current) {
 				setPlayVideoUrl('')
 				const videoElement = videoRef.current
@@ -69,6 +54,18 @@ function ModalPreviewVideo() {
 					console.log('Поток видео очищен')
 				}
 			}
+		}
+
+		if (openVideoPlayer && previewFile?.mode === 'stream') {
+			mediaService.getPlayById({ id: previewFile.src }).then(response => {
+				const videoBlob = new Blob([response.data], { type: 'video/mp4' })
+				const url = URL.createObjectURL(videoBlob)
+				setPlayVideoUrl(url)
+				console.log(url)
+				// if (videoRef.current) {
+				// 	videoRef.current.src = url
+				// }
+			})
 		}
 	}, [openVideoPlayer])
 

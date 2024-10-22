@@ -13,6 +13,7 @@ import { SortByDate } from '@/components/Photos/SortByDate/SortByDate'
 import { SortByPeoples } from '@/components/Photos/SortByPeoples/SortByPeoples'
 import { SortNotFilter } from '@/components/Photos/SortNotFilter.tsx/SortNotFilter'
 import { ModalPreview } from '@/components/ui/ModalPreview/ModalPreview'
+import { ModalPreviewVideo } from '@/components/ui/ModalPreviewVideo/ModalPreviewVideo'
 
 import { useMediaActions } from '@/hooks/use-media-actions.hook'
 
@@ -76,6 +77,7 @@ export function MediaList() {
 			/>
 			{showPeople && openPeoplesBar && <PeopleBar />}
 			<ModalPreview />
+			<ModalPreviewVideo />
 		</div>
 	)
 }

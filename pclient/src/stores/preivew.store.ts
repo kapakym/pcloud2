@@ -9,10 +9,13 @@ export interface IPreviewFile {
 
 interface IDrawerStore {
 	open: boolean
+	openVideoPlayer: boolean
 	previewFile: IPreviewFile | null
 	title: string
 	setOpen: (payload: boolean) => void
+	setOpenVideoPlayer: (payload: boolean) => void
 	onClose: () => void
+	onCloseVideoPlayer: () => void
 	setPreviewFile: (payload: IPreviewFile | null) => void
 	setTitle: (payload: string) => void
 }
@@ -20,6 +23,7 @@ interface IDrawerStore {
 export const usePreviewStore = create<IDrawerStore>()(
 	immer(set => ({
 		open: false,
+		openVideoPlayer: false,
 		previewFile: null,
 		title: '',
 		onClose: () =>
@@ -27,9 +31,18 @@ export const usePreviewStore = create<IDrawerStore>()(
 				open: false,
 				childrenDrawer: null
 			})),
+		onCloseVideoPlayer: () =>
+			set(() => ({
+				openVideoPlayer: false,
+				childrenDrawer: null
+			})),
 		setOpen: payload =>
 			set(() => ({
 				open: payload
+			})),
+		setOpenVideoPlayer: payload =>
+			set(() => ({
+				openVideoPlayer: payload
 			})),
 		setPreviewFile: payload =>
 			set(() => ({

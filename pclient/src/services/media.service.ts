@@ -9,7 +9,7 @@ import {
 import { requestBuilder } from '@/api/requestBuilder'
 
 class MediaService {
-	async getPlayById(params: { id: string }) {
+	async getPlayById(params: { id: string; start?: number; end?: number }) {
 		return await requestBuilder<unknown, Blob>({
 			url: `media/play/${params.id}`,
 			method: 'get',
@@ -17,7 +17,11 @@ class MediaService {
 				isAuth: true,
 				responseType: 'blob',
 				headers: {
-					Accept: 'video/mp4;charset=UTF-8'
+					Accept: 'video/mp4;charset=UTF-8',
+					Range:
+						params.start && params.end
+							? `bytes=${params.start}-${params.end}`
+							: ''
 				}
 			}
 		})

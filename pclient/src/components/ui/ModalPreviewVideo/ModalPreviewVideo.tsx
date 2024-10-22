@@ -17,70 +17,62 @@ const drawerClass = tv({
 	}
 })
 
-const accessToken = getAccessToken()
-
-function ModalPreview() {
-	const { onClose, open, title, previewFile } = usePreviewStore(state => state)
+function ModalPreviewVideo() {
+	const { onCloseVideoPlayer, openVideoPlayer, title, previewFile } =
+		usePreviewStore(state => state)
 	const [showImage, setShowImage] = useState(false)
+	const [playVideoUrl, setPlayVideoUrl] = useState('')
 	const videoRef = useRef<HTMLVideoElement>(null)
 
+	console.log(previewFile)
 	useEffect(() => {
-		if (!open) {
+		if (!openVideoPlayer) {
 			setShowImage(false)
 		}
-	}, [open])
 
-	const ShowContent = ({ src }: { src: IPreviewFile | null }) => {
-		const allowImages = ['image/png', 'image/jpeg', 'image/gif']
-		const allowVideo = ['video/mp4', 'video/quicktime']
-		const allowPdf = ['application/pdf']
-		if (!src) return
-
-		if (allowImages.includes(src.type)) {
-			return (
-				<img
-					src={src.src}
-					alt=''
-					className='h-full object-contain'
-				/>
-			)
+		if (openVideoPlayer && previewFile?.mode === 'stream') {
+			mediaService.getPlayById({ id: previewFile.src }).then(response => {
+				const videoBlob = new Blob([response.data], { type: 'video/mp4' })
+				const url = URL.createObjectURL(videoBlob)
+				setPlayVideoUrl(url)
+				console.log(url)
+				// if (videoRef.current) {
+				// 	videoRef.current.src = url
+				// }
+			})
 		}
 
-		if (allowVideo.includes(src.type)) {
-			return (
-				<video
-					src={src.src}
-					className='h-full object-contain'
-					autoPlay={true}
-					controls={true}
-					ref={videoRef}
-				/>
-			)
+		return () => {
+			if (videoRef.current) {
+				setPlayVideoUrl('')
+				videoRef.current.pause()
+			}
 		}
-
-		if (allowPdf.includes(src.type)) {
-			window.open(src.src)
-
-			return <div>PDF - файл открыт в новой вкладке</div>
-		}
-
-		return <div>Формат файла не поддерживается</div>
-	}
+	}, [openVideoPlayer])
 
 	const handleTransitionEnd = async () => {
-		if (open) setShowImage(true)
+		if (openVideoPlayer) setShowImage(true)
+		// if (open && previewFile?.mode === 'stream') {
+		// 	const response = await mediaService.getPlayById({ id: previewFile.src })
+		// 	const videoBlob = new Blob([response.data], { type: 'video/mp4' })
+		// 	const url = URL.createObjectURL(videoBlob)
+		// 	setPlayVideoUrl(url)
+		// 	if (videoRef.current) {
+		// 		videoRef.current.src = url
+		// 	}
+		// }
 	}
 
 	return (
 		<>
-			{open && (
+			{openVideoPlayer && (
 				<div
 					className='h-full w-full fixed top-0 left-0 bg-black opacity-40 '
-					onClick={onClose}
+					onClick={onCloseVideoPlayer}
 				></div>
 			)}
 			<div
-				className={drawerClass({ state: open ? 'open' : 'close' })}
+				className={drawerClass({ state: openVideoPlayer ? 'open' : 'close' })}
 				onTransitionEnd={handleTransitionEnd}
 			>
 				<>
@@ -91,7 +83,7 @@ function ModalPreview() {
 
 						<div
 							className='w-full flex justify-end items-center'
-							onClick={onClose}
+							onClick={onCloseVideoPlayer}
 						>
 							<XCircle
 								size={28}
@@ -104,7 +96,15 @@ function ModalPreview() {
 						<HSeparator />
 					</div>
 					<div className='h-full overflow-hidden flex justify-center items-center text-center'>
-						{open && showImage && <ShowContent src={previewFile} />}
+						{openVideoPlayer && showImage && (
+							<video
+								src={playVideoUrl}
+								className='h-full object-contain'
+								autoPlay={true}
+								controls={true}
+								ref={videoRef}
+							/>
+						)}
 					</div>
 				</>
 			</div>
@@ -112,4 +112,4 @@ function ModalPreview() {
 	)
 }
 
-export { ModalPreview }
+export { ModalPreviewVideo }

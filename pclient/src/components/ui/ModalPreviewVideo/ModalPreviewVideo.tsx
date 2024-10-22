@@ -45,7 +45,29 @@ function ModalPreviewVideo() {
 		return () => {
 			if (videoRef.current) {
 				setPlayVideoUrl('')
-				videoRef.current.pause()
+				const videoElement = videoRef.current
+				if (videoElement) {
+					// Останавливаем воспроизведение
+					videoElement.pause()
+
+					// Сбрасываем источник видео
+					videoElement.src = ''
+
+					// Освобождаем объект URL, если использовался createObjectURL
+					if (videoElement.srcObject) {
+						videoElement.srcObject = null
+					}
+
+					// Можно также очистить буфер MediaSource (если используется)
+					if (window.URL && window.URL.revokeObjectURL) {
+						window.URL.revokeObjectURL(videoElement.src)
+					}
+
+					// Сбрасываем текущее время
+					videoElement.currentTime = 0
+
+					console.log('Поток видео очищен')
+				}
 			}
 		}
 	}, [openVideoPlayer])

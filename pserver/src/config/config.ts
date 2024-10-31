@@ -20,4 +20,8 @@ export default () => ({
       ? 'http://pythonface:6000'
       : 'http://localhost:6000',
   DOMAIN: process.env.NODE_ENV === 'production' ? 'server' : 'localhost',
+  MAIL_USER: '',
+  MAIL_PASSWORD: '',
+  MAIL_HOST: '',
+  MAIL_PORT: 465,
 });

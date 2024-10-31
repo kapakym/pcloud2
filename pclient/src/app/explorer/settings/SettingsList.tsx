@@ -83,16 +83,7 @@ function SettingsList() {
 									className='text-slate-400 hover:text-slate-200 cursor-pointer'
 									onClick={() => handleSetAction('scanAll')}
 								/>
-								<div className='text-sm'>Scan images</div>
-							</div>
-
-							<div className='flex flex-row items-center space-x-4 '>
-								<FileScan
-									size={38}
-									className='text-slate-400 hover:text-slate-200 cursor-pointer'
-									onClick={() => handleSetAction('scanAll')}
-								/>
-								<div className='text-sm'>Scan video</div>
+								<div className='text-sm'>Scan media</div>
 							</div>
 						</div>
 					</SettingItem>

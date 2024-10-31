@@ -13,6 +13,7 @@ import { Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ConfigService } from '@nestjs/config';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +26,7 @@ export class AuthService {
     private jwt: JwtService,
     private userService: UserService,
     private configService: ConfigService,
+    private mailService: MailService,
   ) {
     this.tempPrefix = this.configService.get('TEMP_PREFIX');
     this.cloudFolder = this.configService.get('CLOUD_PATH');
@@ -35,7 +37,7 @@ export class AuthService {
     const { password, ...user } = await this.validateUser(dto);
 
     const tokens = this.issueTokens({ role: user.roles, id: user.id });
-
+    this.mailService.sendMail(user.email, 'PClod2', 'Auth');
     return { user, ...tokens };
   }
 

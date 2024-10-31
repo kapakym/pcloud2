@@ -128,6 +128,7 @@ export class UserService {
         where: { id },
         data: { name, email },
       });
+      if (!newPassword) return;
       const isValid = await verify(user.password, oldPassword);
       if (oldPassword && isValid) {
         await this.prisma.user.update({

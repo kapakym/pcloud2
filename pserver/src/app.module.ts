@@ -7,6 +7,7 @@ import { LoggerMiddleware } from './logger/logger';
 import { MediaModule } from './media/media.module';
 import { SharesModule } from './shares/shares.module';
 import { UserModule } from './user/user.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserModule } from './user/user.module';
     FilesModule,
     MediaModule,
     SharesModule,
+    MailModule,
   ],
 })
 export class AppModule {

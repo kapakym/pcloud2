@@ -26,6 +26,7 @@ import {
 } from './dto/media.dto';
 import { $Enums } from '@prisma/client';
 import { spawn } from 'child_process';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class MediaService {
@@ -38,6 +39,7 @@ export class MediaService {
     private configService: ConfigService,
     private prisma: PrismaService,
     private taskGateWay: TasksGateway,
+    private mailService: MailService,
   ) {
     this.tempPrefix = this.configService.get('TEMP_PREFIX');
     this.serverPythonUrl = this.configService.get('SERVER_PYTHON');
@@ -154,6 +156,18 @@ export class MediaService {
 
   async scanAll(dto: ScanMediaDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
+    const currentUser = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (currentUser.email) {
+      this.mailService.sendMail(
+        currentUser.email,
+        'PCloud2 - Message',
+        'Start scaning media files...',
+      );
+    }
 
     // this.tasksGateway.server.
     const basePath = path?.join(this.cloudFolder, id);
@@ -179,11 +193,30 @@ export class MediaService {
       status: 'completed',
       description: JSON.stringify({ count: imageFiles.length }),
     });
+    if (currentUser.email) {
+      this.mailService.sendMail(
+        currentUser.email,
+        'PCloud2 - Message',
+        `Scan media files completed. Count: ${imageFiles.length} files`,
+      );
+    }
     return dto.uuidTask;
   }
 
   async scanFaces(dto: TaskIdDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
+    const currentUser = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (currentUser.email) {
+      this.mailService.sendMail(
+        currentUser.email,
+        'PCloud2 - Message',
+        `Scan faces in image files...`,
+      );
+    }
     // Получение списка не отсканированных фотографий
     const media = await this.prisma.media.findMany({
       where: {
@@ -240,6 +273,13 @@ export class MediaService {
       status: 'completed',
       description: JSON.stringify({ count: media.length }),
     });
+    if (currentUser.email) {
+      this.mailService.sendMail(
+        currentUser.email,
+        'PCloud2 - Message',
+        `Scan faces completed. Count: ${media.length} files`,
+      );
+    }
   }
 
   async clearCluster(id: string) {
@@ -300,6 +340,18 @@ export class MediaService {
   async updateClusters(dto: TaskIdDto, id: string) {
     if (!id) throw new UnauthorizedException('Error');
 
+    const currentUser = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (currentUser.email) {
+      this.mailService.sendMail(
+        currentUser.email,
+        'PCloud2 - Message',
+        `Start create clusters...`,
+      );
+    }
     const url = `${this.serverPythonUrl}/update_clusters`;
     type ClusterType = Record<string, string[]>;
     const result: AxiosResponse = await axios.post<{
@@ -353,6 +405,13 @@ export class MediaService {
       status: 'completed',
       description: JSON.stringify({ count: result?.data?.clusters?.size }),
     });
+    if (currentUser.email) {
+      this.mailService.sendMail(
+        currentUser.email,
+        'PCloud2 - Message',
+        `Clusters created completed. Count: ${result?.data?.clusters?.size} clusters`,
+      );
+    }
   }
 
   async findById(dto: GetMediaByIdtDto, id: string, res: Response) {

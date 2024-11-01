@@ -8,12 +8,14 @@ import { TasksModule } from 'src/tasks/tasks.module';
 import { TasksService } from 'src/tasks/tasks.service';
 import { MediaController } from './media.controller';
 import { MediaService } from './media.service';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
     HttpModule,
     TasksModule,
     ConfigModule,
+    MailModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

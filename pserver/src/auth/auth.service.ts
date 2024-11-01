@@ -37,7 +37,11 @@ export class AuthService {
     const { password, ...user } = await this.validateUser(dto);
 
     const tokens = this.issueTokens({ role: user.roles, id: user.id });
-    this.mailService.sendMail(user.email, 'PClod2', 'Auth');
+    this.mailService.sendMail(
+      user.email,
+      'PClod2',
+      `${user.name}, hello! You are logged into cloud storage`,
+    );
     return { user, ...tokens };
   }
 

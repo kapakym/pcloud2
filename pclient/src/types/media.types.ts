@@ -51,5 +51,5 @@ export interface IPeopleResponse {
 	name: string
 	face: string
 	faceId: string
-	photos?: IMedia[]
+	media?: IMedia[]
 }

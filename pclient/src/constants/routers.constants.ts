@@ -1,5 +1,5 @@
 import { LucideIcon, icons } from 'lucide-react'
-import { Folder, Image, Settings, Share, UserCog } from 'lucide-react'
+import { Folder, Image, ScanFace, Settings, Share, UserCog } from 'lucide-react'
 
 import { DASHBOARD_PAGES } from '@/config/page-url.config'
 
@@ -19,6 +19,11 @@ export const ROUTERS: IRoute[] = [
 		name: 'Media',
 		path: DASHBOARD_PAGES.MEDIA_EXPLORER,
 		icon: Image
+	},
+	{
+		name: 'Faces',
+		path: DASHBOARD_PAGES.FACES_EXPLORER,
+		icon: ScanFace
 	},
 	{
 		name: 'Share',

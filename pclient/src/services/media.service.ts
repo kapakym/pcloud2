@@ -33,8 +33,8 @@ class MediaService {
 			method: 'post',
 			options: {
 				isAuth: true,
-				data,
-				responseType: 'blob'
+				data
+				// responseType: 'blob'
 			}
 		})
 		return response

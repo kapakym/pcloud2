@@ -26,8 +26,7 @@ export function MediaList() {
 		setOffset,
 		sortBy,
 		sortWay,
-		openPeoplesBar,
-		showPeople
+		openPeoplesBar
 	} = useMediaStore(state => state)
 
 	const { data } = useQuery({
@@ -41,9 +40,6 @@ export function MediaList() {
 	useMediaActions()
 
 	const getContent = () => {
-		if (showPeople) {
-			return <SortByPeoples />
-		}
 		switch (sortBy) {
 			case 'dateCreate':
 				return <SortByDate data={data?.data} />
@@ -75,7 +71,6 @@ export function MediaList() {
 				totalPages={totalPages}
 				onPageChange={handleChangePage}
 			/>
-			{showPeople && openPeoplesBar && <PeopleBar />}
 			<ModalPreview />
 			<ModalPreviewVideo />
 		</div>

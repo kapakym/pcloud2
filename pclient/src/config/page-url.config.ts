@@ -6,6 +6,7 @@ class DASHBOARD {
 	REGISTER = '/register'
 	FILE_EXPLORER = '/explorer/files'
 	MEDIA_EXPLORER = '/explorer/media'
+	FACES_EXPLORER = '/explorer/faces'
 	ADMIN_EXPLORER = '/explorer/admin'
 	SETTINGS_EXPLORER = '/explorer/settings'
 	SHARE_EXPLORER = '/explorer/share'

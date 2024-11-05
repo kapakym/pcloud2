@@ -27,7 +27,6 @@ function ModalPreviewVideo() {
 	const handleClose = () => {
 		setPlayVideoUrl('')
 		const videoElement = videoRef.current
-		console.info('', videoElement)
 		if (videoElement) {
 			// Останавливаем воспроизведение
 			videoElement.pause()

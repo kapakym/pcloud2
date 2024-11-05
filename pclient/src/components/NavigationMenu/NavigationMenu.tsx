@@ -11,7 +11,6 @@ function NavigationMenu() {
 	const { push } = useRouter()
 	const { onClose } = useDrawerStore(state => state)
 	const handleClickMenuItem = (path: string) => {
-		console.info(path)
 		push(path)
 		onClose()
 	}

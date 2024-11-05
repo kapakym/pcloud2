@@ -5,6 +5,7 @@ import cn from 'clsx'
 
 export const SortByPeoples = () => {
 	const { peopleSelected } = useMediaStore(state => state)
+	console.info({ peopleSelected })
 	return (
 		<>
 			{!!peopleSelected.length &&
@@ -12,8 +13,8 @@ export const SortByPeoples = () => {
 					<div key={face.faceId}>
 						<FaceIcon face={face} />
 						<div className={cn(`w-full l grid grid-cols-3 gap-4 p-2`)}>
-							{face?.photos?.length &&
-								face.photos.map(item => (
+							{face?.media?.length &&
+								face.media.map(item => (
 									<div key={`${item.id}${item.path}`}>
 										<MediaItem mediaFile={item}></MediaItem>
 									</div>

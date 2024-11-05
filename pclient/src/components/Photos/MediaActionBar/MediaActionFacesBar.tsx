@@ -22,7 +22,7 @@ import { TypeMediaActions } from '@/types/media.types'
 
 import { DASHBOARD_PAGES } from '@/config/page-url.config'
 
-export default function MediaActionBar() {
+export default function MediaActionFacesBar() {
 	const {
 		register,
 		handleSubmit,
@@ -41,6 +41,7 @@ export default function MediaActionBar() {
 		setOpenPeoplesBar,
 		openPeoplesBar,
 		setShowPeople,
+		showPeople,
 		setAction
 	} = useMediaStore(state => state)
 
@@ -72,18 +73,6 @@ export default function MediaActionBar() {
 		setOpenRename(true)
 	}
 
-	const handleSortByDate = () => {
-		setSortBy('dateCreate')
-	}
-
-	const handleSortBy = () => {
-		setSortBy(undefined)
-	}
-
-	const handleSortWay = () => {
-		sortWay === 'asc' ? setSortWay('desc') : setSortWay('asc')
-	}
-
 	const handleGetFaces = async () => {
 		setOpenPeoplesBar(!openPeoplesBar)
 	}
@@ -92,40 +81,29 @@ export default function MediaActionBar() {
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>
 			<div className='flex space-x-2'>
-				<ImageIco
+				<CalendarSearch
 					size={28}
 					className={cn(
 						'  cursor-pointer ',
-						!sortBy ? 'text-green-500' : 'text-slate-400 hover:text-slate-200'
-					)}
-					onClick={() => handleSortBy()}
-				/>
-				<Calendar
-					size={28}
-					className={cn(
-						'  cursor-pointer ',
-						sortBy === 'dateCreate'
+						showPeople
 							? 'text-green-500'
 							: 'text-slate-400 hover:text-slate-200'
 					)}
-					onClick={() => handleSortByDate()}
+					onClick={() => handleSetDateRange()}
 				/>
-				{sortWay === 'asc' && (
-					<ArrowUpAZ
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSortWay()}
-					/>
-				)}
-				{sortWay === 'desc' && (
-					<ArrowDownAZ
-						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
-						onClick={() => handleSortWay()}
-					/>
-				)}
+				<PanelBottomOpen
+					size={28}
+					className={cn(
+						'  cursor-pointer ',
+						openPeoplesBar
+							? 'text-green-500'
+							: 'text-slate-400 hover:text-slate-200'
+					)}
+					onClick={() => handleGetFaces()}
+				/>
 
 				<VSeparator />
+
 				<>
 					<Settings
 						size={28}

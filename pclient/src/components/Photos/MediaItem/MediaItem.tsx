@@ -11,7 +11,6 @@ import { IMedia } from '@/types/media.types'
 // eslint-disable-next-line react/display-name
 export const MediaItem = memo(({ mediaFile }: { mediaFile: IMedia }) => {
 	const { setPreviewFile, setOpen, setTitle } = usePreviewStore(state => state)
-	console.info(mediaFile)
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['getMediaFileById', mediaFile.id],

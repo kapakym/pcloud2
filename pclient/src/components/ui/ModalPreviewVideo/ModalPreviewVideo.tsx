@@ -65,7 +65,6 @@ function ModalPreviewVideo() {
 				const videoBlob = new Blob([response.data], { type: 'video/mp4' })
 				const url = URL.createObjectURL(videoBlob)
 				setPlayVideoUrl(url)
-				console.log(url)
 				// if (videoRef.current) {
 				// 	videoRef.current.src = url
 				// }

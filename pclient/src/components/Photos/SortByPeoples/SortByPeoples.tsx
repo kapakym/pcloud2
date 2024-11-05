@@ -5,7 +5,6 @@ import cn from 'clsx'
 
 export const SortByPeoples = () => {
 	const { peopleSelected } = useMediaStore(state => state)
-	console.info({ peopleSelected })
 	return (
 		<>
 			{!!peopleSelected.length &&

@@ -16,6 +16,7 @@ import {
   filterImages,
   filterVideo,
   getFilesNonRecursively,
+  removeSpecialCharacters,
 } from 'src/utils/files.utils';
 import {
   GetPeoplesListDto,
@@ -110,7 +111,7 @@ export class MediaService {
   async findLimit(dto: GetMediaListDto, id: string) {
     const { sortBy, sortWay } = dto;
     if (!id) throw new UnauthorizedException('Error');
-
+    console.log(dto.search, '---------------------<<<<');
     const orderBy = sortBy
       ? {
           [sortBy]: sortWay,
@@ -125,6 +126,10 @@ export class MediaService {
       },
       where: {
         userId: id,
+        text: {
+          contains: dto.search,
+          mode: 'insensitive',
+        },
       },
       include: {
         faces: true,
@@ -201,6 +206,66 @@ export class MediaService {
       );
     }
     return dto.uuidTask;
+  }
+
+  async recogText(dto: TaskIdDto, id: string) {
+    if (!id) throw new UnauthorizedException('Error');
+    const currentUser = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (currentUser.email) {
+      this.mailService.sendMail(
+        currentUser.email,
+        'PCloud2 - Message',
+        `Scan faces in image files...`,
+      );
+    }
+    // Получение списка не отсканированных фотографий
+    const media = await this.prisma.media.findMany({
+      where: {
+        // isFacesScanned: false,
+        type: $Enums.TypesMedia.image,
+      },
+    });
+    if (media.length) {
+      const url = `${this.serverPythonUrl}/get_text`;
+      let current = 0;
+
+      for (const photo of media) {
+        current++;
+        // Проход по списку фото и вытаскивание из них лиц
+        console.log('scan: total,current', media.length, current);
+        const result: any = await axios.post(url, {
+          path: photo.path,
+        });
+
+        console.log(result?.data);
+        if (result?.data?.status === 'error') continue;
+        if (result.data.status === 'completed' && result.data.text) {
+          await this.prisma.media.update({
+            where: { id: photo.id },
+            data: {
+              text: removeSpecialCharacters(result.data.text),
+            },
+          });
+        }
+      }
+    }
+    // Отправка информации, о том что задача завершена
+    this.taskGateWay.server.emit('tasks', {
+      id: dto.uuidTask,
+      status: 'completed',
+      description: JSON.stringify({ count: media.length }),
+    });
+    if (currentUser.email) {
+      this.mailService.sendMail(
+        currentUser.email,
+        'PCloud2 - Message',
+        `Scan faces completed. Count: ${media.length} files`,
+      );
+    }
   }
 
   async scanFaces(dto: TaskIdDto, id: string) {

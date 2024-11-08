@@ -59,3 +59,8 @@ export const filterVideo = (files: string[]): string[] => {
     return videoExtensions.has(ext);
   });
 };
+
+export function removeSpecialCharacters(str) {
+  // Регулярное выражение, которое заменяет все символы, кроме букв и пробелов, на пустую строку
+  return str.replace(/[^a-zA-Zа-яА-ЯёЁ\s]/g, '');
+}

@@ -26,13 +26,14 @@ export function MediaList() {
 		setOffset,
 		sortBy,
 		sortWay,
-		openPeoplesBar
+		openPeoplesBar,
+		search
 	} = useMediaStore(state => state)
 
 	const { data } = useQuery({
-		queryKey: ['getMediaFiles', offset, sortBy, sortWay, limit],
+		queryKey: ['getMediaFiles', offset, sortBy, sortWay, limit, search],
 		queryFn: () =>
-			mediaService.getMediaFiles({ offset, sortBy, sortWay, limit })
+			mediaService.getMediaFiles({ offset, sortBy, sortWay, limit, search })
 	})
 
 	const [page, setPage] = useState(1)

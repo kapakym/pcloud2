@@ -22,6 +22,7 @@ interface IMediaActionsStore {
 	openPeoplesBar: boolean
 	peopleSelected: IPeopleResponse[] | []
 	showPeople: boolean
+	search: string
 
 	setLimit: (payload: number) => void
 	setOffset: (payload: number) => void
@@ -35,6 +36,7 @@ interface IMediaActionsStore {
 	setOpenPeoplesBar: (payload: boolean) => void
 	setPeoplesSelected: (payload: IPeopleResponse[]) => void
 	setShowPeople: (payload: boolean) => void
+	setSearch: (payload: string) => void
 }
 
 export const useMediaStore = create<IMediaActionsStore>()(
@@ -51,6 +53,7 @@ export const useMediaStore = create<IMediaActionsStore>()(
 		peopleSelected: [],
 		openPeoplesBar: true,
 		showPeople: false,
+		search: '',
 
 		setLimit: payload => set(() => ({ limit: payload })),
 		setTotal: payload => set(() => ({ total: payload })),
@@ -63,6 +66,7 @@ export const useMediaStore = create<IMediaActionsStore>()(
 		setSortWay: payload => set(() => ({ sortWay: payload })),
 		setOpenPeoplesBar: payload => set(() => ({ openPeoplesBar: payload })),
 		setPeoplesSelected: payload => set(() => ({ peopleSelected: payload })),
-		setShowPeople: payload => set(() => ({ showPeople: payload }))
+		setShowPeople: payload => set(() => ({ showPeople: payload })),
+		setSearch: payload => set(() => ({ search: payload }))
 	}))
 )

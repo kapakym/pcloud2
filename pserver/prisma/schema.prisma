@@ -37,6 +37,7 @@ model Media {
   longitude      String?
   latitude       String?
   thumbs         String?    @unique
+  text           String?
   isFacesScanned Boolean    @default(false) @map("is_faces_scaned")
   type           TypesMedia
 

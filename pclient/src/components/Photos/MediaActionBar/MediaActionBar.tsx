@@ -5,17 +5,15 @@ import { Modal } from '../../ui/Modal/Modal'
 import { VSeparator } from '../../ui/VSeparator/VSeparator'
 import { useMediaStore } from '@/stores/media.store'
 import cn from 'clsx'
+import debounce from 'lodash.debounce'
 import {
 	ArrowDownAZ,
 	ArrowUpAZ,
 	Calendar,
-	CalendarSearch,
 	Image as ImageIco,
-	Laugh,
-	PanelBottomOpen,
 	Settings
 } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { TypeMediaActions } from '@/types/media.types'
@@ -41,14 +39,31 @@ export default function MediaActionBar() {
 		setOpenPeoplesBar,
 		openPeoplesBar,
 		setShowPeople,
-		setAction
+		setAction,
+		setSearch,
+		setOffset
 	} = useMediaStore(state => state)
 
 	const [open, setOpen] = useState(false)
 	const [openRename, setOpenRename] = useState(false)
+	const [searchValue, setSearchValue] = useState('')
 
 	const handleClose = () => setOpen(false)
 	const handleCloseRename = () => setOpenRename(false)
+
+	const debouncedUpdate = useCallback(
+		debounce(value => {
+			setOffset(0)
+			setSearch(value)
+		}, 300), // 300 мс задержка
+		[]
+	)
+
+	useEffect(() => {
+		return () => {
+			debouncedUpdate.cancel() // Очищаем таймер при размонтировании
+		}
+	}, [debouncedUpdate])
 
 	const handleSetAction = (action: TypeMediaActions) => {
 		setAction(action)
@@ -88,10 +103,16 @@ export default function MediaActionBar() {
 		setOpenPeoplesBar(!openPeoplesBar)
 	}
 
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value
+		setSearchValue(value)
+		debouncedUpdate(value) // Вызовем дебаунсированную функцию
+	}
+
 	const handleSetDateRange = async () => {}
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl'>
-			<div className='flex space-x-2'>
+			<div className='flex space-x-2 w-full  items-center'>
 				<ImageIco
 					size={28}
 					className={cn(
@@ -120,11 +141,20 @@ export default function MediaActionBar() {
 				{sortWay === 'desc' && (
 					<ArrowDownAZ
 						size={28}
-						className='text-slate-400 hover:text-slate-200 cursor-pointer'
+						className='text-slate-400 hover:text-slate-200 cursor-pointer min-w-[48px]'
 						onClick={() => handleSortWay()}
 					/>
 				)}
 
+				<VSeparator />
+				<input
+					type='text'
+					value={searchValue}
+					onChange={handleInputChange}
+					className={
+						'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg flex-1   block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white '
+					}
+				/>
 				<VSeparator />
 				<>
 					<Settings

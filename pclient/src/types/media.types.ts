@@ -18,6 +18,7 @@ export interface IGetMediaReq {
 	offset: number
 	sortBy?: TypeSortMedia
 	sortWay?: TypeSortWay
+	search?: string
 }
 
 export interface IGetPeoplesReq {
@@ -41,6 +42,7 @@ export type TypeMediaActions =
 	| 'clearCluster'
 	| 'clearFaces'
 	| 'clearMedia'
+	| 'scanText'
 	| null
 
 export type TypeSortMedia = 'dateCreate' | 'peoples' | undefined

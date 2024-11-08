@@ -108,6 +108,14 @@ export class MediaController {
   }
 
   @Auth()
+  @Post('scan_text')
+  scanText(@Body() dto: TaskIdDto, @CurrentUser('id') id: string) {
+    // Фоновая задача
+    this.photosService.recogText(dto, id);
+    return { message: 'taskStarted' };
+  }
+
+  @Auth()
   @Post('update_clusters')
   updateClusters(@Body() dto: TaskIdDto, @CurrentUser('id') id: string) {
     // Фоновая задача

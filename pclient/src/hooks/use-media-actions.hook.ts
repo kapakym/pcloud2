@@ -26,6 +26,7 @@ export const useMediaActions = () => {
 			})
 			mutateScanMedia({ uuidTask: uuid })
 		},
+
 		scanFaces: uuid => {
 			addTask({
 				completed: false,
@@ -73,6 +74,16 @@ export const useMediaActions = () => {
 				typeProgress: 'infinity'
 			})
 			mutateClearFaces()
+		},
+
+		scanText: uuid => {
+			addTask({
+				completed: false,
+				title: 'scan text',
+				id: uuid,
+				typeProgress: 'infinity'
+			})
+			mutateScanText({ uuidTask: uuid })
 		}
 	}
 
@@ -80,6 +91,12 @@ export const useMediaActions = () => {
 		mutationKey: ['scanFiles'],
 		mutationFn: (data: IScanMediaReq = { uuidTask: '' }) =>
 			mediaService.scanFiles(data)
+	})
+
+	const { mutate: mutateScanText } = useMutation({
+		mutationKey: ['scanText'],
+		mutationFn: (data: { uuidTask: string } = { uuidTask: '' }) =>
+			mediaService.scanText(data)
 	})
 
 	const { mutate: mutateScanFace } = useMutation({

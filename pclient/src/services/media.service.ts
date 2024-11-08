@@ -159,6 +159,18 @@ class MediaService {
 		})
 		return response
 	}
+
+	async scanText(data: { uuidTask: string }) {
+		const response = await requestBuilder<{ uuidTask: string }, IGetMediaRes>({
+			url: 'media/scan_text',
+			method: 'post',
+			options: {
+				isAuth: true,
+				data
+			}
+		})
+		return response
+	}
 }
 
 export const mediaService = new MediaService()

@@ -20,6 +20,9 @@ export class GetMediaListDto {
 
   @IsString()
   sortWay?: string;
+
+  @IsString()
+  search?: string;
 }
 
 export class GetPeoplesListDto {

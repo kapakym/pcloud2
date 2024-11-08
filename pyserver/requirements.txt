@@ -6,3 +6,5 @@ datetime
 uuid
 numpy
 scikit-learn
+pytesseract
+Pillow

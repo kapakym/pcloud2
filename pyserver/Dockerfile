@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libboost-python-dev \
+    tesseract-ocr \
+    tesseract-ocr-rus \
     && rm -rf /var/lib/apt/lists/*
 
 # Создаем рабочую директорию внутри контейнера

@@ -45,7 +45,7 @@ export const MediaItem = memo(({ mediaFile }: { mediaFile: IMedia }) => {
 
 			{isLoading && (
 				<div className='p-4 w-full h-full flex justify-center items-center'>
-					<span className='loader '></span>
+					<span className='loaderCircle'></span>
 				</div>
 			)}
 			{mediaFile?.dateCreate && (

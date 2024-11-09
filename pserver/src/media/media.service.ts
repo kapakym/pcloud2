@@ -111,7 +111,6 @@ export class MediaService {
   async findLimit(dto: GetMediaListDto, id: string) {
     const { sortBy, sortWay } = dto;
     if (!id) throw new UnauthorizedException('Error');
-    console.log(dto.search, '---------------------<<<<');
     const orderBy = sortBy
       ? {
           [sortBy]: sortWay,
@@ -127,7 +126,7 @@ export class MediaService {
       where: {
         userId: id,
         text: {
-          contains: dto.search,
+          contains: dto.search ? dto.search : undefined,
           mode: 'insensitive',
         },
       },
@@ -139,6 +138,10 @@ export class MediaService {
     const total = await this.prisma.media.count({
       where: {
         userId: id,
+        text: {
+          contains: dto.search ? dto.search : undefined,
+          mode: 'insensitive',
+        },
       },
     });
 

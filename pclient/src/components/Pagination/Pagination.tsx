@@ -61,22 +61,27 @@ const Pagination: React.FC<PaginationProps> = ({
 
 	return (
 		<div className='bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-t-xl'>
-			<button
-				onClick={() => handlePageChange(currentPage - 1)}
-				disabled={currentPage === 1}
-				className='px-3 py-1 mx-1 rounded  text-gray-300  hover:text-white  disabled:text-gray-500 cursor-pointer'
-			>
-				<ArrowLeft size={28} />
-			</button>
+			{totalPages > 1 && (
+				<button
+					onClick={() => handlePageChange(currentPage - 1)}
+					disabled={currentPage === 1}
+					className='px-3 py-1 mx-1 rounded  text-gray-300  hover:text-white  disabled:text-gray-500 cursor-pointer'
+				>
+					<ArrowLeft size={28} />
+				</button>
+			)}
+
 			<div>{renderPageNumbers()}</div>
 
-			<button
-				onClick={() => handlePageChange(currentPage + 1)}
-				disabled={currentPage === totalPages}
-				className='px-3 py-1 mx-1 rounded  text-gray-300  hover:text-white  disabled:text-gray-500 cursor-pointer'
-			>
-				<ArrowRight size={28} />
-			</button>
+			{totalPages > 1 && (
+				<button
+					onClick={() => handlePageChange(currentPage + 1)}
+					disabled={currentPage === totalPages}
+					className='px-3 py-1 mx-1 rounded  text-gray-300  hover:text-white  disabled:text-gray-500 cursor-pointer'
+				>
+					<ArrowRight size={28} />
+				</button>
+			)}
 		</div>
 	)
 }

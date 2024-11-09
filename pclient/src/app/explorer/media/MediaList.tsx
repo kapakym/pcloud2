@@ -2,15 +2,12 @@
 
 import { mediaService } from '@/services/media.service'
 import { useMediaStore } from '@/stores/media.store'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { useEffect, useMemo, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
+import { useQuery } from '@tanstack/react-query'
+import { useMemo, useState } from 'react'
 
 import Pagination from '@/components/Pagination/Pagination'
 import PhotoActionBar from '@/components/Photos/MediaActionBar/MediaActionBar'
-import { PeopleBar } from '@/components/Photos/PeopleBar/PeopleBar'
 import { SortByDate } from '@/components/Photos/SortByDate/SortByDate'
-import { SortByPeoples } from '@/components/Photos/SortByPeoples/SortByPeoples'
 import { SortNotFilter } from '@/components/Photos/SortNotFilter.tsx/SortNotFilter'
 import { ModalPreview } from '@/components/ui/ModalPreview/ModalPreview'
 import { ModalPreviewVideo } from '@/components/ui/ModalPreviewVideo/ModalPreviewVideo'
@@ -18,17 +15,8 @@ import { ModalPreviewVideo } from '@/components/ui/ModalPreviewVideo/ModalPrevie
 import { useMediaActions } from '@/hooks/use-media-actions.hook'
 
 export function MediaList() {
-	const {
-		limit,
-		offset,
-		total,
-		setLimit,
-		setOffset,
-		sortBy,
-		sortWay,
-		openPeoplesBar,
-		search
-	} = useMediaStore(state => state)
+	const { limit, offset, setLimit, setOffset, sortBy, sortWay, search } =
+		useMediaStore(state => state)
 
 	const { data } = useQuery({
 		queryKey: ['getMediaFiles', offset, sortBy, sortWay, limit, search],

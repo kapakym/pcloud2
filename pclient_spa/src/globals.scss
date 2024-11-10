@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  box-sizing: border-box;
+}
+
+
+body {
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+  color: white;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+h4 {
+  font-size: 1rem;
+}
+
+.myBorder {
+  border: 1px solid red;
+}
+
+.loader {
+  width: 100%;
+  height: 4.8px;
+  display: inline-block;
+  position: relative;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+.loader::after {
+  content: '';
+  width: 16px;
+  height: 4.8px;
+  background: #FFF;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  animation: hitZak 1s linear infinite alternate;
+}
+
+@keyframes hitZak {
+  0% {
+    left: 0;
+    transform: translateX(-1%);
+  }
+  100% {
+    left: 100%;
+    transform: translateX(-99%);
+  }
+}
+    
+
+/* HTML: <div class="loader"></div> */
+.loaderCircle {
+  width: 50px;
+  --b: 8px; 
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 1px;
+  background: conic-gradient(#0000 10%,white) content-box;
+  -webkit-mask:
+    repeating-conic-gradient(#0000 0deg,#000 1deg 20deg,#0000 21deg 36deg),
+    radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
+  -webkit-mask-composite: destination-in;
+          mask-composite: intersect;
+  animation:l4 1s infinite steps(10);
+}
+@keyframes l4 {to{transform: rotate(1turn)}}

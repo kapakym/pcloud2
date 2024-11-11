@@ -1,8 +1,14 @@
-import { MediaList } from "../pages/MediaList";
+import { Auth } from "../pages/auth/Auth";
+import { MediaList } from "../pages/media/MediaList";
 
-export const mainRoutes: any[] = [
+export interface IMenuItem {
+  element: React.ReactNode;
+  path: string;
+}
+
+export const mainRoutes: IMenuItem[] = [
   {
-    element: <MediaList />,
+    element: <Auth />,
     path: "/",
   },
   {

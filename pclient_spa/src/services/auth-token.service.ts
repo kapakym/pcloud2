@@ -24,7 +24,7 @@ export const removeToken = () => {
 
 class AuthService {
   async login(data: IAuthFrom) {
-    const response = requestBuilder<IAuthFrom, IAuthRes>({
+    const response = await requestBuilder<IAuthFrom, IAuthRes>({
       url: "auth/login",
       method: "post",
       options: {

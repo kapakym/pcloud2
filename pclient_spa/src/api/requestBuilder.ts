@@ -1,16 +1,16 @@
 import axios, { AxiosResponse } from "axios";
-import { errorCatch } from "./error";
-import {
-  AxiosCustomConfig,
-  PropsRequestBuilder,
-  RBAxiosRequestConfig,
-} from "../types/api.types";
+import { AUTH_IGNORE_PAGES, DASHBOARD_PAGES } from "../config/page-url.config";
 import {
   authService,
   getAccessToken,
   removeToken,
 } from "../services/auth-token.service";
-import { AUTH_IGNORE_PAGES, DASHBOARD_PAGES } from "../config/page-url.config";
+import {
+  AxiosCustomConfig,
+  PropsRequestBuilder,
+  RBAxiosRequestConfig,
+} from "../types/api.types";
+import { errorCatch } from "./error";
 
 const axiosCreate = axios.create();
 
@@ -64,7 +64,7 @@ const requestBuilder = async <Req, Res, Params = undefined>({
   progressFnDw,
 }: PropsRequestBuilder<Req, Params>): Promise<AxiosResponse<Res, Res>> => {
   const baseURL =
-    process.env.NEXT_PUBLIC_MODE === "dev"
+    import.meta.env.MODE === "dev"
       ? `http://${window.location.hostname}:5555/api/`
       : "/api/";
   const config: RBAxiosRequestConfig = {

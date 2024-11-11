@@ -2,19 +2,20 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { useMediaStore } from "../stores/media.store";
-import { mediaService } from "../services/media.service";
-import { useMediaActions } from "../hooks/use-media-actions.hook";
-import { SortByDate } from "../components/Photos/SortByDate/SortByDate";
-import { SortNotFilter } from "../components/Photos/SortNotFilter.tsx/SortNotFilter";
-import Pagination from "../components/Pagination/Pagination";
-import { ModalPreview } from "../components/ui/ModalPreview/ModalPreview";
-import { ModalPreviewVideo } from "../components/ui/ModalPreviewVideo/ModalPreviewVideo";
-import MediaActionBar from "../components/Photos/MediaActionBar/MediaActionBar";
+import { useMediaStore } from "../../stores/media.store";
+import { mediaService } from "../../services/media.service";
+import { useMediaActions } from "../../hooks/use-media-actions.hook";
+import { SortByDate } from "../../components/Photos/SortByDate/SortByDate";
+import { SortNotFilter } from "../../components/Photos/SortNotFilter.tsx/SortNotFilter";
+import Pagination from "../../components/Pagination/Pagination";
+import { ModalPreview } from "../../components/ui/ModalPreview/ModalPreview";
+import { ModalPreviewVideo } from "../../components/ui/ModalPreviewVideo/ModalPreviewVideo";
+import MediaActionBar from "../../components/Photos/MediaActionBar/MediaActionBar";
 
 export function MediaList() {
-  const { limit, offset, setLimit, setOffset, sortBy, sortWay, search } =
-    useMediaStore((state) => state);
+  const { limit, offset, setOffset, sortBy, sortWay, search } = useMediaStore(
+    (state) => state
+  );
 
   const { data } = useQuery({
     queryKey: ["getMediaFiles", offset, sortBy, sortWay, limit, search],

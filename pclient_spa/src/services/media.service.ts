@@ -127,7 +127,7 @@ class MediaService {
   }
 
   async clearCluster() {
-    const response = await requestBuilder<unknown, any>({
+    const response = await requestBuilder<unknown, unknown>({
       url: "media/clear_cluster",
       method: "post",
       options: {
@@ -138,7 +138,7 @@ class MediaService {
   }
 
   async clearMedia() {
-    const response = await requestBuilder<unknown, any>({
+    const response = await requestBuilder<unknown, unknown>({
       url: "media/clear_media",
       method: "post",
       options: {
@@ -149,7 +149,7 @@ class MediaService {
   }
 
   async clearFaces() {
-    const response = await requestBuilder<unknown, any>({
+    const response = await requestBuilder<unknown, unknown>({
       url: "media/clear_faces",
       method: "post",
       options: {

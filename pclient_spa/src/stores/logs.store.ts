@@ -29,7 +29,7 @@ export const useLogsStore = create<ILogsStore>()(
     addTask: (payload: ITaskStore) => {
       if (!payload?.id) payload.id = uuidv4();
       payload.status = "in progress";
-      payload?.typeProgress ? payload?.typeProgress : "percent";
+      //   payload?.typeProgress ? payload?.typeProgress : "percent";
       payload.createTime = new Date();
       set((state) => {
         state.tasks.push(payload);

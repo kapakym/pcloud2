@@ -1,27 +1,29 @@
+import { MediaList } from "../pages/MediaList";
+
 export const mainRoutes: any[] = [
   {
-    element: <LoginPage />,
+    element: <MediaList />,
     path: "/",
   },
   {
-    element: <Main />,
+    element: <MediaList />,
     path: "/files_list",
   },
   {
-    element: <RegistrationPage />,
+    element: <MediaList />,
     path: "/registration",
   },
   {
-    element: <ViewSharePage />,
+    element: <MediaList />,
     path: "/viewshare/:uuid",
   },
   {
-    element: <UsersPage />,
+    element: <MediaList />,
     path: "/userlist",
   },
 
   {
-    element: <SharedLinksPage />,
+    element: <MediaList />,
     path: "/sharedlinkslist",
   },
 ];

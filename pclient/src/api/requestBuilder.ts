@@ -4,9 +4,7 @@ import {
 	getAccessToken,
 	removeToken
 } from '@/services/auth-token.service'
-import { useLogsStore } from '@/stores/logs.store'
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { redirect, useRouter } from 'next/navigation'
+import axios, { AxiosResponse } from 'axios'
 
 import {
 	AxiosCustomConfig,
@@ -59,6 +57,8 @@ axiosCreate.interceptors.response.use(
 		throw error
 	}
 )
+
+console.info(axiosCreate)
 
 const requestBuilder = async <Req, Res, Params = undefined>({
 	url,

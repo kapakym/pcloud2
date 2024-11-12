@@ -10,9 +10,10 @@ import { useDoubleTouchHook } from "../../hooks/use-double-touch.hook";
 import { TypeFiles } from "../../types/files.types";
 import { ShareLinkBar } from "../../components/ShareLinkBar/ShareLinkBar";
 import { FileItemRow } from "../../components/ui/FileItems/FileItemRow";
+import { ModalEnterPasswordShare } from "../../components/FileActionBar/ModalEnterPasswordShare/ModalEnterPasswordShare";
 
 export const ShareLink = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string }>();
   const { path, setPath, setSelectedShareLink, selectedShareLink, selectMode } =
     useShareStore((state) => state);
   const { data, mutate: mutateGetShareFiles } = useMutation({

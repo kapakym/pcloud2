@@ -41,7 +41,6 @@ function Auth() {
   }, [data?.data.user]);
 
   const onSubmit: SubmitHandler<IAuthFrom> = (formData) => {
-    console.log(formData);
     mutate(formData);
   };
 

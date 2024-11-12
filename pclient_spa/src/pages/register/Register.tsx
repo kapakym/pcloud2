@@ -77,7 +77,7 @@ function Register() {
         <div className="text-red-400">{isError && error.message}</div>
         <div className="text-green-400">{data && "Register success!"}</div>
 
-        <Button type="submit">Login</Button>
+        <Button type="submit">Register</Button>
         <Link to={DASHBOARD_PAGES.AUTH}>Login page</Link>
       </form>
     </div>

@@ -5,6 +5,7 @@ import { useDrawerStore } from "../../stores/drawer.store";
 import { mainRoutes } from "../../routes/routes";
 import { StatusBar } from "../../components/StatusBar/StatusBar";
 import { Drawer } from "../../components/ui/Drawer/Drawer";
+import { DASHBOARD_PAGES } from "../../config/page-url.config";
 
 export function Layout() {
   const location = useLocation();
@@ -12,7 +13,10 @@ export function Layout() {
     (state) => state
   );
 
-  const isLoginOrRegisterPage = location.pathname === "/";
+  const isLoginOrRegisterPage =
+    location.pathname === DASHBOARD_PAGES.AUTH ||
+    location.pathname === DASHBOARD_PAGES.REGISTER ||
+    location.pathname.includes("viewshare");
 
   return (
     <div className="   flex flex-col  overflow-hidden w-[100dvw] h-[100dvh]">

@@ -7,6 +7,7 @@ import { ShareList } from "../pages/share/ShareList";
 import { SettingsList } from "../pages/settings/SettingsList";
 import { UsersList } from "../pages/admin/UsersList";
 import { ShareLink } from "../pages/shareid/ShareLink";
+import { Register } from "../pages/register/Register";
 
 export interface IMenuItem {
   element: React.ReactNode;
@@ -48,5 +49,10 @@ export const mainRoutes: IMenuItem[] = [
   {
     element: <ShareLink />,
     path: DASHBOARD_PAGES.SHARE_LINK,
+  },
+
+  {
+    element: <Register />,
+    path: DASHBOARD_PAGES.REGISTER,
   },
 ];

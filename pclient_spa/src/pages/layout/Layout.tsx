@@ -1,12 +1,11 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Header } from "../../components/Header/Header";
 import { NavigationMenu } from "../../components/NavigationMenu/NavigationMenu";
-import { useDrawerStore } from "../../stores/drawer.store";
-import { mainRoutes } from "../../routes/routes";
 import { StatusBar } from "../../components/StatusBar/StatusBar";
 import { Drawer } from "../../components/ui/Drawer/Drawer";
 import { DASHBOARD_PAGES } from "../../config/page-url.config";
-import { UseWsTasks } from "../../hooks/use-wstasks.hook";
+import { mainRoutes } from "../../routes/routes";
+import { useDrawerStore } from "../../stores/drawer.store";
 
 export function Layout() {
   const location = useLocation();
@@ -18,8 +17,6 @@ export function Layout() {
     location.pathname === DASHBOARD_PAGES.AUTH ||
     location.pathname === DASHBOARD_PAGES.REGISTER ||
     location.pathname.includes("viewshare");
-
-  if (!isLoginOrRegisterPage) UseWsTasks();
 
   return (
     <div className="   flex flex-col  overflow-hidden w-[100dvw] h-[100dvh]">

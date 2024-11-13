@@ -5,6 +5,7 @@ import { useDrawerStore } from "../../stores/drawer.store";
 import { authService } from "../../services/auth-token.service";
 import { ROUTERS } from "../../constants/routers.constants";
 import { useNavigate } from "react-router-dom";
+import { UseWsTasks } from "../../hooks/use-wstasks.hook";
 
 function NavigationMenu() {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ function NavigationMenu() {
     navigate({ pathname: path });
     onClose();
   };
+
+  UseWsTasks();
 
   const handleLogout = () => {
     authService.logout();

@@ -15,7 +15,7 @@ import { TasksService } from './tasks.service';
   cors: {
     origin: '*', // можно указать `*` для отключения `CORS`
   },
-  namespace: 'tasks',
+  namespace: '',
 })
 export class TasksGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect

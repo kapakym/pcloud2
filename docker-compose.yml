@@ -46,19 +46,34 @@ services:
       - ./share:/var/share
 
   client:
-    container_name: pcloud2-client
+    container_name: pcloud-client_spa
     restart: unless-stopped
-    image: pcloud2-client:1
+    image: pcloud-client_spa:1
     build:
-      context: ./pclient
+      context: ./pclient_spa
 #      target: production
       dockerfile: Dockerfile
     ports:
-      - 4000:3000
+      - 4000:80
     networks:
       - shared-network
     depends_on:
-      - server
+      - server    
+
+#   client:
+#     container_name: pcloud2-client
+#     restart: unless-stopped
+#     image: pcloud2-client:1
+#     build:
+#       context: ./pclient
+# #      target: production
+#       dockerfile: Dockerfile
+#     ports:
+#       - 4000:3000
+#     networks:
+#       - shared-network
+#     depends_on:
+#       - server
 
 
 

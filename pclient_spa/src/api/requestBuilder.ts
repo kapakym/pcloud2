@@ -64,9 +64,6 @@ const requestBuilder = async <Req, Res, Params = undefined>({
   progressFnDw,
 }: PropsRequestBuilder<Req, Params>): Promise<AxiosResponse<Res, Res>> => {
   const baseURL = "/api/";
-  // import.meta.env.MODE === "dev"
-  //   ? `http://${window.location.hostname}:5555/api/`
-  //   : "/api/";
   const config: RBAxiosRequestConfig = {
     baseURL,
     isAuth: options?.isAuth,

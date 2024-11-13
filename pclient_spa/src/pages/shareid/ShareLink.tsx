@@ -75,10 +75,7 @@ export const ShareLink = () => {
 
   const doubleTouchHook = useDoubleTouchHook();
 
-  const handleTouch = (
-    event: React.TouchEvent<HTMLDivElement>,
-    folderName: string
-  ) => {
+  const handleTouch = (folderName: string) => {
     if (doubleTouchHook()) {
       handleEnterFolder(folderName);
     }
@@ -121,7 +118,7 @@ export const ShareLink = () => {
             file={item}
             key={item.name}
             typeFile={"folder"}
-            handleTouch={(event) => handleTouch(event, item.name)}
+            handleTouch={() => handleTouch(item.name)}
             onDoubleClick={() => handleEnterFolder(item.name)}
           />
         ))}

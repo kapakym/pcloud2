@@ -41,7 +41,7 @@ export const useShareLinkActions = (idShareLink: string) => {
     onMutate: (variables) => {
       return { filename: variables.filename };
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       if (data.data instanceof Blob) {
         const url = window.URL.createObjectURL(new Blob([data.data]));
         const link = document.createElement("a");

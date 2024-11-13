@@ -50,10 +50,7 @@ function FilesList() {
 
   const doubleTouchHook = useDoubleTouchHook();
 
-  const handleTouch = (
-    event: React.TouchEvent<HTMLDivElement>,
-    folderName: string
-  ) => {
+  const handleTouch = (folderName: string) => {
     if (doubleTouchHook()) {
       handleEnterFolder(folderName);
     }
@@ -78,7 +75,7 @@ function FilesList() {
             file={item}
             key={item.name}
             typeFile={"folder"}
-            handleTouch={(event) => handleTouch(event, item.name)}
+            handleTouch={() => handleTouch(item.name)}
             onDoubleClick={() => handleEnterFolder(item.name)}
             onClick={(event) => handleSelected(event, item.name, "folder")}
             selected={

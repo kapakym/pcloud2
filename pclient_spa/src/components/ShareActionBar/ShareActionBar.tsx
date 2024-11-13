@@ -1,12 +1,11 @@
-import { ModalDeleteShareLink } from "./ModalDeleteShareLink/ModalDeleteShareLink";
-import { ModalEditShare } from "./ModalEditShareLink/ModalEditShare";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ClipboardCopy, Edit, Trash } from "lucide-react";
 import { useState } from "react";
-import { useShareStore } from "../../stores/share.store";
 import { shareService } from "../../services/share.service";
-import { TypeShareActions } from "../../types/share.types";
+import { useShareStore } from "../../stores/share.store";
 import { handleCopyToClipboard } from "../../utils/clipboard.utils";
+import { ModalDeleteShareLink } from "./ModalDeleteShareLink/ModalDeleteShareLink";
+import { ModalEditShare } from "./ModalEditShareLink/ModalEditShare";
 
 export default function ShareActionBar() {
   const queryClient = useQueryClient();
@@ -14,7 +13,7 @@ export default function ShareActionBar() {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
-  const { setAction, selected } = useShareStore((state) => state);
+  const { selected } = useShareStore((state) => state);
 
   const { mutate: mutateDeleteShareLink } = useMutation({
     mutationKey: ["deleteShareLink"],
@@ -23,10 +22,6 @@ export default function ShareActionBar() {
       queryClient.invalidateQueries({ queryKey: ["queryGetHareLinks"] });
     },
   });
-
-  const handleSetAction = (action: TypeShareActions) => {
-    setAction(action);
-  };
 
   const handleEdit = () => {
     setOpenEdit(true);

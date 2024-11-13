@@ -102,6 +102,7 @@ const requestBuilder = async <Req, Res, Params = undefined>({
       if (!AUTH_IGNORE_PAGES.includes(window.location.pathname)) {
         window.location.replace(DASHBOARD_PAGES.AUTH);
       }
+    //@ts-expect-error
     throw new Error(e?.response?.data?.message, { cause: e?.response?.data });
   }
 };

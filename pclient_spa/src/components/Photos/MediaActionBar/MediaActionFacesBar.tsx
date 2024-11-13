@@ -22,8 +22,9 @@ export default function MediaActionFacesBar() {
 
   const navigate = useNavigate();
 
-  const { setOpenPeoplesBar, openPeoplesBar, showPeople, setAction } =
-    useMediaStore((state) => state);
+  const { setOpenPeoplesBar, openPeoplesBar, showPeople } = useMediaStore(
+    (state) => state
+  );
 
   const [open, setOpen] = useState(false);
   const [openRename, setOpenRename] = useState(false);
@@ -35,13 +36,9 @@ export default function MediaActionFacesBar() {
     handleClose();
   };
 
-  const onSubmit: SubmitHandler<{ name: string }> = (formData) => {
+  const onSubmit: SubmitHandler<{ name: string }> = () => {
     // mutate(formData)
     setOpenRename(false);
-  };
-
-  const handleRename = () => {
-    setOpenRename(true);
   };
 
   const handleGetFaces = async () => {

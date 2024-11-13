@@ -1,13 +1,13 @@
 import { ScrollText } from "lucide-react";
 import { useMemo } from "react";
+import { useDrawerStore } from "../../stores/drawer.store";
+import { useFileActionsStore } from "../../stores/file-actions.store";
+import { useLogsStore } from "../../stores/logs.store";
 import { VSeparator } from "../ui/VSeparator/VSeparator";
 import { TasksList } from "./TasksList/TasksList";
-import { useLogsStore } from "../../stores/logs.store";
-import { useFileActionsStore } from "../../stores/file-actions.store";
-import { useDrawerStore } from "../../stores/drawer.store";
 
 function StatusBar() {
-  const { tasks, completedTask, addTask } = useLogsStore((state) => state);
+  const { tasks } = useLogsStore((state) => state);
   const { selected } = useFileActionsStore((state) => state);
 
   const { setOpen, setTitle, setChildrenDrawer } = useDrawerStore(

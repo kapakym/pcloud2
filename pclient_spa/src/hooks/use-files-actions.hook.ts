@@ -40,7 +40,7 @@ export const useFilesActions = (
   const { mutate: mutateCopyFiles } = useMutation({
     mutationKey: ["copyFiles"],
     mutationFn: (data: IActionFilesReq) => filesService.copyFiles(data),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       queryClient.invalidateQueries({ queryKey: ["getFiles", path] });
       setCompletedTask({
         uuid: context.uuid,
@@ -56,7 +56,7 @@ export const useFilesActions = (
   const { mutate: mutateMoveFiles } = useMutation({
     mutationKey: ["moveFiles"],
     mutationFn: (data: IActionFilesReq) => filesService.moveFiles(data),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       queryClient.invalidateQueries({ queryKey: ["getFiles", path] });
       setCompletedTask({
         uuid: context.uuid,
@@ -72,7 +72,7 @@ export const useFilesActions = (
   const { mutate: mutateRenameFile } = useMutation({
     mutationKey: ["renameFile"],
     mutationFn: (data: IRenameFilesReq) => filesService.renameFile(data),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       queryClient.invalidateQueries({ queryKey: ["getFiles", path] });
       setCompletedTask({
         uuid: context.uuid,
@@ -88,7 +88,7 @@ export const useFilesActions = (
   const { mutate: deleteMutate } = useMutation({
     mutationKey: ["deleteFiles"],
     mutationFn: (data: IDeleteFilesReq) => filesService.deleteFiles(data),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       queryClient.invalidateQueries({ queryKey: ["getFiles", path] });
       setCompletedTask({
         uuid: context.uuid,
@@ -126,7 +126,7 @@ export const useFilesActions = (
     onMutate: (variables) => {
       return { uuid: variables.uuid, filename: variables.file.filename };
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       setCompletedTask({
         uuid: context.uuid,
       });
@@ -150,7 +150,7 @@ export const useFilesActions = (
     onMutate: (variables) => {
       return { uuid: variables.uuid, filename: variables.file.filename };
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       setCompletedTask({
         uuid: context.uuid,
       });

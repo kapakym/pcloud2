@@ -1,15 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { useUsersStore } from "../../stores/users.store";
-import { usersService } from "../../services/users.service";
-import { IUser } from "../../types/auth.types";
 import UserActionBar from "../../components/UserActionBar/UserActionBar";
 import { UserItem } from "../../components/ui/UserItem/UserItem";
-import Pagination from "../../components/Pagination/Pagination";
+import { usersService } from "../../services/users.service";
+import { useUsersStore } from "../../stores/users.store";
+import { IUser } from "../../types/auth.types";
 
 function UsersList() {
-  const { limit, offset, page, setSelected, selected, selectMode } =
-    useUsersStore((state) => state);
+  const { limit, offset, setSelected, selected, selectMode } = useUsersStore(
+    (state) => state
+  );
 
   const { data } = useQuery({
     queryKey: ["getUsers", offset, limit],
@@ -35,11 +34,11 @@ function UsersList() {
     return selected.find((item) => item.id === id);
   };
 
-  const totalPage = useMemo(() => {
-    return data?.data.count ? Math.round(data?.data.count / limit) : 0;
-  }, [data?.data.count, limit]);
+  //   const totalPage = useMemo(() => {
+  //     return data?.data.count ? Math.round(data?.data.count / limit) : 0;
+  //   }, [data?.data.count, limit]);
 
-  const handleChangePage = (page: number) => {};
+  //   const handleChangePage = (page: number) => {};
 
   return (
     <div className="w-full h-full flex flex-col select-none">
@@ -61,11 +60,11 @@ function UsersList() {
             />
           ))}
       </div>
-      <Pagination
+      {/* <Pagination
         currentPage={page}
         totalPages={totalPage}
         onPageChange={handleChangePage}
-      />
+      /> */}
     </div>
   );
 }

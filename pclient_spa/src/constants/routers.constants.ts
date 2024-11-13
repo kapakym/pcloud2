@@ -1,4 +1,4 @@
-import { LucideIcon, icons } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import {
   Folder,
   Image,

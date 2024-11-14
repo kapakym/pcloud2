@@ -10,6 +10,7 @@ import { Modal } from "../../ui/Modal/Modal";
 import Button from "../../ui/Button/Button";
 import { InputField } from "../../ui/Fields/InputField";
 import { EButtonType } from "../../ui/Button/button.enums";
+import { handleCopyToClipboard } from "../../../utils/clipboard.utils";
 
 interface ModalAddEditShareProps {
   setOpen: (value: boolean) => void;
@@ -77,9 +78,6 @@ export const ModalAddShare = (props: ModalAddEditShareProps) => {
     // setOpen(false)
   };
 
-  const handleCopyToClipboard = (value: string) => {
-    navigator.clipboard.writeText(value);
-  };
   return (
     <Modal open={open} onClose={handleClose} title={"Share"}>
       {shareUrl && (

@@ -21,7 +21,7 @@ export const PeopleBar = () => {
     }
   }, [inView]);
 
-  const { mutate: getFaces } = useMutation({
+  const { mutate: getFaces, isPending } = useMutation({
     mutationKey: ["mutationFaces"],
     mutationFn: (data: IGetPeoplesReq) => mediaService.getPeoples(data),
     onSuccess: (data) => {
@@ -38,8 +38,9 @@ export const PeopleBar = () => {
       <div className="flex overflow-x-auto overflow-y-hidden space-x-2">
         {!!peoples.length &&
           peoples.map((item) => <PeopleItem key={item.face} face={item} />)}
+        {isPending && <span className="loaderCircle absolute left-1/2"></span>}
         {peoples.length > limit - 1 && (
-          <div className="w-[40px] h-[50px] bg-red-600" ref={ref}></div>
+          <div className="w-[40px] h-[50px]" ref={ref}></div>
         )}
       </div>
     </div>

@@ -6,6 +6,7 @@ import { IGetPeoplesReq, IPeopleResponse } from "../../../types/media.types";
 import { PeopleItem } from "../PeopleItem/PeopleItem";
 
 export const PeopleBar = () => {
+  // @ts-expect-error
   const [limit, setLimit] = useState(6);
   const [offset, setOffset] = useState(0);
   const [peoples, setPeoples] = useState<IPeopleResponse[]>([]);

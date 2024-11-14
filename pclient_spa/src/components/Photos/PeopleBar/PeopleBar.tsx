@@ -1,19 +1,45 @@
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { mediaService } from "../../../services/media.service";
+import { IGetPeoplesReq, IPeopleResponse } from "../../../types/media.types";
 import { PeopleItem } from "../PeopleItem/PeopleItem";
-import { useQuery } from "@tanstack/react-query";
 
 export const PeopleBar = () => {
-  const { data: facesData } = useQuery({
-    queryKey: ["queryGetFaces"],
-    queryFn: () => mediaService.getPeoples(),
+  const [limit, setLimit] = useState(6);
+  const [offset, setOffset] = useState(0);
+  const [peoples, setPeoples] = useState<IPeopleResponse[]>([]);
+  const { ref, inView } = useInView({
+    threshold: 0.5, // 50% видимости
   });
+
+  useEffect(() => {
+    if (inView) {
+      setOffset((prev) => prev + limit);
+      getFaces({ limit, offset: offset + limit });
+    }
+  }, [inView]);
+
+  const { mutate: getFaces } = useMutation({
+    mutationKey: ["mutationFaces"],
+    mutationFn: (data: IGetPeoplesReq) => mediaService.getPeoples(data),
+    onSuccess: (data) => {
+      setPeoples([...peoples, ...data.data]);
+    },
+  });
+
+  useEffect(() => {
+    getFaces({ limit, offset });
+  }, []);
+
   return (
     <div className=" bg-slate-700 px-4  h-[100px] w-full border-[1px] border-solid border-slate-600 p-2 rounded-t-xl absolute bottom-0 lef-0  ">
       <div className="flex overflow-x-auto overflow-y-hidden space-x-2">
-        {facesData?.data.length &&
-          facesData.data.map((item) => (
-            <PeopleItem key={item.face} face={item} />
-          ))}
+        {!!peoples.length &&
+          peoples.map((item) => <PeopleItem key={item.face} face={item} />)}
+        {peoples.length > limit - 1 && (
+          <div className="w-[40px] h-[50px] bg-red-600" ref={ref}></div>
+        )}
       </div>
     </div>
   );

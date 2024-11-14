@@ -26,11 +26,11 @@ export class GetMediaListDto {
 }
 
 export class GetPeoplesListDto {
-  // @IsNumber()
-  // limit: number;
+  @IsNumber()
+  limit: number;
 
-  // @IsNumber()
-  // offset: number;
+  @IsNumber()
+  offset: number;
 
   @IsString()
   sortBy?: string;

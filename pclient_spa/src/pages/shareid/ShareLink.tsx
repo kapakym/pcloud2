@@ -24,8 +24,6 @@ export const ShareLink = () => {
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState<string | undefined>();
 
-  console.info(id);
-
   useEffect(() => {
     if (id) {
       mutateGetShareFiles({ id, path });

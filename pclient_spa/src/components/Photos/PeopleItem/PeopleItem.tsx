@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { IPeopleResponse } from "../../../types/media.types";
 import { useMediaStore } from "../../../stores/media.store";
 import { mediaService } from "../../../services/media.service";
+import { Image } from "lucide-react";
 
 interface FaceItemProps {
   face: IPeopleResponse;
@@ -44,7 +45,7 @@ export const PeopleItem = ({ face }: FaceItemProps) => {
   return (
     <div
       className={cn(
-        " rounded-full overflow-hidden border-[2px] h-[80px] min-w-[80px] border-solid  aspect-square",
+        " rounded-full overflow-hidden border-[2px] h-[80px] min-w-[80px] border-solid  aspect-square flex justify-center items-center",
         isExistPeople ? "border-green-600" : "border-white"
       )}
     >
@@ -53,14 +54,17 @@ export const PeopleItem = ({ face }: FaceItemProps) => {
           <span className="loaderCircle"></span>
         </div>
       )}
-      {!isLoading && (
-        <img
-          onClick={handleClickPeople}
-          src={mediaUrl}
-          alt=""
-          className=" h-full w-full object-contain aspect-square"
-        />
-      )}
+      {!isLoading &&
+        (face.key === "-1" ? (
+          <Image className="w-16 h-16" />
+        ) : (
+          <img
+            onClick={handleClickPeople}
+            src={mediaUrl}
+            alt=""
+            className=" h-full w-full object-contain aspect-square"
+          />
+        ))}
     </div>
   );
 };

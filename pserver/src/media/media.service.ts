@@ -48,7 +48,11 @@ export class MediaService {
   }
 
   async getPeoples(dto: GetPeoplesListDto, id: string) {
+    console.log(dto);
+    const count = await this.prisma.clusters.count();
     const peoples = await this.prisma.clusters.findMany({
+      skip: dto.offset,
+      take: dto.limit,
       where: {
         userId: id,
       },
@@ -62,44 +66,45 @@ export class MediaService {
 
     const response = [];
     for (const people of peoples) {
-      if (people.key !== '-1') {
-        const media = await this.prisma.media.findMany({
-          where: {
-            userId: id,
-            faces: {
-              some: {
-                clusterId: people.id,
-              },
+      // if (people.key !== '-1') {
+      const media = await this.prisma.media.findMany({
+        where: {
+          userId: id,
+          faces: {
+            some: {
+              clusterId: people.id,
             },
           },
-        });
-        console.log('-1', media);
-        const item = {
-          id: people?.id,
-          name: people?.name,
-          face: people?.faces[0]?.path,
-          faceId: people?.faces[0]?.id,
-          media: media,
-        };
-        if (media.length) {
-          response.push(item);
-        }
-      } else {
-        for (const face of people.faces) {
-          const photo = await this.prisma.media.findUnique({
-            where: { id: face.mediaId },
-          });
-          const item = {
-            id: people?.id,
-            name: people?.name,
-            face: face?.path,
-            faceId: face?.id,
-            media: [photo],
-          };
-          console.log('faces', photo);
-          response.push(item);
-        }
+        },
+      });
+      const item = {
+        total: count,
+        id: people?.id,
+        name: people?.name,
+        face: people?.faces[0]?.path,
+        faceId: people?.faces[0]?.id,
+        media: media,
+        key: people.key,
+      };
+      if (media.length) {
+        response.push(item);
       }
+      // } else {
+      // for (const face of people.faces) {
+      //   const photo = await this.prisma.media.findUnique({
+      //     where: { id: face.mediaId },
+      //   });
+      //   const item = {
+      //     total: count,
+      //     id: people?.id,
+      //     name: people?.name,
+      //     face: face?.path,
+      //     faceId: face?.id,
+      //     media: [photo],
+      //   };
+      //   response.push(item);
+      // }
+      // }
     }
     return response;
   }
@@ -156,6 +161,7 @@ export class MediaService {
         dateCreate: item.dateCreate ? item.dateCreate : undefined,
         lon: item.longitude ? item.longitude : undefined,
         lat: item.latitude ? item.latitude : undefined,
+        faces: item.faces,
       })),
     };
 

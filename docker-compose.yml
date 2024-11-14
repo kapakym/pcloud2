@@ -54,7 +54,7 @@ services:
 #      target: production
       dockerfile: Dockerfile
     ports:
-      - 4000:80
+      - 4000:3000
     networks:
       - shared-network
     depends_on:

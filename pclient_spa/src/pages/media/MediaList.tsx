@@ -43,7 +43,7 @@ export function MediaList() {
   );
 
   const handleChangePage = (page: number) => {
-    setOffset(limit * page);
+    setOffset(limit * (page - 1));
     setPage(page);
   };
 

@@ -48,7 +48,11 @@ export const PeopleItem = ({ face }: FaceItemProps) => {
         isExistPeople ? "border-green-600" : "border-white"
       )}
     >
-      {isLoading && <span className="loader"></span>}
+      {isLoading && (
+        <div className="w-full h-full flex justify-center items-center">
+          <span className="loaderCircle"></span>
+        </div>
+      )}
       {!isLoading && (
         <img
           onClick={handleClickPeople}

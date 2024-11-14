@@ -492,6 +492,7 @@ export class MediaService {
       },
     });
 
+    console.log(file);
     if (!file) throw new BadRequestException('file not found');
 
     if (fs.existsSync(file.path)) {

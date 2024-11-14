@@ -10,7 +10,7 @@ class DASHBOARD {
   ADMIN_EXPLORER = "/explorer/admin";
   SETTINGS_EXPLORER = "/explorer/settings";
   SHARE_EXPLORER = "/explorer/share";
-  SHARE_LINK = "/viewshare/:uuid";
+  SHARE_LINK = "/viewshare/:id";
 }
 
 export const DASHBOARD_PAGES = new DASHBOARD();

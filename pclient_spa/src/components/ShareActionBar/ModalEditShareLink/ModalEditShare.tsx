@@ -87,13 +87,13 @@ export const ModalEditShare = (props: ModalAddEditShareProps) => {
       {data?.data && link && (
         <div className="flex flex-col space-y-4">
           <div className="flex space-x-2">
-            <div>{`${window.location.host}/share/${link.id}`}</div>
+            <div>{`${window.location.host}/viewshare/${link.id}`}</div>
             <Clipboard
               size={28}
               className="text-slate-400 hover:text-slate-200 cursor-pointer"
               onClick={() =>
                 handleCopyToClipboard(
-                  `${window.location.host}/share/${link.id}`
+                  `${window.location.host}/viewshare/${link.id}`
                 )
               }
             ></Clipboard>

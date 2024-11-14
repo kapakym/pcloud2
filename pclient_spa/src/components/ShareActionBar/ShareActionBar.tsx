@@ -43,7 +43,7 @@ export default function ShareActionBar() {
               className="text-slate-400 hover:text-slate-200 cursor-pointer"
               onClick={() =>
                 handleCopyToClipboard(
-                  `${window.location.host}/share/${selected.id}`
+                  `${window.location.host}/viewshare/${selected.id}`
                 )
               }
             />

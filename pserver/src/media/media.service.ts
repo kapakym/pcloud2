@@ -511,6 +511,7 @@ export class MediaService {
       },
     });
 
+    console.info('-->', file);
     if (!file) throw new BadRequestException('file not found');
 
     if (fs.existsSync(file.thumbs)) {

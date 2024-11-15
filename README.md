@@ -13,7 +13,7 @@ Web application for forking a private cloud at home. The application allows you 
 The application consists of three main parts:
 
 - client (there is a version on Next.js, but it is not supported at the moment) React application. Interaction with the server via Rest API and WebSocket
-- Nest JS server + ORM Prisma + Postges
+- Nest JS server + ORM Prisma + Postgres
 - server for processing Python media. Interaction with the server via Rest API
 
 view them in the gallery
@@ -67,6 +67,8 @@ Application installation:
 - Clone this repository
 - Go to the folder with the source code
 - Run the command [docker compose up -d --build]
+
+#Screenshots applications
 
 ![pCloud2 - application](./screenshot/1.png)
 ![pCloud2 - application](./screenshot/2.png)

@@ -1,7 +1,6 @@
+import cn from "clsx";
 import { useMediaStore } from "../../../stores/media.store";
 import { MediaItem } from "../MediaItem/MediaItem";
-import { FaceIcon } from "./FaceIcon";
-import cn from "clsx";
 
 export const SortByPeoples = () => {
   const { peopleSelected } = useMediaStore((state) => state);

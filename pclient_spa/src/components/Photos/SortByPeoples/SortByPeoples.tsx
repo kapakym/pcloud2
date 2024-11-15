@@ -7,6 +7,7 @@ import { IMedia } from "../../../types/media.types";
 
 export const SortByPeoples = () => {
   const { peopleSelected } = useMediaStore((state) => state);
+  //   @ts-expect-error
   const [limit, setLimit] = useState(12);
   const [offset, setOffset] = useState(0);
   const [showPeoples, setShowPepople] = useState<IMedia[] | []>([]);

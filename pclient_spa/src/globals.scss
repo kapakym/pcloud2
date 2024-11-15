@@ -11,6 +11,8 @@ body {
   --tw-bg-opacity: 1;
   background-color: rgb(15 23 42 / var(--tw-bg-opacity));
   color: white;
+  max-width: 100dvw;
+  max-height: 100dvh;
 }
 
 h1 {

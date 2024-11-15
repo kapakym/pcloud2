@@ -19,7 +19,7 @@ export function Layout() {
     location.pathname.includes("viewshare");
 
   return (
-    <div className="   flex flex-col  overflow-hidden w-[100dvw] h-[100dvh]">
+    <div className="flex flex-col  overflow-hidden w-[100dvw] h-[100dvh]">
       {!isLoginOrRegisterPage && <Header />}
       <div className="flex h-full  overflow-hidden">
         {!isLoginOrRegisterPage && (

@@ -68,7 +68,7 @@ export const PeopleItem = ({ face }: FaceItemProps) => {
           </div>
         ))}
       <div className="absolute bottom-0 text-[10px] right-0  bg-gray-800 px-[6px] rounded-full">
-        {face.media?.length + ""}
+        {face.media?.length}
       </div>
     </div>
   );

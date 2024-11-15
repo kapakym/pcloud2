@@ -79,7 +79,7 @@ export default function FileActionBar() {
   };
 
   return (
-    <div className="bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl">
+    <div className="bg-gray-800 min-h-[46px] flex border-[1px] border-solid py-2 px-1 justify-between border-slate-600 rounded-b-xl overflow-x-auto">
       <div className="flex items-center space-x-1">
         <Check
           size={28}

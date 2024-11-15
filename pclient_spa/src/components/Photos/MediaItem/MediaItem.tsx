@@ -49,7 +49,7 @@ export const MediaItem = memo(({ mediaFile }: { mediaFile: IMedia }) => {
         </div>
       )}
       {mediaFile?.dateCreate && (
-        <div className="absolute bottom-2 left-2 text-sm bg-gray-700 p-1 rounded-lg opacity-65">
+        <div className="absolute bottom-2 left-2 text-sm bg-gray-700 p-1 rounded-lg opacity-65 text-[10px]">
           {new Date(mediaFile.dateCreate).toLocaleString()}
         </div>
       )}

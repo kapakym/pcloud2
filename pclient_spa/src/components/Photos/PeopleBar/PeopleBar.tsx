@@ -15,6 +15,10 @@ export const PeopleBar = () => {
   });
 
   useEffect(() => {
+    setPeoples([]);
+  }, []);
+
+  useEffect(() => {
     if (inView) {
       setOffset((prev) => prev + limit);
       getFaces({ limit, offset: offset + limit });

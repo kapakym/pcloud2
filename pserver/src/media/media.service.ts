@@ -66,7 +66,6 @@ export class MediaService {
 
     const response = [];
     for (const people of peoples) {
-      // if (people.key !== '-1') {
       const media = await this.prisma.media.findMany({
         where: {
           userId: id,
@@ -83,28 +82,12 @@ export class MediaService {
         name: people?.name,
         face: people?.faces[0]?.path,
         faceId: people?.faces[0]?.id,
-        media: media,
+        media: media.map((item) => ({ ...item, key: people.key })),
         key: people.key,
       };
       if (media.length) {
         response.push(item);
       }
-      // } else {
-      // for (const face of people.faces) {
-      //   const photo = await this.prisma.media.findUnique({
-      //     where: { id: face.mediaId },
-      //   });
-      //   const item = {
-      //     total: count,
-      //     id: people?.id,
-      //     name: people?.name,
-      //     face: face?.path,
-      //     faceId: face?.id,
-      //     media: [photo],
-      //   };
-      //   response.push(item);
-      // }
-      // }
     }
     return response;
   }

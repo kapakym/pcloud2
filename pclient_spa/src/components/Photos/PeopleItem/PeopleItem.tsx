@@ -30,22 +30,22 @@ export const PeopleItem = ({ face }: FaceItemProps) => {
   }, [data]);
 
   const isExistPeople = useMemo(
-    () => peopleSelected.find((item) => item.face === face.face),
+    () => peopleSelected.find((item) => item.key === face.key),
     [peopleSelected, face.face]
   );
 
   const handleClickPeople = () => {
     isExistPeople
       ? setPeoplesSelected(
-          peopleSelected.filter((item) => item.face !== face.face)
+          peopleSelected.filter((item) => item.key !== face.key)
         )
-      : setPeoplesSelected([...peopleSelected, face]);
+      : setPeoplesSelected([...peopleSelected, ...(face?.media || [])]);
   };
 
   return (
     <div
       className={cn(
-        " rounded-full overflow-hidden border-[2px] h-[80px] min-w-[80px] border-solid  aspect-square flex justify-center items-center",
+        " rounded-xl relative overflow-hidden border-[2px] h-[80px] min-w-[80px] border-solid  aspect-square flex justify-center items-center",
         isExistPeople ? "border-green-600" : "border-white"
       )}
     >
@@ -58,13 +58,18 @@ export const PeopleItem = ({ face }: FaceItemProps) => {
         (face.key === "-1" ? (
           <Image className="w-16 h-16" />
         ) : (
-          <img
-            onClick={handleClickPeople}
-            src={mediaUrl}
-            alt=""
-            className=" h-full w-full object-contain aspect-square"
-          />
+          <div className="relative">
+            <img
+              onClick={handleClickPeople}
+              src={mediaUrl}
+              alt=""
+              className=" h-full w-full object-contain aspect-square"
+            />
+          </div>
         ))}
+      <div className="absolute bottom-0 text-[10px] right-0  bg-gray-800 px-[6px] rounded-full">
+        {face.media?.length + ""}
+      </div>
     </div>
   );
 };

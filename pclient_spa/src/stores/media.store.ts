@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import {
   IMedia,
-  IPeopleResponse,
   TypeMediaActions,
   TypeSortMedia,
   TypeSortWay,
@@ -19,7 +18,7 @@ interface IMediaActionsStore {
   sortBy: TypeSortMedia;
   sortWay: TypeSortWay;
   openPeoplesBar: boolean;
-  peopleSelected: IPeopleResponse[] | [];
+  peopleSelected: IMedia[] | [];
   showPeople: boolean;
   search: string;
 
@@ -33,7 +32,7 @@ interface IMediaActionsStore {
   setSortBy: (payload: TypeSortMedia) => void;
   setSortWay: (payload: TypeSortWay) => void;
   setOpenPeoplesBar: (payload: boolean) => void;
-  setPeoplesSelected: (payload: IPeopleResponse[]) => void;
+  setPeoplesSelected: (payload: IMedia[]) => void;
   setShowPeople: (payload: boolean) => void;
   setSearch: (payload: string) => void;
 }

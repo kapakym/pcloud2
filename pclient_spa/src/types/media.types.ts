@@ -11,6 +11,7 @@ export interface IMedia {
   dateCreate?: string;
   userId: string;
   type: string;
+  key: string;
 }
 
 export interface IGetMediaReq {

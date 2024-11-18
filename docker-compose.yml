@@ -60,7 +60,7 @@ services:
       - shared-network
     depends_on:
       - server 
-      - cerbot  
+      - certbot  
     volumes:
        - ./certbot/www:/var/www/certbot/:ro
        - ./certbot/conf:/etc/letsencrypt/:ro
